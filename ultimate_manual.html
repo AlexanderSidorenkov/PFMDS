@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<h1>Описание программы молекулярной динамики.</h1>
+<p>пара слов</p>
+
+<h1>Оглавление.</h1>
+<h2>&emsp;<a href="#размерности">размерности</a></h2>
+<h2>&emsp;<a href="#входной файл">входной файл</a></h2>
+<h2>&emsp;<a href="#md_modules">md_modules</a></h2>
+<h3>&emsp;&emsp;<a href="#module md_general">module md_general</a></h3>
+<h4>&emsp;&emsp;&emsp;&emsp;<a href="#types in md_general">types in md_general</a></h4>
+<h5>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<a href="#type time_steps">type time_steps</a></h5>
+<h5>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<a href="#type simulation_cell">type simulation_cell</a></h5>
+<h5>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<a href="#type particles">type particles</a></h5>
+<h5>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<a href="#type particle_group">type particle_group</a></h5>
+<h5>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<a href="#type nose_hoover_chain">type nose_hoover_chain</a></h5>
+<h5>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<a href="#type neibour_list">type neibour_list</a></h5>
+<h5>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<a href="#type integrator_params">type integrator_params</a></h5>
+<h4>&emsp;&emsp;&emsp;&emsp;<a href="#subroutines in md_general">subroutines in md_general</a></h4>
+<h5>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<a href="#subroutine read_integrator_params">subroutine read_integrator_params</a></h5>
+<h5>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<a href="#subroutine init_time_steps">subroutine init_time_steps</a></h5>
+<h5>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<a href="#subroutine read_box_size">subroutine read_box_size</a></h5>
+<h5>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<a href="#subroutine read_particles">subroutine read_particles</a></h5>
+<h5>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<a href="#subroutine create_particle_group">subroutine create_particle_group</a></h5>
+<h5>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<a href="#subroutine write_particle_group">subroutine write_particle_group</a></h5>
+<h5>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<a href="#subroutine integrate_verlet_positions">subroutine integrate_verlet_positions</a></h5>
+<h5>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<a href="#subroutine integrate_verlet_velocities">subroutine integrate_verlet_velocities</a></h5>
+<h5>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<a href="#subroutine molecular_static_velocities">subroutine molecular_static_velocities</a></h5>
+<h5>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<a href="#subroutine zero_forces">subroutine zero_forces</a></h5>
+<h5>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<a href="#subroutine scale_velocities">subroutine scale_velocities</a></h5>
+<h5>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<a href="#subroutine random_velocities">subroutine scale_velocities</a></h5>
+<h5>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<a href="#subroutine random_momenta">subroutine random_momenta</a></h5>
+<h5>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<a href="#subroutine calculate_kinetic_energy">subroutine calculate_kinetic_energy</a></h5>
+<h5>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<a href="#subroutine calculate_mass_center">subroutine calculate_mass_center</a></h5>
+<h5>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<a href="#subroutine calculate_mass_center_velosity">subroutine calculate_mass_center_velosity</a></h5>
+<h5>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<a href="#subroutine zero_momentum">subroutine zero_momentum</a></h5>
+<h5>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<a href="#subroutine calculate_masses_sum">subroutine calculate_masses_sum</a></h5>
+<h5>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<a href="#subroutine calculate_force_sum">subroutine calculate_force_sum</a></h5>
+<h5>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<a href="#subroutine calculate_temperature">subroutine calculate_temperature</a></h5>
+<h5>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<a href="#subroutine set_new_temperature">subroutine set_new_temperature</a></h5>
+<h5>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<a href="#subroutine position_analysis">subroutine position_analysis</a></h5>
+<h5>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<a href="#subroutine find_distance">subroutine find_distance</a></h5>
+<h5>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<a href="#subroutine create_nose_hoover_chain">subroutine create_nose_hoover_chain</a></h5>
+<h5>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<a href="#subroutine set_nose_hoover_chain">subroutine set_nose_hoover_chain</a></h5>
+<h5>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<a href="#subroutine integrate_nose_hoover_chain">subroutine integrate_nose_hoover_chain</a></h5>
+<h5>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<a href="#subroutine calculate_nose_hoover_chain_energy">subroutine calculate_nose_hoover_chain_energy</a></h5>
+<h5>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<a href="#subroutine create_neibour_list">subroutine create_neibour_list</a></h5>
+<h5>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<a href="#subroutine update_neibour_list">subroutine update_neibour_list</a></h5>
+<h5>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<a href="#subroutine find_neibours">subroutine find_neibours</a></h5>
+<h5>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<a href="#subroutine find_neibour_distances">subroutine find_neibour_distances</a></h5>
+<h5>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<a href="#subroutine converce_neigbour_list">subroutine converce_neigbour_list</a></h5>
+<h3>&emsp;&emsp;<a href="#module md_interactions">module md_interactions</a></h3>
+<h4>&emsp;&emsp;&emsp;&emsp;<a href="#types in md_interactions">types in md_interactions</a></h4>
+<h5>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<a href="#type interaction_parameters">type interaction_parameters</a></h5>
+<h5>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<a href="#type interaction">type interaction</a></h5>
+<h4>&emsp;&emsp;&emsp;&emsp;<a href="#subroutines in md_interactions">subroutines in md_interactions</a></h4>
+<h5>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<a href="#subroutine create_groups">subroutine create_groups</a></h5>
+<h5>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<a href="#subroutine create_interactions">subroutine create_interactions</a></h5>
+<h5>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<a href="#subroutine update_interactions_neibour_lists">subroutine update_interactions_neibour_lists</a></h5>
+<h5>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<a href="#subroutine allocate_graphene_norm">subroutine allocate_graphene_norm</a></h5>
+<h5>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<a href="#subroutine update_norm_in_graphene">subroutine update_norm_in_graphene</a></h5>
+<h5>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<a href="#subroutine calculate_forces">subroutine calculate_forces</a></h5>
+<h5>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<a href="#subroutine energy">subroutine energy</a></h5>
+<h5>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<a href="#subroutine calculate_potential_energies">subroutine calculate_potential_energies</a></h5>
+<h5>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<a href="#subroutine calculate_forces_numerically">subroutine calculate_forces_numerically</a></h5>
+<h5>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<a href="#subroutine create_truncated_nl">subroutine create_truncated_nl</a></h5>
+<h5>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<a href="#subroutine destroy_truncated_nl">subroutine destroy_truncated_nl</a></h5>
+<h5>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<a href="#subroutine calculate_truncated_nl">subroutine calculate_truncated_nl</a></h5>
+<h5>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<a href="#subroutine shift_drs">subroutine shift_drs</a></h5>
+<h5>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<a href="#subroutine shift_gr_norm">subroutine shift_gr_norm</a></h5>
+<h5>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<a href="#subroutine nlists_load">subroutine nlists_load</a></h5>
+<h3>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<a href="#module md_simulation">module md_simulation</a></h3>
+<h5>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<a href="#subroutine md">subroutine md</a></h5>
+<h2>&emsp;<a href="#interaction_modules">interaction_modules</a></h2>
+<h3>&emsp;&emsp;<a href="#module cut_off_function">module cut_off_function</a></h3>
+<h5>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<a href="#function f_cut">function f_cut</a></h5>
+<h5>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<a href="#function df_cut">function df_cut</a></h5>
+<h3>&emsp;&emsp;<a href="#module graphenenorm">module graphenenorm</a></h3>
+<h5>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<a href="#subroutine find_gr_nearest_neibors">subroutine find_gr_nearest_neibors(nl_nn,nl)</a></h5>
+<h5>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<a href="#subroutine find_norm_in_graphene">subroutine find_norm_in_graphene(gr_norm,dr_nn)</a></h5>
+<h5>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<a href="#subroutine update_nearest_neibours_in_graphene">subroutine update_nearest_neibours_in_graphene(md_step,nl_nn,nl,atoms,group,box)</a></h5>
+
+<p><h2 id="размерности">размерности</h2></p>
+<p>масса - а.е.м.</p>
+<p>время - фс</p>
+<p>энергия - эВ</p>
+<p>расстояние - А</p>
+<p>температура - К</p>
+
+<p><h2 id="входной файл">входной файл</h2></p>
+
+<p><h2 id="md_modules">md_modules</h2></p>
+Содержит основные модули, все что нужно для молекулярной динамики, кроме функций относящихся к взаимодействию частиц (расчет сил и энергии взаимодействия), эти функции содержутся в <a href="#interaction_modules">interaction_modules</a>. 
+
+<p><h3 id="module md_general">md_general</h3></p>
+
+<p><h4 id="types in md_general">types in md_general</h4></p>
+<p>Производные типы данных для молекулярной динамики.</p>
+
+<p><h5 id="type time_steps">type time_steps</h5></p>
+<p>Содержит величину одного шага по времени, половины шага, четверти шага и одной восьмой.</p>
+
+<p><h5 id="type simulation_cell">type simulation_cell</h5></p>
+<p>Вычислительная ячейка. Содержит размеры вычислительной ячейки по X,Y и Z.</p>
+
+<p><h5 id="type particles">type particles</h5></p>
+<p>Частицы. Содержит информацию о частицах: количество, координаты, скорости, массы, силы, названия.</p>
+
+<p><h5 id="type particle_group">type particle_group</h5></p>
+<p>Группа частиц. Содержит количетво частиц и их индексы частиц в массивах внутри <a href="#type particles">type particles</a>.</p>
+
+<p><h5 id="type nose_hoover_chain">type nose_hoover_chain</h5></p>
+<p>Цепочка термостатов Нозе-Гувера. Содержит количество звеньев, количество степеней свободы подключенной системы частиц,
+ координаты звеньев, скорости звеньев, массы звеньев, заданную температуру, шкалирующий множитель и
+ полную энергию цепочки термостатов.</p>
+<p> чтото там как то настраивается</p>
+
+<p><h5 id="type neibour_list">type neibour_list</h5></p>
+<p>Списки соседей. Содержит количество соседей, номера в <a href="#type neibour_list">type neibour_list</a>?,
+ расстояния до соседей (векторы и их модули), индексы частиц в массивах внутри <a href="#type particles">type particles</a>,
+ количество списков, максимальное количетво соседей, частоту обновления списков, радиус обрезания взаимодействия.</p>
+!!!
+
+<p><h5 id="type integrator_params">type integrator_params</h5></p>
+<p>Общие для всех интеграторов параметры. Содержит название интегратора, шаг по времени, количество шагов (сколько он будет работать), частоты для записи ???, ???
+
+<p><h4 id="subroutines in md_general">subroutines in md_general</h4></p>
+<p>Подпрограммы для молекулярной динамики, анализа положения частиц и всего что угодно.</p>
+
+<p><h5 id="subroutine read_integrator_params">subroutine read_integrator_params(integr,file_id)</h5></p>
+
+<p><h5 id="subroutine init_time_steps">subroutine init_time_steps(dt,delta_t)</h5></p>
+
+<p><h5 id="subroutine read_box_size">subroutine read_box_size(box,filename)</h5></p>
+
+<p><h5 id="subroutine read_particles">subroutine read_particles(atoms,filename)</h5></p>
+Считывает информацию о частицах из .xyz файла.
+
+<p><h5 id="subroutine create_particle_group">subroutine create_particle_group(group,type_names,atoms)</h5></p>
+Создает группу частиц с именами из массива type_names.
+
+<p><h5 id="subroutine write_particle_group">subroutine write_particle_group(filename,atoms,group,box)</h5></p>
+Выводит информацию о группе частиц в .xyz файл.
+
+<p><h5 id="subroutine integrate_verlet_positions">subroutine integrate_verlet_positions(atoms,group,steps,box)</h5></p>
+Изменяет положения частиц (за один временной шаг) согласно алгоритму интегрирования уравнений движения Верле в скоростной форме. 
+
+<p><h5 id="subroutine integrate_verlet_velocities">subroutine integrate_verlet_velocities(atoms,group,steps)</h5></p>
+Изменяет скорости частиц (за половину временного шага) согласно алгоритму интегрирования уравнений движения Верле в скоростной форме.
+
+<p><h5 id="subroutine molecular_static_velocities">subroutine molecular_static_velocities(atoms,group)</h5></p>
+Изменяет скорости частиц. От скорости остается компонента параллельная силе, действующей на частицу. 
+Если эта компонента направлена в противоположную сторону с силой, то скорость приравнивается к нулю.
+
+<p><h5 id="subroutine zero_forces">subroutine zero_forces(atoms,group)</h5></p>
+Обнуляет силы.
+
+<p><h5 id="subroutine scale_velocities">subroutine scale_velocities(atoms,group,s)</h5></p>
+Умножает все скорости на s.
+
+<p><h5 id="subroutine random_velocities">subroutine random_velocities(atoms,group)</h5></p>
+Присваивает проекциям скоростей частиц случайные величины согласно распределению Гаусса, с нулевым среднем и ? дисперсией.
+
+<p><h5 id="subroutine random_momenta">subroutine random_momenta(atoms,group)</h5></p>
+Присваивает проекциям скоростей частиц случайные величины согласно, так чтобы проекции импульсов имели гауссовское распределение. ? ?
+
+<p><h5 id="subroutine calculate_kinetic_energy">subroutine calculate_kinetic_energy(ke,atoms,group)</h5></p>
+
+<p><h5 id="subroutine calculate_mass_center">subroutine calculate_mass_center(mc,atoms,group)</h5></p>
+
+<p><h5 id="subroutine calculate_mass_center_velosity">subroutine calculate_mass_center_velosity(mcv,atoms,group)</h5></p>
+
+<p><h5 id="subroutine zero_momentum">subroutine zero_momentum(atoms,group)</h5></p>
+Вычитает из скоростей скорость центра масс.
+
+<p><h5 id="subroutine calculate_masses_sum">subroutine calculate_masses_sum(totm,atoms,group)</h5></p>
+
+<p><h5 id="subroutine calculate_force_sum">subroutine calculate_force_sum(fs,atoms,group)</h5></p>
+
+<p><h5 id="subroutine calculate_temperature">subroutine calculate_temperature(temp,ke,atoms,group)</h5></p>
+
+<p><h5 id="subroutine set_new_temperature">subroutine set_new_temperature(atoms,group,temp)</h5></p>
+Присваивает частицам случайные импульсы, так чтобы группа частиц имела необходимую температуру. 
+Скорость центра масс частиц становится равной нулю.
+
+<p><h5 id="subroutine position_analysis">subroutine position_analysis(av,mi,ma,atoms,group,direction,minimum,maximum)</h5></p>
+Находит максимальную, минимальную и среднюю координату для частиц из группы, у которых эта координата лежит между minimum и maximum.
+
+<p><h5 id="subroutine find_distance">subroutine find_distance(dr,vec1,vec2,box)</h5></p>
+Находит рассояние между двумя точками с учетом периодических граничных условий по X, Y и Z.
+
+<p><h5 id="subroutine create_nose_hoover_chain">subroutine create_nose_hoover_chain(nhc)</h5></p>
+
+<p><h5 id="subroutine set_nose_hoover_chain">subroutine set_nose_hoover_chain(nhc,temp,q1,l)</h5></p>
+
+<p><h5 id="subroutine integrate_nose_hoover_chain">subroutine integrate_nose_hoover_chain(nhc,atoms,group,dt)</h5></p>
+Производит шаг интегрирования цепочки термостатов Нозе-Гувера, корректирует скорости частиц из группы. 
+Таких шагов два в одном шаге МД.
+
+<p><h5 id="subroutine calculate_nose_hoover_chain_energy">subroutine calculate_nose_hoover_chain_energy(nhc)</h5></p>
+
+<p><h5 id="subroutine create_neibour_list">subroutine create_neibour_list(nl)</h5></p>
+Выделяет память под списки соседей. 
+
+<p><h5 id="subroutine update_neibour_list">subroutine update_neibour_list(md_step,nl,atoms,group1,group2,box)</h5></p>
+Обновляет списки соседей. Пересчитывает взаимное расположение соседей, если нужно ищет соседей заново 
+согласно частоте обновления списков.
+
+<p><h5 id="subroutine find_neibours">subroutine find_neibours(nl,atoms,group1,group2,box)</h5></p>
+Для каждого атома из group1 находит соседей из group2 (порядок важен!). group1 и group2 могут совпадать.
+
+<p><h5 id="subroutine find_neibour_distances">subroutine find_neibour_distances(nl,atoms,group1,group2,box)</h5></p>
+Обновляет списки соседей. Пересчитывает взаимное расположение соседей. nl, 
+group1 и group2 должны быть те же что и в <a href="#subroutine find_neibours">subroutine find_neibours</a>.
+
+<p><h5 id="subroutine converce_neigbour_list">subroutine converce_neigbour_list(cnl,group,nl)</h5></p>
+Пересчитывает из списков соседей nl найденных для group1 и group2 в списки cnl для group2 и group1.
+
+<p><h3 id="module md_interactions">md_interactions</h3></p>
+Модуль содержит подпрограммы зависящие от потенциалов взаимодействия частиц. 
+Сами потенциалы описываются отдельно. 
+
+<p><h4 id="types in md_interactions">types in md_interactions</h4></p>
+
+<p><h5 id="type interaction_parameters">type interaction_parameters</h5></p>
+Парметры взаимодействия. Тип данных может хранить сколько угодно, каких угодно параметров взаимодействия. 
+В текущей реализации он хранит только один набор параметров для кагого либо взаимодействия. 
+
+<p><h5 id="type interaction">type interaction</h5></p>
+Описывает взаимодействие. Содержит имя взаимодействия, имя файла с параметрами, параметры взаимодействия, 
+энергию взаимодействия, номера взаимодействующих групп частиц из <a href="#входной файл">входного файла</a>, 
+необходимое количество списков соседей и максимальный порядок соседей, с которыми взаимодействует частица 
+(насколько далеких соседей надо учесть чтобы найти силу, действующую на частицу).
+
+<p><h4 id="subroutines in md_interactions">subroutines in md_interactions</h4></p>
+
+<p><h5 id="subroutine create_groups">subroutine create_groups(groups,file_id,out_id,atoms)</h5></p>
+Создает группы частиц указанные во <a href="#входной файл">входном файле</a>.
+
+<p><h5 id="subroutine create_interactions">subroutine create_interactions(interactions,groups,file_id,out_id,input_path)</h5></p>
+Создает взаимодействия (<a href="#type interaction">type interaction</a>) указанные во <a href="#входной файл">входном файле</a>.
+
+<p><h5 id="subroutine update_interactions_neibour_lists">subroutine update_interactions_neibour_lists(md_step,interactions,atoms,groups,cell)</h5></p>
+Обновляет списки соседей.
+
+<p><h5 id="subroutine allocate_graphene_norm">subroutine allocate_graphene_norm(interactions)</h5></p>
+
+<p><h5 id="subroutine update_norm_in_graphene">subroutine update_norm_in_graphene(interactions)</h5></p>
+
+<p><h5 id="subroutine calculate_forces">subroutine calculate_forces(atoms,interactions)</h5></p>
+Добавляет к текушим силам частиц силы от всех взаимодействий. Считает силы аналитически используя соответствующие подпрограммы из модулей для каждого взаимодействия.
+
+<p><h5 id="subroutine energy">subroutine energy(inter_name,e,nl,p)</h5></p>
+Находит энергию взаимодействия частиц по спискам nl, для взаимодействия с именем inter_name.
+
+<p><h5 id="subroutine calculate_potential_energies">subroutine calculate_potential_energies(interactions)</h5></p>
+Находит суммарную энергию взаимодействия от всех взаимодействий.
+
+<p><h5 id="subroutine calculate_forces_numerically">subroutine calculate_forces_numerically(atoms,interactions)</h5></p>
+Считает силы численно, используя только зависимость энергии взаимодействия от расположения частиц. Не дописано для некоторых взаимодействий.
+
+<p><h5 id="subroutine create_truncated_nl">subroutine create_truncated_nl(tnl,nl)</h5></p>
+
+<p><h5 id="subroutine destroy_truncated_nl">subroutine destroy_truncated_nl(tnl)</h5></p>
+
+<p><h5 id="subroutine calculate_truncated_nl">subroutine calculate_truncated_nl(tnl,nl,i,n)</h5></p>
+
+<p><h5 id="subroutine shift_drs">subroutine shift_drs(tnl,inl,k,nl_n,dx)</h5></p>
+
+<p><h5 id="subroutine shift_gr_norm">subroutine shift_gr_norm(gr_norm,nl_nn,inl,k,dx)</h5></p>
+
+<p><h5 id="subroutine nlists_load">subroutine nlists_load(out_id,interactions)</h5></p>
+Выводит информацию о том, какая часть списков соседей использутся 
+(часть памяти может простаивать так как было указано слишком большое максимальное количество соседей, влияет на производительность). 
+
+<p><h3 id="module md_simulation">md_simulation</h3></p>
+
+<p><h5 id="subroutine md">subroutine md(out_id,all_out_id,input_path,settings_filename,output_prefix,out_period,num_of_omp_treads)</h5></p>
+Собственно алгоритм молекулярной динамики. В данной реализации может моделировать NVE и NVT ансамбли, 
+а также минимизировать потенциальную энергию методом молекулярной статики. Для NVE ансамля используется скоростной алгоритм Верле, 
+для NVT - цепочка термостатов Нозе-Гувера.
+
+<p><h2 id="interaction_modules">interaction_modules</h2></p>
+
+<p><h3 id="module cut_off_function">module cut_off_function</h3></p>
+
+<p><h5 id="function f_cut">function f_cut(r,R1,R2)</h5></p>
+
+<p><h5 id="function df_cut">function df_cut(r,R1,R2)</h5></p>
+
+<p><h3 id="module graphenenorm">module graphenenorm</h3></p>
+
+<p><h5 id="subroutine find_gr_nearest_neibors">subroutine find_gr_nearest_neibors(nl_nn,nl)</h5></p>
+
+<p><h5 id="subroutine find_norm_in_graphene">subroutine find_norm_in_graphene(gr_norm,dr_nn)</h5></p>
+
+<p><h5 id="subroutine update_nearest_neibours_in_graphene">subroutine update_nearest_neibours_in_graphene(md_step,nl_nn,nl,atoms,group,box)</h5></p>
+
+...
+
+</body>
+</html>
