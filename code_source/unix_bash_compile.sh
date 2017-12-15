@@ -7,15 +7,15 @@ lmf='ljc_and_morsec_moire_graphene_fitting/'
 mod='mods/'
 exe='../executables/'
 
-#compiler='ifort'
-compiler='gfortran'
+compiler='ifort'
+#compiler='gfortran'
 
 if [ $compiler = 'ifort' ]
 then
 module add intel
 mod="$mod"lomonosov_ifort/
 p=" -fpconstant -r8 -openmp -O3 -module $mod -I $mod "
-$compiler -c "$md"md_general_ifort.f90 -o "$mod"md_general.o
+$compiler $p -c "$md"md_general_ifort.f90 -o "$mod"md_general.o
 elif [ $compiler = 'gfortran' ]
 then
 module add gcc
