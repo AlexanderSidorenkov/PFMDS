@@ -27,7 +27,7 @@ SET compiler=gfortran -fdefault-real-8 -fopenmp -O3 -Wsurprising -Wunused -J %mo
 %compiler% -c %anl%graphene_on_surface_analysis.f90 -o %mod%graphene_on_surface_analysis.o
 %compiler% -o %exe%run_gr_analysis.exe %rns%run_gr_analysis.f90 %mod%graphene_on_surface_analysis.o %mod%md_general.o
 
-%compiler% -c %lmf%fit_ljc_gr_moire.f90 -o %mod%fit_ljc_gr_moire.o
-%compiler% -o %exe%run_gr_moire_fitting.exe %rns%run_ljc_gr_moire_fitting.f90 %mod%fit_ljc_gr_moire.o %mod%md_general.o %mod%md_simulation.o %mod%md_interactions.o %mod%graphenenorm.o %mod%cut_off_function.o %mod%LennardJones.o %mod%LennardJonesCosine.o %mod%MorseCosine.o %mod%RosatoGuillopeLegrand.o %mod%TersoffBrenner.o %mod%REBOsolidcarbon.o %mod%graphene_on_surface_analysis.o
+%compiler% -c %lmf%fit_gr_moire.f90 -o %mod%fit_gr_moire.o
+%compiler% -o %exe%run_gr_moire_fitting.exe %rns%run_gr_moire_fitting.f90 %mod%fit_gr_moire.o %mod%md_general.o %mod%md_simulation.o %mod%md_interactions.o %mod%graphenenorm.o %mod%cut_off_function.o %mod%LennardJones.o %mod%LennardJonesCosine.o %mod%MorseCosine.o %mod%RosatoGuillopeLegrand.o %mod%TersoffBrenner.o %mod%REBOsolidcarbon.o %mod%graphene_on_surface_analysis.o
 
 pause
