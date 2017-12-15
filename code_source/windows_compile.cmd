@@ -3,7 +3,7 @@ SET int=INTERACTION_POTENTIALS\
 SET rns=runners\
 SET anl=graphene_on_surface_analysis\
 SET lmf=ljc_and_morsec_moire_graphene_fitting\
-SET mod=mods\my_pc_gfortran
+SET mod=mods\my_pc_gfortran\
 SET exe=..\executables\
 
 SET compiler=gfortran -fdefault-real-8 -fopenmp -O3 -Wsurprising -Wunused -J %mod% -I %mod%
