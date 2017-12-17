@@ -115,26 +115,26 @@ integer					:: i
 	enddo
 
 	open(9,file=fitting_parameters_file_name)
-	read(9,'(A16,A)') str,input_path;		write(out_id,*) trim(str),'/t',trim(input_path)
-	read(9,'(A16,A)') str,out_path;			write(out_id,*) trim(str),'/t',trim(out_path)
-	read(9,*) str,interaction_name;			write(out_id,*) trim(str),'/t',trim(interaction_name)
-	read(9,*) str,output_prefix;			write(out_id,*) trim(str),'/t',trim(output_prefix)
-	read(9,*) str,ar_settings_filename(1);	write(out_id,*) trim(str),'/t',trim(ar_settings_filename(1))
-	read(9,*) str,ar_start_xyz_file(1);		write(out_id,*) trim(str),'/t',trim(ar_start_xyz_file(1))
-	read(9,*) str,ar_c_num(1);				write(out_id,*) trim(str),'/t',ar_c_num(1)
-	read(9,*) str,ar_zero_energy_level(1);	write(out_id,*) trim(str),'/t',ar_zero_energy_level(1)
-	read(9,*) str,ar_final_file(1);			write(out_id,*) trim(str),'/t',trim(ar_final_file(1))
-	read(9,*) str,ar_settings_filename(2);	write(out_id,*) trim(str),'/t',trim(ar_settings_filename(2))
-	read(9,*) str,ar_start_xyz_file(2);		write(out_id,*) trim(str),'/t',trim(ar_start_xyz_file(2))
-	read(9,*) str,ar_c_num(2);				write(out_id,*) trim(str),'/t',ar_c_num(2)
-	read(9,*) str,ar_zero_energy_level(2);	write(out_id,*) trim(str),'/t',ar_zero_energy_level(2)
-	read(9,*) str,ar_final_file(2);			write(out_id,*) trim(str),'/t',trim(ar_final_file(2))
-	read(9,*) str,min_param_file;			write(out_id,*) trim(str),'/t',trim(min_param_file)
-	read(9,*) str,max_param_file;			write(out_id,*) trim(str),'/t',trim(max_param_file)
-	read(9,*) str,z;						write(out_id,*) trim(str),'/t',z
-	read(9,*) str,be0;						write(out_id,*) trim(str),'/t',be0
-	read(9,*) str,ar_grd0(1);				write(out_id,*) trim(str),'/t',ar_grd0(1)
-	read(9,*) str,ar_grd0(2);				write(out_id,*) trim(str),'/t',ar_grd0(2)
+	read(9,'(A16,A)') str,input_path;		write(out_id,*) trim(str),'  ',trim(input_path)
+	read(9,'(A16,A)') str,out_path;			write(out_id,*) trim(str),'  ',trim(out_path)
+	read(9,*) str,interaction_name;			write(out_id,*) trim(str),'  ',trim(interaction_name)
+	read(9,*) str,output_prefix;			write(out_id,*) trim(str),'  ',trim(output_prefix)
+	read(9,*) str,ar_settings_filename(1);	write(out_id,*) trim(str),'  ',trim(ar_settings_filename(1))
+	read(9,*) str,ar_start_xyz_file(1);		write(out_id,*) trim(str),'  ',trim(ar_start_xyz_file(1))
+	read(9,*) str,ar_c_num(1);				write(out_id,*) trim(str),'  ',ar_c_num(1)
+	read(9,*) str,ar_zero_energy_level(1);	write(out_id,*) trim(str),'  ',ar_zero_energy_level(1)
+	read(9,*) str,ar_final_file(1);			write(out_id,*) trim(str),'  ',trim(ar_final_file(1))
+	read(9,*) str,ar_settings_filename(2);	write(out_id,*) trim(str),'  ',trim(ar_settings_filename(2))
+	read(9,*) str,ar_start_xyz_file(2);		write(out_id,*) trim(str),'  ',trim(ar_start_xyz_file(2))
+	read(9,*) str,ar_c_num(2);				write(out_id,*) trim(str),'  ',ar_c_num(2)
+	read(9,*) str,ar_zero_energy_level(2);	write(out_id,*) trim(str),'  ',ar_zero_energy_level(2)
+	read(9,*) str,ar_final_file(2);			write(out_id,*) trim(str),'  ',trim(ar_final_file(2))
+	read(9,*) str,min_param_file;			write(out_id,*) trim(str),'  ',trim(min_param_file)
+	read(9,*) str,max_param_file;			write(out_id,*) trim(str),'  ',trim(max_param_file)
+	read(9,*) str,z;						write(out_id,*) trim(str),'  ',z
+	read(9,*) str,be0;						write(out_id,*) trim(str),'  ',be0
+	read(9,*) str,ar_grd0(1);				write(out_id,*) trim(str),'  ',ar_grd0(1)
+	read(9,*) str,ar_grd0(2);				write(out_id,*) trim(str),'  ',ar_grd0(2)
 	close(9)
 	
 
@@ -156,7 +156,7 @@ integer					:: i
 		read(1234,*) Rcut(1),Rcut(2)
 		close(1234)
 		open(1234,file=trim(input_path)//trim(max_param_file))
-		read(1234,*) init_max_params(3),init_max_params(1),init_min_params(4),init_max_params(2)
+		read(1234,*) init_max_params(3),init_max_params(1),init_max_params(4),init_max_params(2)
 		close(1234)
 	endif
 	
