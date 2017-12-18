@@ -1,4 +1,5 @@
 module md_simulation
+use perfomance_settings
 use md_general
 use md_interactions
 implicit none 
@@ -25,9 +26,6 @@ real									::	omp_get_wtime
 starttime = omp_get_wtime()
 log_id = 108
 file_id = 2017
-write(out_id,'(A,i6,A)') 'RUNNING ON ',num_of_omp_treads,' OPENMP THREADS'
-call omp_set_num_threads(num_of_omp_treads)
-!call omp_thread_limit(num_of_omp_treads)
 
 open(file_id,file=trim(input_path)//settings_filename);	write(out_id,'(A,A)') 'settings_filename: ',trim(settings_filename)
 read(file_id,*) str,time_step_limit;					write(out_id,'(A32,i12)') str,time_step_limit
@@ -56,6 +54,9 @@ if (initial_temperature<0.) initial_temperature=0.
 if (new_velocities) call set_new_temperature(atoms,groups(moving_atoms_group_num),initial_temperature)
 call create_interactions(interactions,groups,file_id,out_id,input_path)
 close(file_id)
+
+write(out_id,'(A,i6,A)') 'RUNNING ON ',num_of_omp_treads,' OPENMP THREADS'
+call set_openmp_perfomance(num_of_omp_treads,atoms%N)
 
 write(interactions_energies_format,'("(",i0,"f20.9)")') size(interactions)
 write(str,'(A,A)') trim(output_prefix),trim(logfilename)

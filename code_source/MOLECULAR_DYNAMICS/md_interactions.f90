@@ -1,6 +1,7 @@
 module md_interactions
 use md_general
 use LennardJones
+use LennardJones_1g
 !use Morse
 use graphenenorm
 use LennardJonesCosine
@@ -12,6 +13,7 @@ implicit none
 
 type interaction_parameters
 	type(LennardJones_parameters),allocatable			:: LJ(:)
+	type(LennardJones1g_parameters),allocatable			:: LJ1g(:)
 	!type(Morse_parameters),allocatable					:: Morse(:)
 	type(LennardJonesCosine_parameters),allocatable		:: LJC(:)
 	type(MorseCosine_parameters),allocatable			:: MorseC(:)
@@ -69,6 +71,12 @@ subroutine create_interactions(interactions,groups,file_id,out_id,input_path)
 			allocate(interactions(i)%parameters%LJ(1))
 			call read_LJ_parameters(interactions(i)%parameters%LJ(1),trim(input_path)//interactions(i)%parameters_file)
 			interactions(i)%nl_n = 2
+			interactions(i)%neib_order = 0
+			interactions(i)%numerical_force = .false.
+		case('lj1g')
+			allocate(interactions(i)%parameters%LJ1g(1))
+			call read_LJ1g_parameters(interactions(i)%parameters%LJ1g(1),trim(input_path)//interactions(i)%parameters_file)
+			interactions(i)%nl_n = 1
 			interactions(i)%neib_order = 0
 			interactions(i)%numerical_force = .false.
 		!case('morse')
@@ -203,6 +211,8 @@ subroutine calculate_forces(atoms,interactions)
 			case('lj')
 				call LJ_forces(atoms,interactions(i)%nl(1),interactions(i)%parameters%LJ(1))
 				call LJ_forces(atoms,interactions(i)%nl(2),interactions(i)%parameters%LJ(1))
+			case('lj1g')
+				call LJ1g_forces(atoms,interactions(i)%nl(1),interactions(i)%parameters%LJ1g(1))
 			!case('morse')
 			!	call Morse_forces(atoms,interactions(i)%nl(1),interactions(i)%parameters%Morse(1))
 			!	call Morse_forces(atoms,interactions(i)%nl(2),interactions(i)%parameters%Morse(1))
@@ -232,6 +242,7 @@ subroutine energy(inter_name,e,nl,p)
 	
 	select case (inter_name)
 	case('lj');		call LJ_energy(e,nl,p%LJ(1))
+	case('lj1g');	call LJ1g_energy(e,nl,p%LJ1g(1))
 	!case('morse');
 	case('ljc');	call LJC_energy(e,nl,p%LJC(1))
 	case('morsec');	call MorseC_energy(e,nl,p%MorseC(1))
