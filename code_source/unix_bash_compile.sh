@@ -53,7 +53,8 @@ modules=$modules "$mod"md_interactions.o
 $compiler $p -c "$md"md_simulation.f90 -o "$mod"md_simulation.o
 modules=$modules "$mod"md_simulation.o
 
-$compiler $p -o "$exe"run_md_simulation_"$compiler" "$rns"run_md_simulation.f90 "$mod"md_general.o "$mod"md_simulation.o "$mod"md_interactions.o "$mod"graphenenorm.o "$mod"cut_off_function.o "$mod"LennardJones.o "$mod"LennardJonesCosine.o "$mod"MorseCosine.o "$mod"RosatoGuillopeLegrand.o "$mod"TersoffBrenner.o "$mod"REBOsolidcarbon.o
+#$compiler $p -o "$exe"run_md_simulation_"$compiler" "$rns"run_md_simulation.f90 "$mod"md_general.o "$mod"md_simulation.o "$mod"md_interactions.o "$mod"graphenenorm.o "$mod"cut_off_function.o "$mod"LennardJones.o "$mod"LennardJonesCosine.o "$mod"MorseCosine.o "$mod"RosatoGuillopeLegrand.o "$mod"TersoffBrenner.o "$mod"REBOsolidcarbon.o
+$compiler $p -o "$exe"run_md_simulation_"$compiler" "$rns"run_md_simulation.f90 $modules
 
 $compiler $p -c "$anl"graphene_on_surface_analysis.f90 -o "$mod"graphene_on_surface_analysis.o
 modules=$modules "$mod"graphene_on_surface_analysis.o
@@ -61,7 +62,8 @@ $compiler $p -o "$exe"run_gr_analysis_"$compiler" "$rns"run_gr_analysis.f90 "$mo
 
 $compiler $p -c "$lmf"fit_gr_moire.f90 -o "$mod"fit_gr_moire.o
 modules=$modules "$mod"fit_gr_moire.o
-$compiler $p -o "$exe"run_gr_moire_fitting_"$compiler" "$rns"run_gr_moire_fitting.f90 "$mod"fit_gr_moire.o "$mod"md_general.o "$mod"md_simulation.o "$mod"md_interactions.o "$mod"graphenenorm.o "$mod"cut_off_function.o "$mod"LennardJones.o "$mod"LennardJonesCosine.o "$mod"MorseCosine.o "$mod"RosatoGuillopeLegrand.o "$mod"TersoffBrenner.o "$mod"REBOsolidcarbon.o "$mod"graphene_on_surface_analysis.o
+#$compiler $p -o "$exe"run_gr_moire_fitting_"$compiler" "$rns"run_gr_moire_fitting.f90 "$mod"fit_gr_moire.o "$mod"md_general.o "$mod"md_simulation.o "$mod"md_interactions.o "$mod"graphenenorm.o "$mod"cut_off_function.o "$mod"LennardJones.o "$mod"LennardJonesCosine.o "$mod"MorseCosine.o "$mod"RosatoGuillopeLegrand.o "$mod"TersoffBrenner.o "$mod"REBOsolidcarbon.o "$mod"graphene_on_surface_analysis.o
+$compiler $p -o "$exe"run_gr_moire_fitting_"$compiler" "$rns"run_gr_moire_fitting.f90 $modules
 
 module rm intel
 module rm gcc
