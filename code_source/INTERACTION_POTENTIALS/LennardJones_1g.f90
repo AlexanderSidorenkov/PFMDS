@@ -1,6 +1,6 @@
 module LennardJones_1g
 use perfomance_settings
-use cut_off_function
+use cut_off_poly
 use md_general
 implicit none
 
@@ -37,10 +37,13 @@ subroutine LJ1g_energy(energy,nl,LJp)
 	!$OMP DO
 	do i=1,nl%N
 		do p=1,nl%nnum(i)
-			if (nl%moddr(p,i)<LJp%R2 .and. nl%nlist(p,i)>i) then
+			if (nl%nlist(p,i)>i) exit
+			!if (nl%moddr(p,i)<LJp%R2 .and. nl%nlist(p,i)>i) then
+			!if ( nl%nlist(p,i)<i) then
 				U = 1./nl%moddr(p,i)**6
 				energy_priv = energy_priv+U*(LJp%c12*U-LJp%c6)*f_cut(nl%moddr(p,i),LJp%R1,LJp%R2)
-			endif	
+				!energy_priv = energy_priv+U*(LJp%c12*U-LJp%c6)
+			!endif	
 		enddo
 	enddo
 	!$OMP END DO
@@ -64,13 +67,16 @@ subroutine LJ1g_forces(atoms,nl,LJp)
 	!$OMP DO schedule(dynamic,chunk_size)
 	do i=1,nl%N
 		do p=1,nl%nnum(i)
-			if (nl%moddr(p,i)<LJp%R2 .and. nl%nlist(p,i)>i) then
+			if (nl%nlist(p,i)>i) exit
+			!if (nl%moddr(p,i)<LJp%R2 .and. nl%nlist(p,i)>i) then
+			!if ( nl%nlist(p,i)<i) then
 				U = 1./nl%moddr(p,i)**6
 				F = (U*(LJp%c12t12*U-LJp%c6t6)/nl%moddr(p,i)**2*f_cut(nl%moddr(p,i),LJp%R1,LJp%R2)&
 				-U*(LJp%c12*U-LJp%c6)*df_cut(nl%moddr(p,i),LJp%R1,LJp%R2))*nl%dr(:,p,i)
+				!F = (U*(LJp%c12t12*U-LJp%c6t6)/nl%moddr(p,i)**2)*nl%dr(:,p,i)
 				priv_force(:,nl%particle_index(i)) = priv_force(:,nl%particle_index(i))-F
 				priv_force(:,nl%particle_index(nl%nlist(p,i))) = priv_force(:,nl%particle_index(nl%nlist(p,i)))+F
-			endif
+			!endif
 		enddo
 	enddo
 	!$OMP END DO

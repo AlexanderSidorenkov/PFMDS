@@ -7,7 +7,8 @@ SET lmf=ljc_and_morsec_moire_graphene_fitting\
 SET mod=mods\my_pc_gfortran\
 SET exe=..\executables\
 
-SET compiler=gfortran -fdefault-real-8 -fopenmp -O3 -Wsurprising -Wunused -J %mod% -I %mod%
+SET optimizations=-O3 -funroll-all-loops -ffast-math -funsafe-math-optimizations -flto -march=native 
+SET compiler=gfortran -fdefault-real-8 -fopenmp -Wsurprising -Wunused %optimizations% -J %mod% -I %mod%
 SET modules=
 
 %compiler% -c %md%perfomance_settings.f90 -o %mod%perfomance_settings.o
@@ -18,6 +19,8 @@ SET modules=%modules% %mod%IFPORT_illusion.o
 SET modules=%modules% %mod%md_general.o
 %compiler% -c %int%cut_off_function.f90 -o %mod%cut_off_function.o
 SET modules=%modules% %mod%cut_off_function.o
+%compiler% -c %int%cut_off_poly.f90 -o %mod%cut_off_poly.o
+SET modules=%modules% %mod%cut_off_poly.o
 %compiler% -c %int%LennardJones.f90 -o %mod%LennardJones.o
 SET modules=%modules% %mod%LennardJones.o
 %compiler% -c %int%LennardJones_1g.f90 -o %mod%LennardJones_1g.o
