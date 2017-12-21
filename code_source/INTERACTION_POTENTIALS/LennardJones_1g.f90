@@ -34,11 +34,10 @@ subroutine LJ1g_energy(energy,nl,LJp)
 	energy = 0.
 	energy_priv = 0.
 	!$OMP PARALLEL firstprivate(energy_priv) private(i,p,U)
-	!$OMP DO
+	!$OMP DO schedule(dynamic,chunk_size)
 	do i=1,nl%N
 		do p=1,nl%nnum(i)
 			if (nl%nlist(p,i)>i) exit
-			!if (nl%moddr(p,i)<LJp%R2 .and. nl%nlist(p,i)>i) then
 			!if (nl%nlist(p,i)<i) then
 				U = 1./nl%moddr(p,i)**6
 				energy_priv = energy_priv+U*(LJp%c12*U-LJp%c6)*f_cut(nl%moddr(p,i),LJp%R1,LJp%R2)
@@ -56,8 +55,8 @@ subroutine LJ1g_forces(atoms,nl,LJp)
 	type(particles)::	atoms
 	type(neibour_list):: nl
 	type(LennardJones1g_parameters):: LJp
-	integer:: i,p,k
-	real:: U,F(3)
+	integer:: i,p,k,ind,jnd
+	real:: U,F
 	real,allocatable:: priv_force(:,:)
 	
 	!$OMP PARALLEL private(i,p,k,U,F,priv_force)
@@ -67,13 +66,18 @@ subroutine LJ1g_forces(atoms,nl,LJp)
 	do i=1,nl%N
 		do p=1,nl%nnum(i)
 			if (nl%nlist(p,i)>i) exit
-			!if (nl%moddr(p,i)<LJp%R2 .and. nl%nlist(p,i)>i) then
 			!if (nl%nlist(p,i)<i) then
 				U = 1./nl%moddr(p,i)**6
 				F = (U*(LJp%c12t12*U-LJp%c6t6)/nl%moddr(p,i)**2*f_cut(nl%moddr(p,i),LJp%R1,LJp%R2)&
-				-U*(LJp%c12*U-LJp%c6)*df_cut(nl%moddr(p,i),LJp%R1,LJp%R2))*nl%dr(:,p,i)
-				priv_force(:,nl%particle_index(i)) = priv_force(:,nl%particle_index(i))-F
-				priv_force(:,nl%particle_index(nl%nlist(p,i))) = priv_force(:,nl%particle_index(nl%nlist(p,i)))+F
+				-U*(LJp%c12*U-LJp%c6)*df_cut(nl%moddr(p,i),LJp%R1,LJp%R2))
+				ind = nl%particle_index(i)
+				do k=1,3
+					priv_force(k,ind) = priv_force(k,ind)-F*nl%dr(k,p,i)
+				enddo
+				jnd = nl%particle_index(nl%nlist(p,i))
+				do k=1,3
+					priv_force(k,jnd) = priv_force(k,jnd)+F*nl%dr(k,p,i)
+				enddo
 			!endif
 		enddo
 	enddo

@@ -7,7 +7,7 @@ type time_steps
 end type time_steps
 
 type simulation_cell
-	real:: box_size(3)
+	real:: box_size(3),half_box_size(3)
 end type simulation_cell
 
 type particles
@@ -75,7 +75,8 @@ subroutine read_box_size(box,filename)
 	box%box_size(1)=boxmatrix(1)
 	box%box_size(2)=boxmatrix(5)
 	box%box_size(3)=boxmatrix(9)
-
+	box%half_box_size = 0.5*box%box_size
+	
 	return
 end subroutine read_box_size
 
@@ -502,20 +503,21 @@ subroutine position_analysis(av,mi,ma,atoms,group,direction,minimum,maximum)
 	
 end subroutine position_analysis
 
-subroutine find_distance(dr,vec1,vec2,box)
+subroutine find_distance(dr,dr2,vec1,vec2,box)
 	type(simulation_cell):: box
-	real:: dr(3),vec1(3),vec2(3)
-	integer::		k
+	real:: dr(3),dr2,vec1(3),vec2(3)
+	integer:: k
 
-	dr = vec2-vec1
 	do k=1,3
-		if (dr(k)>box%box_size(k)/2) then
+		dr(k) = vec2(k)-vec1(k)
+		if (dr(k)>box%half_box_size(k)) then
 			dr(k) = dr(k)-box%box_size(k)
-		elseif (dr(k)<-box%box_size(k)/2) then
+		elseif (dr(k)<-box%half_box_size(k)) then
 			dr(k) = dr(k)+box%box_size(k)
 		endif
 	enddo
-
+	dr2 = dr(1)*dr(1)+dr(2)*dr(2)+dr(3)*dr(3)
+	
 	return
 end subroutine find_distance
 
@@ -650,30 +652,33 @@ subroutine find_neibours(nl,atoms,group1,group2,box)
 	type(particle_group):: group1,group2
 	type(simulation_cell):: box
 	type(neibour_list):: nl
-	real:: dr(3)
-	integer::		i,j,k,ind,jnd
+	real:: dr(3),dr2
+	integer:: i,j,k,ind,jnd,nnumind
 
 	if (group1%N/=nl%N) then; write(*,*) 'error: group%N/=nl%N',group1%N,nl%N; stop; endif
-	!$OMP PARALLEL firstprivate(i,j,k,ind,jnd,dr)
+	!$OMP PARALLEL firstprivate(i,j,k,ind,jnd,dr,dr2,nnumind)
 	!$OMP DO
 	do ind=1,group1%N
 		i = group1%indexes(ind)
+		nl%particle_index(ind) = group1%indexes(ind)
 		!nl%nlist(:nl%nnum(ind),ind) = 0
-		nl%nnum(ind) = 0
-		nl%particle_index(ind) = i
+		nnumind = 0
 		do jnd=1,group2%N
 			j = group2%indexes(jnd)
 			if (i/=j) then
-				call find_distance(dr,atoms%positions(:,i),atoms%positions(:,j),box)
-				if (sum(dr**2)<nl%r_cut**2) then
-					nl%nnum(ind) = nl%nnum(ind)+1
-					if (nl%nnum(ind)>nl%neib_num_max) then; write(*,*) 'error: too many neibours',ind,nl%nnum(ind); stop; endif
-					nl%nlist(nl%nnum(ind),ind) = jnd
-					nl%dr(:,nl%nnum(ind),ind) = dr
-					nl%moddr(nl%nnum(ind),ind) = sqrt(sum(dr**2))
+				call find_distance(dr,dr2,atoms%positions(:,i),atoms%positions(:,j),box)
+				if (dr2<nl%r_cut*nl%r_cut) then
+					nnumind = nnumind+1
+					if (nnumind>nl%neib_num_max) then; write(*,*) 'error: too many neibours',ind,nnumind; stop; endif
+					nl%nlist(nnumind,ind) = jnd
+					nl%dr(1,nnumind,ind) = dr(1)
+					nl%dr(2,nnumind,ind) = dr(2)
+					nl%dr(3,nnumind,ind) = dr(3)
+					nl%moddr(nnumind,ind) = sqrt(dr2)
 				endif
 			endif
 		enddo
+		nl%nnum(ind) = nnumind
 	enddo
 	!$OMP END DO
 	!$OMP END PARALLEL
@@ -686,14 +691,15 @@ subroutine find_neibour_distances(nl,atoms,group1,group2,box)
 	type(particle_group):: group1,group2
 	type(simulation_cell):: box
 	type(neibour_list):: nl
-	integer::		i,p
+	real:: dr2
+	integer:: i,p
 
-	!$OMP PARALLEL firstprivate(i,p)
+	!$OMP PARALLEL firstprivate(i,p,dr2)
 	!$OMP DO
 	do i=1,nl%N
 		do p=1,nl%nnum(i)
-			call find_distance(nl%dr(:,p,i),atoms%positions(:,group1%indexes(i)),atoms%positions(:,group2%indexes(nl%nlist(p,i))),box)
-			nl%moddr(p,i) = sqrt(sum(nl%dr(:,p,i)**2))
+			call find_distance(nl%dr(:,p,i),dr2,atoms%positions(:,group1%indexes(i)),atoms%positions(:,group2%indexes(nl%nlist(p,i))),box)
+			nl%moddr(p,i) = sqrt(dr2)
 		enddo
 	enddo
 	!$OMP END DO
