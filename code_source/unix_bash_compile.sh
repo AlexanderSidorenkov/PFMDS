@@ -31,6 +31,8 @@ $compiler $p -c "$md"md_general.f90 -o "$mod"md_general.o
 modules="$modules $mod"'md_general.o '
 $compiler $p -c "$int"cut_off_function.f90 -o "$mod"cut_off_function.o
 modules="$modules $mod"'cut_off_function.o '
+$compiler $p -c "$int"cut_off_poly.f90 -o "$mod"cut_off_poly.o
+modules="$modules $mod"'cut_off_poly.o '
 $compiler $p -c "$int"LennardJones.f90 -o "$mod"LennardJones.o
 modules="$modules $mod"'LennardJones.o '
 $compiler $p -c "$int"LennardJones_1g.f90 -o "$mod"LennardJones_1g.o
