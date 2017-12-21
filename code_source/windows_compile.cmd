@@ -7,7 +7,7 @@ SET lmf=ljc_and_morsec_moire_graphene_fitting\
 SET mod=mods\my_pc_gfortran\
 SET exe=..\executables\
 
-SET optimizations=-O3 -funroll-all-loops -ffast-math -funsafe-math-optimizations -flto -march=native -mfpmath=sse
+SET optimizations=-Ofast -funroll-all-loops -ffast-math -funsafe-math-optimizations -flto -march=native -mfpmath=sse
 SET compiler=gfortran -fdefault-real-8 -fopenmp -Wsurprising -Wunused %optimizations% -J %mod% -I %mod%
 SET modules=
 

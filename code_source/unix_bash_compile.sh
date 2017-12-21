@@ -7,21 +7,21 @@ lmf='ljc_and_morsec_moire_graphene_fitting/'
 mod='mods/'
 exe='../executables/'
 
-compiler='ifort'
-#compiler='gfortran'
+#compiler='ifort'
+compiler='gfortran'
 modules=''
 
 if [ $compiler = 'ifort' ]
 then
 module add intel
 mod="$mod"lomonosov_ifort/
-p=" -fpconstant -r8 -openmp -O3 -module $mod -I $mod "
+p=" -fpconstant -r8 -openmp -fast -unroll-aggressive -module $mod -I $mod "
 elif [ $compiler = 'gfortran' ]
 then
 module add gcc
 mod="$mod"lomonosov_gfortran/
-p=" -fdefault-real-8 -fopenmp -O3 -Wsurprising -Wunused -J $mod -I $mod "
-$compiler $p -c %md%IFPORT_illusion.f90 -o "$mod"IFPORT_illusion.o
+p=" -fdefault-real-8 -fopenmp -Ofast -funroll-all-loops -ffast-math -funsafe-math-optimizations -flto -march=native -Wsurprising -Wunused -J $mod -I $mod "
+$compiler $p -c "$md"IFPORT_illusion.f90 -o "$mod"IFPORT_illusion.o
 modules="$modules $mod"'IFPORT_illusion.o '
 fi
 
