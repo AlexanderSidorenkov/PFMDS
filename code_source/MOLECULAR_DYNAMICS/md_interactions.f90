@@ -142,13 +142,16 @@ subroutine update_interactions_neibour_lists(md_step,interactions,atoms,groups,c
 	integer:: i,j,md_step
 	
 	do i=1,size(interactions)
+	
 		call update_neibour_list(md_step,interactions(i)%nl(1),atoms,&
 		groups(interactions(i)%group_nums(1)),groups(interactions(i)%group_nums(2)),cell)
+		
 		select case (interactions(i)%interaction_name)
 		case('lj','morse','ljc','morsec')
 			call converce_neigbour_list(interactions(i)%nl(2),&
 			groups(interactions(i)%group_nums(2)),interactions(i)%nl(1))
 		end select
+		
 		select case (interactions(i)%interaction_name)
 		case('ljc','morsec')
 			do j=1,size(interactions)
@@ -165,7 +168,9 @@ subroutine update_interactions_neibour_lists(md_step,interactions,atoms,groups,c
 				groups(interactions(i)%group_nums(5)),groups(interactions(i)%group_nums(6)),cell)
 			endif
 		end select
+		
 	enddo
+	
 	call update_norm_in_graphene(interactions)
 	
 end subroutine update_interactions_neibour_lists
@@ -420,10 +425,11 @@ end subroutine shift_gr_norm
 subroutine nlists_load(out_id,interactions)
 	type(interaction):: interactions(:)
 	integer:: i,j,out_id
-	
+	 
 	do i=1,size(interactions)
 		do j=1,interactions(i)%nl_n
-			write(out_id,*) i,j,maxval(interactions(i)%nl(j)%nnum),'/',interactions(i)%nl(j)%neib_num_max
+			write(out_id,*) trim(interactions(i)%interaction_name),' ',j,' neib lists load:',&
+			maxval(interactions(i)%nl(j)%nnum),'/',interactions(i)%nl(j)%neib_num_max
 		enddo
 	enddo
 	

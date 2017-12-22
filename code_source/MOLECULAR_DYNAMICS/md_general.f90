@@ -468,7 +468,7 @@ end subroutine set_new_temperature
 subroutine check_positions(out_id,atoms,box)
 	type(particles)::	atoms
 	type(simulation_cell):: box
-	integer:: 			out_id,i,k
+	integer:: out_id,i,k
 	real:: tolerance=0.0000001
 	
 	!$OMP PARALLEL firstprivate(i,k)
@@ -484,6 +484,22 @@ subroutine check_positions(out_id,atoms,box)
 	!$OMP END PARALLEL
 	
 end subroutine check_positions
+
+subroutine check_velocities(out_id,atoms)
+	type(particles)::	atoms
+	integer:: out_id,i
+	real:: maxvel2,v2
+
+	maxvel2 = -1.	
+	!$OMP PARALLEL DO private(i,v2) REDUCTION(max:maxvel2)
+	do i=1,atoms%N
+		v2 = sum(atoms%velocities(:,i)**2)
+		if(maxvel2<v2) maxvel2 = v2
+	enddo
+	!$OMP END PARALLEL DO
+	write(out_id,'(A,f16.8,A)') ' max velocity: ',sqrt(maxvel2),' A/fs '
+	
+end subroutine check_velocities
 
 subroutine position_analysis(av,mi,ma,atoms,group,direction,minimum,maximum)
 	type(particles)::	atoms
@@ -661,22 +677,23 @@ subroutine find_neibours(nl,atoms,group1,group2,box)
 	type(simulation_cell):: box
 	type(neibour_list):: nl
 	real:: dr(3),dr2
-	integer:: i,j,k,ind,jnd,nnumind
+	integer:: i,j,k,ind,jnd,nnumind,lessnnumind
 
 	if (group1%N/=nl%N) then; write(*,*) 'error: group%N/=nl%N',group1%N,nl%N; stop; endif
-	!$OMP PARALLEL firstprivate(i,j,k,ind,jnd,dr,dr2,nnumind)
+	!$OMP PARALLEL firstprivate(i,j,k,ind,jnd,dr,dr2,nnumind,lessnnumind)
 	!$OMP DO
 	do ind=1,group1%N
 		i = group1%indexes(ind)
 		nl%particle_index(ind) = group1%indexes(ind)
 		!nl%nlist(:nl%nnum(ind),ind) = 0
 		nnumind = 0
+		lessnnumind = -1
 		do jnd=1,group2%N
 			j = group2%indexes(jnd)
 			if (i/=j) then
 				call find_distance(dr,dr2,atoms%positions(:,i),atoms%positions(:,j),box)
 				if (dr2<nl%r_cut*nl%r_cut) then
-					if (nl%lessnnum(ind)==0 .and. i<j) nl%lessnnum(ind) = nnumind
+					if (lessnnumind==-1 .and. i<j) lessnnumind = nnumind
 					nnumind = nnumind+1
 					if (nnumind>nl%neib_num_max) then; write(*,*) 'error: too many neibours',ind,nnumind; stop; endif
 					nl%nlist(nnumind,ind) = jnd
@@ -687,7 +704,11 @@ subroutine find_neibours(nl,atoms,group1,group2,box)
 				endif
 			endif
 		enddo
-		if (nl%lessnnum(ind)==0) nl%lessnnum(ind) = nnumind
+		if(lessnnumind==-1) then
+			nl%lessnnum(ind) = nnumind
+		else
+			nl%lessnnum(ind) = lessnnumind
+		endif
 		nl%nnum(ind) = nnumind
 	enddo
 	!$OMP END DO

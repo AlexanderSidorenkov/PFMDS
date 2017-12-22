@@ -14,6 +14,7 @@ subroutine set_openmp_perfomance(num_of_omp_treads,N)
 	call omp_set_num_threads(num_of_omp_treads)
 	!call omp_thread_limit(num_of_omp_treads)
 	chunk_size = int(real(N)/chunks_per_thread/num_of_omp_treads)
+	if(chunk_size==0) chunk_size = 1
 	
 end subroutine
 

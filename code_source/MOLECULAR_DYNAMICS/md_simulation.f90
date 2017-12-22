@@ -92,11 +92,11 @@ do md_step=0,time_step_limit
 	endif
 
 	call update_interactions_neibour_lists(md_step,interactions,atoms,groups,cell)
-	
+
 	call zero_forces(atoms,groups(all_atoms_group_num))
 	call calculate_forces(atoms,interactions)
 	call calculate_forces_numerically(atoms,interactions)
-	
+
 	if (md_step/=0) then
 		call integrate_verlet_velocities(atoms,groups(moving_atoms_group_num),dt)
 		if (integrator_name=='nvt') call integrate_nose_hoover_chain(nhc,atoms,groups(termo_atoms_group_num),dt)
@@ -125,6 +125,7 @@ do md_step=0,time_step_limit
 			write(out_id,'(f12.2,A,A6,i12,f27.9,e14.4)') omp_get_wtime()-starttime,' ',&
 			trim(integrator_name),md_step,conserved_energy,sqrt(sum(fs**2))
 			call nlists_load(out_id,interactions)
+			call check_velocities(out_id,atoms)
 		endif
 		
 	endif
