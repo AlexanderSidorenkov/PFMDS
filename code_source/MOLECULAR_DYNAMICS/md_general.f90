@@ -30,7 +30,7 @@ end type nose_hoover_chain
 type neibour_list
 	integer:: N,neib_num_max,update_period
 	real:: r_cut
-	integer,allocatable:: nlist(:,:),nnum(:),particle_index(:)
+	integer,allocatable:: nlist(:,:),nnum(:),lessnnum(:),particle_index(:)
 	real,allocatable:: dr(:,:,:),moddr(:,:)
 end type neibour_list
 
@@ -508,9 +508,10 @@ subroutine position_analysis(av,mi,ma,atoms,group,direction,minimum,maximum)
 	
 end subroutine position_analysis
 
-subroutine find_distance(dr,dr2,vec1,vec2,box)
-	type(simulation_cell):: box
-	real:: dr(3),dr2,vec1(3),vec2(3)
+pure subroutine find_distance(dr,dr2,vec1,vec2,box)
+	type(simulation_cell), intent (in) :: box
+	real, intent (in) :: vec1(3),vec2(3)
+	real, intent (out) :: dr(3),dr2
 	integer:: k
 
 	do k=1,3
@@ -622,11 +623,13 @@ subroutine create_neibour_list(nl)
 	if (nl%N>0) then
 		allocate(nl%particle_index(nl%N))
 		allocate(nl%nnum(nl%N))
+		allocate(nl%lessnnum(nl%N))
 		allocate(nl%nlist(nl%neib_num_max,nl%N))
 		allocate(nl%dr(3,nl%neib_num_max,nl%N))
 		allocate(nl%moddr(nl%neib_num_max,nl%N))
 		nl%particle_index = 0
 		nl%nnum = 0
+		nl%lessnnum = 0
 		nl%nlist = 0
 		nl%dr = 0.
 		nl%moddr = 0.
@@ -673,6 +676,7 @@ subroutine find_neibours(nl,atoms,group1,group2,box)
 			if (i/=j) then
 				call find_distance(dr,dr2,atoms%positions(:,i),atoms%positions(:,j),box)
 				if (dr2<nl%r_cut*nl%r_cut) then
+					if (nl%lessnnum(ind)==0 .and. i<j) nl%lessnnum(ind) = nnumind
 					nnumind = nnumind+1
 					if (nnumind>nl%neib_num_max) then; write(*,*) 'error: too many neibours',ind,nnumind; stop; endif
 					nl%nlist(nnumind,ind) = jnd
@@ -683,6 +687,7 @@ subroutine find_neibours(nl,atoms,group1,group2,box)
 				endif
 			endif
 		enddo
+		if (nl%lessnnum(ind)==0) nl%lessnnum(ind) = nnumind
 		nl%nnum(ind) = nnumind
 	enddo
 	!$OMP END DO
