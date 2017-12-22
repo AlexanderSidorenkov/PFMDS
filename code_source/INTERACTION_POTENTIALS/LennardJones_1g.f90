@@ -56,10 +56,10 @@ subroutine LJ1g_forces(atoms,nl,LJp)
 	type(neibour_list):: nl
 	type(LennardJones1g_parameters):: LJp
 	integer:: i,p,k,ind,jnd
-	real:: U,F
+	real:: U,F,invr2
 	real,allocatable:: priv_force(:,:)
 	
-	!$OMP PARALLEL private(i,p,k,U,F,priv_force)
+	!$OMP PARALLEL private(i,p,k,U,F,priv_force,invr2)
 	if(.not. allocated(priv_force)) allocate(priv_force(3,atoms%N))
 	priv_force = 0.
 	!$OMP DO schedule(dynamic,chunk_size)
@@ -67,8 +67,9 @@ subroutine LJ1g_forces(atoms,nl,LJp)
 		do p=1,nl%nnum(i)
 			if (nl%nlist(p,i)>i) exit
 			!if (nl%nlist(p,i)<i) then
-				U = 1./nl%moddr(p,i)**6
-				F = (U*(LJp%c12t12*U-LJp%c6t6)/nl%moddr(p,i)**2*f_cut(nl%moddr(p,i),LJp%R1,LJp%R2)&
+				invr2 = 1./nl%moddr(p,i)/nl%moddr(p,i)
+				U = invr2*invr2*invr2
+				F = (U*(LJp%c12t12*U-LJp%c6t6)*invr2*f_cut(nl%moddr(p,i),LJp%R1,LJp%R2)&
 				-U*(LJp%c12*U-LJp%c6)*df_cut(nl%moddr(p,i),LJp%R1,LJp%R2))
 				ind = nl%particle_index(i)
 				do k=1,3

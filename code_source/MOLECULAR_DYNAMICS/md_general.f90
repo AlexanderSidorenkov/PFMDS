@@ -177,13 +177,15 @@ subroutine integrate_verlet_velocities(atoms,group,steps)
 	type(particle_group):: group
 	type(time_steps):: steps
 	real,parameter:: mass_coef=1.6605389217/1.6021765654*10.**(2)
-	integer::		i,ind
+	integer::		i,ind,k
 
-	!$OMP PARALLEL firstprivate(i,ind)
+	!$OMP PARALLEL firstprivate(i,ind,k)
 	!$OMP DO
 	do ind=1,group%N
 		i = group%indexes(ind)
-		atoms%velocities(:,i) = atoms%velocities(:,i)+atoms%forces(:,i)/atoms%masses(i)/mass_coef*steps%ts(2)
+		do k=1,3
+			atoms%velocities(k,i) = atoms%velocities(k,i)+atoms%forces(k,i)/atoms%masses(i)/mass_coef*steps%ts(2)
+		enddo
 	enddo
 	!$OMP END DO
 	!$OMP END PARALLEL
@@ -218,12 +220,15 @@ end subroutine molecular_static_velocities
 subroutine zero_forces(atoms,group)
 	type(particles)::	atoms
 	type(particle_group):: group
-	integer:: ind
+	integer:: i,ind,k
 
-	!$OMP PARALLEL firstprivate(ind)
+	!$OMP PARALLEL firstprivate(i,ind,k)
 	!$OMP DO
 	do ind=1,group%N
-		atoms%forces(:,group%indexes(ind)) = 0.
+		i = group%indexes(ind)
+		do k=1,3
+			atoms%forces(k,i) = 0.
+		enddo
 	enddo
 	!$OMP END DO
 	!$OMP END PARALLEL
