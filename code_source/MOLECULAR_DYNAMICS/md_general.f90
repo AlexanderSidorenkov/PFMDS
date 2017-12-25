@@ -468,19 +468,23 @@ end subroutine set_new_temperature
 subroutine check_positions(out_id,atoms,box)
 	type(particles)::	atoms
 	type(simulation_cell):: box
-	integer:: out_id,i,k
+	integer:: out_id,i,k,p
 	real:: tolerance=0.0000001
 	
-	!$OMP PARALLEL firstprivate(i,k)
+	!$OMP PARALLEL private(i,k,p)
+	p=0
 	!$OMP DO
 	do i=1,atoms%N
 		do k=1,3
 			if( .not.(atoms%positions(k,i)>(0.-tolerance) .and. atoms%positions(k,i)<(box%box_size(k)+tolerance)) ) then
 				write(out_id,*) i,' particle out of cell ',atoms%positions(:,i)
+				p = p+1
 			endif
 		enddo
 	enddo
 	!$OMP END DO
+	!$OMP BARRIER
+	if(p>0) stop
 	!$OMP END PARALLEL
 	
 end subroutine check_positions

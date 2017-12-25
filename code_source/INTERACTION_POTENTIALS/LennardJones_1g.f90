@@ -18,10 +18,10 @@ subroutine read_LJ1g_parameters(LJp,filename)
 	read(1,*) LJp%eps,LJp%sig
 	read(1,*) LJp%R1,LJp%R2
 	close(1)
-	LJp%c6 = 4*LJp%eps*LJp%sig**6
-	LJp%c12 = 4*LJp%eps*LJp%sig**12
-	LJp%c6t6 = 6*4*LJp%eps*LJp%sig**6
-	LJp%c12t12 = 12*4*LJp%eps*LJp%sig**12
+	LJp%c6 = 4.*LJp%eps*LJp%sig**6
+	LJp%c12 = 4.*LJp%eps*LJp%sig**12
+	LJp%c6t6 = 6.*4.*LJp%eps*LJp%sig**6
+	LJp%c12t12 = 12.*4.*LJp%eps*LJp%sig**12
 	
 end subroutine read_LJ1g_parameters
 
@@ -53,20 +53,21 @@ subroutine LJ1g_forces(atoms,nl,LJp)
 	type(neibour_list) :: nl
 	type(LennardJones1g_parameters) :: LJp
 	integer:: i,p,k,ind,jnd
-	real:: U,F,invr2
+	real:: U,F,invr2,fcut,dfrcut
 	real,allocatable:: priv_force(:,:)
 	
-	!$OMP PARALLEL private(i,p,k,U,F,priv_force,invr2)
+	!$OMP PARALLEL private(i,p,k,ind,jnd,U,F,invr2,fcut,dfrcut,priv_force)
 	if(.not. allocated(priv_force)) allocate(priv_force(3,atoms%N))
-	priv_force = 0.
-		
+	priv_force = 0.	
 	!$OMP DO schedule(dynamic,chunk_size)
 	do i=1,nl%N
-		do p=1,nl%lessnnum(i)!do p=1,nl%nnum(i)!if (nl%nlist(p,i)>i) exit
+		do p=1,nl%lessnnum(i)
 			invr2 = 1./(nl%moddr(p,i)*nl%moddr(p,i))
 			U = invr2*invr2*invr2
-			F = U*(LJp%c12t12*U-LJp%c6t6)*invr2*f_cut(nl%moddr(p,i),LJp%R1,LJp%R2)&
-			-U*(LJp%c12*U-LJp%c6)*df_cut(nl%moddr(p,i),LJp%R1,LJp%R2)
+			!F = U*(LJp%c12t12*U-LJp%c6t6)*invr2*f_cut(nl%moddr(p,i),LJp%R1,LJp%R2)&
+			!-U*(LJp%c12*U-LJp%c6)*df_cut(nl%moddr(p,i),LJp%R1,LJp%R2)
+			call f_dfr_cut(fcut,dfrcut,nl%moddr(p,i),LJp%R1,LJp%R2)
+			F = U*invr2*((LJp%c12t12*U-LJp%c6t6)*fcut-(LJp%c12*U-LJp%c6)*dfrcut)
 			ind = nl%particle_index(i)
 			jnd = nl%particle_index(nl%nlist(p,i))
 			priv_force(1,ind) = priv_force(1,ind)-F*nl%dr(1,p,i)
