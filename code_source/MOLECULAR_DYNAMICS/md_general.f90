@@ -532,16 +532,13 @@ pure subroutine find_distance(dr,dr2,vec1,vec2,box)
 	type(simulation_cell), intent (in) :: box
 	real, intent (in) :: vec1(3),vec2(3)
 	real, intent (out) :: dr(3),dr2
-	integer:: k
 
-	do k=1,3
-		dr(k) = vec2(k)-vec1(k)
-		if (dr(k)>box%half_box_size(k)) then
-			dr(k) = dr(k)-box%box_size(k)
-		elseif (dr(k)<-box%half_box_size(k)) then
-			dr(k) = dr(k)+box%box_size(k)
-		endif
-	enddo
+	dr(1) = vec2(1)-vec1(1)
+	dr(2) = vec2(2)-vec1(2)
+	dr(3) = vec2(3)-vec1(3)
+	dr(1) = dr(1)-box%half_box_size(1)*(sign(1.,dr(1)-box%half_box_size(1))+sign(1.,dr(1)+box%half_box_size(1)))
+	dr(2) = dr(2)-box%half_box_size(2)*(sign(1.,dr(2)-box%half_box_size(2))+sign(1.,dr(2)+box%half_box_size(2)))
+	dr(3) = dr(3)-box%half_box_size(3)*(sign(1.,dr(3)-box%half_box_size(3))+sign(1.,dr(3)+box%half_box_size(3)))
 	dr2 = dr(1)*dr(1)+dr(2)*dr(2)+dr(3)*dr(3)
 	
 	return

@@ -53,29 +53,34 @@ subroutine LJ1g_forces(atoms,nl,LJp)
 	type(neibour_list) :: nl
 	type(LennardJones1g_parameters) :: LJp
 	integer:: i,p,k,ind,jnd
-	real:: U,F,invr2,fcut,dfrcut
-	real,allocatable:: priv_force(:,:)
+	real,allocatable:: priv_force(:,:),F(:),fp(:,:)
 	
-	!$OMP PARALLEL private(i,p,k,ind,jnd,U,F,invr2,fcut,dfrcut,priv_force)
-	if(.not. allocated(priv_force)) allocate(priv_force(3,atoms%N))
+	!$OMP PARALLEL private(i,p,k,ind,jnd,F,fp,priv_force)
+	if(.not. allocated(priv_force)) allocate(priv_force(3,atoms%N))!realloc if N changed
+	if(.not. allocated(F)) allocate(F(nl%neib_num_max))!realloc if neib_num_max changed
+	if(.not. allocated(fp)) allocate(fp(3,nl%neib_num_max))!realloc if neib_num_max changed
+	F = 0.
+	fp = 0.
 	priv_force = 0.	
-	!$OMP DO schedule(dynamic,chunk_size)
+	!$OMP DO SCHEDULE(dynamic,chunk_size)	 
 	do i=1,nl%N
 		do p=1,nl%lessnnum(i)
-			invr2 = 1./(nl%moddr(p,i)*nl%moddr(p,i))
-			U = invr2*invr2*invr2
-			!F = U*(LJp%c12t12*U-LJp%c6t6)*invr2*f_cut(nl%moddr(p,i),LJp%R1,LJp%R2)&
-			!-U*(LJp%c12*U-LJp%c6)*df_cut(nl%moddr(p,i),LJp%R1,LJp%R2)
-			call f_dfr_cut(fcut,dfrcut,nl%moddr(p,i),LJp%R1,LJp%R2)
-			F = U*invr2*((LJp%c12t12*U-LJp%c6t6)*fcut-(LJp%c12*U-LJp%c6)*dfrcut)
+			F(p) = scalar_lj_force(nl%moddr(p,i),LJp%R1,LJp%R2,LJp%c12,LJp%c6,LJp%c12t12,LJp%c6t6)
+		enddo
+		do p=1,nl%lessnnum(i)
+			fp(1,p) = F(p)*nl%dr(1,p,i)
+			fp(2,p) = F(p)*nl%dr(2,p,i)
+			fp(3,p) = F(p)*nl%dr(3,p,i)
+		enddo
+		do p=1,nl%lessnnum(i)
 			ind = nl%particle_index(i)
 			jnd = nl%particle_index(nl%nlist(p,i))
-			priv_force(1,ind) = priv_force(1,ind)-F*nl%dr(1,p,i)
-			priv_force(2,ind) = priv_force(2,ind)-F*nl%dr(2,p,i)
-			priv_force(3,ind) = priv_force(3,ind)-F*nl%dr(3,p,i)
-			priv_force(1,jnd) = priv_force(1,jnd)+F*nl%dr(1,p,i)
-			priv_force(2,jnd) = priv_force(2,jnd)+F*nl%dr(2,p,i)
-			priv_force(3,jnd) = priv_force(3,jnd)+F*nl%dr(3,p,i)
+			priv_force(1,ind) = priv_force(1,ind)-fp(1,p)
+			priv_force(2,ind) = priv_force(2,ind)-fp(2,p)
+			priv_force(3,ind) = priv_force(3,ind)-fp(3,p)
+			priv_force(1,jnd) = priv_force(1,jnd)+fp(1,p)
+			priv_force(2,jnd) = priv_force(2,jnd)+fp(2,p)
+			priv_force(3,jnd) = priv_force(3,jnd)+fp(3,p)
 		enddo
 	enddo
 	!$OMP END DO
@@ -88,5 +93,19 @@ subroutine LJ1g_forces(atoms,nl,LJp)
 	!$OMP END PARALLEL
 	
 end subroutine LJ1g_forces
+
+function scalar_lj_force(r,R1,R2,c12,c6,c12t12,c6t6)
+	! DECLARE SIMD(scalar_lj_force) UNIFORM(R1,R2,c12,c6,c12t12,c6t6)
+	real, intent(in) :: r
+	real, intent(in) :: R1,R2,c12,c6,c12t12,c6t6
+	real scalar_lj_force
+	real :: invr2,U,fcut,dfrcut
+	
+	invr2 = 1./(r*r)
+	U = invr2*invr2*invr2
+	call f_dfr_cut(fcut,dfrcut,r,R1,R2)
+	scalar_lj_force = U*invr2*((c12t12*U-c6t6)*fcut-(c12*U-c6)*dfrcut)
+	
+end function
 
 end module LennardJones_1g

@@ -27,33 +27,18 @@ function df_cut(r,R1,R2)
 	endif	
 end function df_cut
 
-subroutine f_dfr_cut(f,dfr,r,R1,R2)
-	real :: f,dfr,r,R1,R2,x,x2!,s,ss
-
-	!x = (r-R1)/(R2-R1)
-	!x2 = x*x
-	!s = ((R2-r)/abs(R2-r)+1)/2
-	!ss = ((r-R1)/abs(r-R1)*(R2-r)/abs(R2-r)+1)/2
+pure subroutine f_dfr_cut(f,dfr,r,R1,R2)
+	real, intent(in) :: r,R1,R2
+	real, intent(out) :: f,dfr
+	real :: tempr,x,x2
 	
-	!if (s>1.1 .or. ss>1.1) print*,x,s,ss
-	!if (s/=s) print*,x,s,ss
-	!if (ss/=ss) print*,x,s,ss
-	
-	!f = s*(1.+x2*x*(-10.+15.*x-6.*x2))
-	!dfr = ss*(x2*(-30.+60.*x-30.*x2)*r)
-	
-	if(r>R1 .and. r<R2) then
-		x = (r-R1)/(R2-R1)
-		x2 = x*x
-		f = 1.+x2*x*(-10.+15.*x-6.*x2)
-		dfr = x2*(-30.+60.*x-30.*x2)*r
-	elseif(r<R1) then
-		f = 1.
-		dfr = 0.
-	else
-		f = 0.
-		dfr = 0.
-	endif	
+	tempr = r
+	tempr = max(tempr,R1)
+	tempr = min(tempr,R2)
+	x = (tempr-R1)/(R2-R1)
+	x2 = x*x
+	f = 1.+x2*x*(-10.+15.*x-6.*x2)
+	dfr = tempr*x2*(-30.+60.*x-30.*x2)
 	
 end subroutine f_dfr_cut
 
