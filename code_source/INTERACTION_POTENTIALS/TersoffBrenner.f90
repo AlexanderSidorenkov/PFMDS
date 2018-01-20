@@ -24,10 +24,10 @@ subroutine read_TB_parameters(TBp,filename)
 end subroutine read_TB_parameters
 
 subroutine TB_energy(energy,nl,TBp)
-	type(neibour_list):: nl
+	type(neighbour_list):: nl
 	type(TersoffBrenner_parameters):: TBp
 	integer:: i,p,j,q
-	real:: energy,energy_priv,B(nl%neib_num_max,nl%N),a
+	real:: energy,energy_priv,B(nl%neighb_num_max,nl%N),a
 
 	energy = 0.
 	energy_priv = 0.
@@ -73,10 +73,10 @@ end subroutine TB_energy
 
 subroutine TB_forces(atoms,nl,TBp)
 	type(particles)::	atoms
-	type(neibour_list):: nl
+	type(neighbour_list):: nl
 	type(TersoffBrenner_parameters):: TBp
 	integer:: i,p,j,q,l
-	real:: B(nl%neib_num_max,nl%N),dB(3),a,dff,rr,cosi,f_c,df_c
+	real:: B(nl%neighb_num_max,nl%N),dB(3),a,dff,rr,cosi,f_c,df_c
 	
 	!$OMP PARALLEL firstprivate(i,p,j,q,l,a,dff,rr,cosi,f_c,df_c,dB)
 	!$OMP DO

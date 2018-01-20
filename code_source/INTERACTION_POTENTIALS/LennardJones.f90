@@ -21,7 +21,7 @@ subroutine read_LJ_parameters(LJp,filename)
 end subroutine read_LJ_parameters
 
 subroutine LJ_energy(energy,nl,LJp)
-	type(neibour_list):: nl
+	type(neighbour_list):: nl
 	type(LennardJones_parameters):: LJp
 	integer:: i,p
 	real:: energy,energy_priv,V
@@ -47,7 +47,7 @@ end subroutine LJ_energy
 
 subroutine LJ_forces(atoms,nl,LJp)
 	type(particles)::	atoms
-	type(neibour_list):: nl
+	type(neighbour_list):: nl
 	type(LennardJones_parameters):: LJp
 	integer:: i,p
 	real:: V

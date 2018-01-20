@@ -25,7 +25,7 @@ end type interaction_parameters
 type interaction
 	integer:: nl_n,neib_order
 	integer,allocatable:: group_nums(:)
-	type(neibour_list),allocatable:: nl(:)
+	type(neighbour_list),allocatable:: nl(:)
 	real:: energy
 	character(len=32):: interaction_name,parameters_file
 	type(interaction_parameters) :: parameters
@@ -123,28 +123,29 @@ subroutine create_interactions(interactions,groups,file_id,out_id,input_path)
 		allocate(interactions(i)%nl(interactions(i)%nl_n))
 		do j=1,interactions(i)%nl_n
 			read(file_id,*) interactions(i)%group_nums(j*2-1:j*2),&
-			interactions(i)%nl(j)%neib_num_max,interactions(i)%nl(j)%r_cut,interactions(i)%nl(j)%update_period
+			interactions(i)%nl(j)%neighb_num_max,interactions(i)%nl(j)%r_cut,interactions(i)%nl(j)%update_period
 			write(out_id,'(3i6,f16.6,i9)') interactions(i)%group_nums(j*2-1:j*2),&
-			interactions(i)%nl(j)%neib_num_max,interactions(i)%nl(j)%r_cut,interactions(i)%nl(j)%update_period
+			interactions(i)%nl(j)%neighb_num_max,interactions(i)%nl(j)%r_cut,interactions(i)%nl(j)%update_period
 			interactions(i)%nl(j)%N = groups(interactions(i)%group_nums(j*2-1))%N
-			call create_neibour_list(interactions(i)%nl(j))
+			call create_neighbour_list(interactions(i)%nl(j))
 		enddo
 	enddo
 	call allocate_graphene_norm(interactions)
 	
 end subroutine create_interactions
 
-subroutine update_interactions_neibour_lists(md_step,interactions,atoms,groups,cell)
+subroutine update_interactions_neighbour_lists(md_step,interactions,atoms,groups,cell,exe_time_nlsearch,exe_time_nldistance)
 	type(interaction):: interactions(:)
 	type(particles):: atoms
 	type(particle_group):: groups(:)
 	type(simulation_cell):: cell
 	integer:: i,j,md_step
+	real:: exe_time_nlsearch,exe_time_nldistance
 	
 	do i=1,size(interactions)
 	
-		call update_neibour_list(md_step,interactions(i)%nl(1),atoms,&
-		groups(interactions(i)%group_nums(1)),groups(interactions(i)%group_nums(2)),cell)
+		call update_neighbour_list(md_step,interactions(i)%nl(1),atoms,&
+		groups(interactions(i)%group_nums(1)),groups(interactions(i)%group_nums(2)),cell,exe_time_nlsearch,exe_time_nldistance)
 		
 		select case (interactions(i)%interaction_name)
 		case('lj','morse','ljc','morsec')
@@ -161,11 +162,11 @@ subroutine update_interactions_neibour_lists(md_step,interactions,atoms,groups,c
 				end select
 			enddo
 			if (j<=size(interactions)) then
-				call update_nearest_neibours_in_graphene&
-				(md_step,interactions(i)%nl(3),interactions(j)%nl(1),atoms,groups(interactions(j)%group_nums(1)),cell)
+				call update_nearest_neibours_in_graphene(md_step,interactions(i)%nl(3),interactions(j)%nl(1),atoms,&
+				groups(interactions(j)%group_nums(1)),cell)
 			else
-				call update_neibour_list(md_step,interactions(i)%nl(3),atoms,&
-				groups(interactions(i)%group_nums(5)),groups(interactions(i)%group_nums(6)),cell)
+				call update_neighbour_list(md_step,interactions(i)%nl(3),atoms,&
+				groups(interactions(i)%group_nums(5)),groups(interactions(i)%group_nums(6)),cell,exe_time_nlsearch,exe_time_nldistance)
 			endif
 		end select
 		
@@ -173,7 +174,7 @@ subroutine update_interactions_neibour_lists(md_step,interactions,atoms,groups,c
 	
 	call update_norm_in_graphene(interactions)
 	
-end subroutine update_interactions_neibour_lists
+end subroutine update_interactions_neighbour_lists
 
 subroutine allocate_graphene_norm(interactions)
 	type(interaction):: interactions(:)
@@ -241,7 +242,7 @@ end subroutine calculate_forces
 
 subroutine energy(inter_name,e,nl,p)
 	type(interaction_parameters):: p
-	type(neibour_list):: nl
+	type(neighbour_list):: nl
 	character(len=32):: inter_name
 	real:: e
 	
@@ -271,7 +272,7 @@ end subroutine calculate_potential_energies
 subroutine calculate_forces_numerically(atoms,interactions)
 	type(interaction):: interactions(:)
 	type(particles):: atoms
-	type(neibour_list):: tnl
+	type(neighbour_list):: tnl
 	real:: e1,e2
 	integer:: i,k,inl,j
 	real,parameter:: dx = 10.**(-6)
@@ -308,19 +309,19 @@ subroutine calculate_forces_numerically(atoms,interactions)
 end subroutine
 
 subroutine create_truncated_nl(tnl,nl)
-	type(neibour_list):: tnl,nl
+	type(neighbour_list):: tnl,nl
 	
 	tnl%N = nl%N
-	tnl%neib_num_max = nl%neib_num_max
-	call create_neibour_list(tnl)
+	tnl%neighb_num_max = nl%neighb_num_max
+	call create_neighbour_list(tnl)
 	
 end subroutine create_truncated_nl
 
 subroutine destroy_truncated_nl(tnl)
-	type(neibour_list):: tnl
+	type(neighbour_list):: tnl
 	
 	tnl%N = 0
-	tnl%neib_num_max = 0
+	tnl%neighb_num_max = 0
 	if(allocated(tnl%particle_index)) deallocate(tnl%particle_index)
 	if(allocated(tnl%nnum)) deallocate(tnl%nnum)
 	if(allocated(tnl%nlist)) deallocate(tnl%nlist)
@@ -330,13 +331,13 @@ subroutine destroy_truncated_nl(tnl)
 end subroutine destroy_truncated_nl
 
 subroutine calculate_truncated_nl(tnl,nl,i,n)
-	type(neibour_list):: tnl,nl
+	type(neighbour_list):: tnl,nl
 	integer:: n,i,ni,p,q,j
 	
 	tnl%particle_index = 0; tnl%nnum = 0; !tnl%nlist = 0!tnl%dr = 0.!tnl%moddr = 0.
 	
 	tnl%N = nl%N
-	tnl%neib_num_max = nl%neib_num_max
+	tnl%neighb_num_max = nl%neighb_num_max
 	tnl%nlist(:nl%nnum(i),i) = nl%nlist(:nl%nnum(i),i)
 	tnl%dr(:,:nl%nnum(i),i) = nl%dr(:,:nl%nnum(i),i)
 	tnl%moddr(:nl%nnum(i),i) = nl%moddr(:nl%nnum(i),i)
@@ -377,7 +378,7 @@ subroutine calculate_truncated_nl(tnl,nl,i,n)
 end subroutine calculate_truncated_nl
 
 subroutine shift_drs(tnl,inl,k,nl_n,dx)
-	type(neibour_list):: tnl
+	type(neighbour_list):: tnl
 	real:: dx
 	integer:: p,k,inl,q,j,nl_n
 	
@@ -401,7 +402,7 @@ end subroutine shift_drs
 
 subroutine shift_gr_norm(gr_norm,nl_nn,inl,k,dx)
 	real:: gr_norm(:,:)
-	type(neibour_list):: nl_nn
+	type(neighbour_list):: nl_nn
 	real:: dx,drj12(3),drj31(3)
 	integer:: k,inl,p,q,j,l
 	
@@ -429,7 +430,7 @@ subroutine nlists_load(out_id,interactions)
 	do i=1,size(interactions)
 		do j=1,interactions(i)%nl_n
 			write(out_id,*) trim(interactions(i)%interaction_name),' ',j,' neib lists load:',&
-			maxval(interactions(i)%nl(j)%nnum),'/',interactions(i)%nl(j)%neib_num_max
+			maxval(interactions(i)%nl(j)%nnum),'/',interactions(i)%nl(j)%neighb_num_max
 		enddo
 	enddo
 	

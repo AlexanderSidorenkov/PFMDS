@@ -27,12 +27,12 @@ type nose_hoover_chain
 	real::	temperature,s,e
 end type nose_hoover_chain
 
-type neibour_list
-	integer:: N,neib_num_max,update_period
+type neighbour_list
+	integer:: N,neighb_num_max,update_period
 	real:: r_cut
 	integer,allocatable:: nlist(:,:),nnum(:),lessnnum(:),particle_index(:)
 	real,allocatable:: dr(:,:,:),moddr(:,:)
-end type neibour_list
+end type neighbour_list
 
 type integrator_params
 	integer:: l,period_snapshot,period_log
@@ -146,7 +146,7 @@ subroutine write_particle_group(filename,atoms,group,box)
 	return
 end subroutine write_particle_group
 
-subroutine integrate_verlet_positions(atoms,group,steps,box)
+subroutine integrate_verlet_xyz_positions(atoms,group,steps,box)
 	type(particles)::	atoms
 	type(particle_group):: group
 	type(time_steps):: steps
@@ -170,9 +170,34 @@ subroutine integrate_verlet_positions(atoms,group,steps,box)
 	!$OMP END PARALLEL
 
 	return
-end subroutine integrate_verlet_positions
+end subroutine integrate_verlet_xyz_positions
 
-subroutine integrate_verlet_velocities(atoms,group,steps)
+subroutine integrate_verlet_z_positions(atoms,group,steps,box)
+	type(particles)::	atoms
+	type(particle_group):: group
+	type(time_steps):: steps
+	type(simulation_cell):: box
+	integer::		i,k,ind
+
+	!$OMP PARALLEL firstprivate(i,ind,k)
+	!$OMP DO
+	do ind=1,group%N
+		i = group%indexes(ind)
+		k = 3
+			atoms%positions(k,i) = atoms%positions(k,i)+atoms%velocities(k,i)*steps%ts(1)
+			if (atoms%positions(k,i)>box%box_size(k)) then
+				atoms%positions(k,i) = atoms%positions(k,i)-box%box_size(k)
+			elseif (atoms%positions(k,i)<0.) then
+				atoms%positions(k,i) = atoms%positions(k,i)+box%box_size(k)
+			endif
+	enddo
+	!$OMP END DO
+	!$OMP END PARALLEL
+
+	return
+end subroutine integrate_verlet_z_positions
+
+subroutine integrate_verlet_xyz_velocities(atoms,group,steps)
 	type(particles)::	atoms
 	type(particle_group):: group
 	type(time_steps):: steps
@@ -191,22 +216,44 @@ subroutine integrate_verlet_velocities(atoms,group,steps)
 	!$OMP END PARALLEL
 
 	return
-end subroutine integrate_verlet_velocities
+end subroutine integrate_verlet_xyz_velocities
 
-subroutine molecular_static_velocities(atoms,group)
+subroutine integrate_verlet_z_velocities(atoms,group,steps)
+	type(particles)::	atoms
+	type(particle_group):: group
+	type(time_steps):: steps
+	real,parameter:: mass_coef=1.6605389217/1.6021765654*10.**(2)
+	integer::		i,ind,k
+
+	!$OMP PARALLEL firstprivate(i,ind,k)
+	!$OMP DO
+	do ind=1,group%N
+		i = group%indexes(ind)
+		k = 3
+			atoms%velocities(k,i) = atoms%velocities(k,i)+atoms%forces(k,i)/atoms%masses(i)/mass_coef*steps%ts(2)
+	enddo
+	!$OMP END DO
+	!$OMP END PARALLEL
+
+	return
+end subroutine integrate_verlet_z_velocities
+
+subroutine molecular_static_xyz_velocities(atoms,group)
 	type(particles)::	atoms
 	type(particle_group):: group
 	real:: fv,ff
-	integer::		i,ind
+	integer:: i,k,ind
 
-	!$OMP PARALLEL firstprivate(i,ind,fv,ff)
+	!$OMP PARALLEL firstprivate(i,k,ind,fv,ff)
 	!$OMP DO
 	do ind=1,group%N
 		i = group%indexes(ind)
 		fv = sum(atoms%forces(:,i)*atoms%velocities(:,i))
 		ff = sum(atoms%forces(:,i)**2)
 		if (fv>0. .and. ff>10.**(-12) ) then
-			atoms%velocities(:,i) = fv/ff*atoms%forces(:,i)
+			do k=1,3
+				atoms%velocities(k,i) = fv/ff*atoms%forces(k,i)
+			enddo
 		else
 			atoms%velocities(:,i) = 0.
 		endif
@@ -215,7 +262,29 @@ subroutine molecular_static_velocities(atoms,group)
 	!$OMP END PARALLEL
 
 	return
-end subroutine molecular_static_velocities
+end subroutine molecular_static_xyz_velocities
+
+subroutine molecular_static_1D_velocities(atoms,group)
+	type(particles)::	atoms
+	type(particle_group):: group
+	real:: fv
+	integer:: i,k,ind
+
+	!$OMP PARALLEL firstprivate(i,k,ind,fv)
+	!$OMP DO
+	do ind=1,group%N
+		i = group%indexes(ind)
+		fv = sum(atoms%forces(:,i)*atoms%velocities(:,i))
+		if (fv>0.) then
+		else
+			atoms%velocities(:,i) = 0.
+		endif
+	enddo
+	!$OMP END DO
+	!$OMP END PARALLEL
+
+	return
+end subroutine molecular_static_1D_velocities
 
 subroutine zero_forces(atoms,group)
 	type(particles)::	atoms
@@ -634,16 +703,16 @@ subroutine calculate_nose_hoover_chain_energy(nhc)
 	return
 end subroutine calculate_nose_hoover_chain_energy
 
-subroutine create_neibour_list(nl)
-	type(neibour_list):: nl
+subroutine create_neighbour_list(nl)
+	type(neighbour_list):: nl
 
 	if (nl%N>0) then
 		allocate(nl%particle_index(nl%N))
 		allocate(nl%nnum(nl%N))
 		allocate(nl%lessnnum(nl%N))
-		allocate(nl%nlist(nl%neib_num_max,nl%N))
-		allocate(nl%dr(3,nl%neib_num_max,nl%N))
-		allocate(nl%moddr(nl%neib_num_max,nl%N))
+		allocate(nl%nlist(nl%neighb_num_max,nl%N))
+		allocate(nl%dr(3,nl%neighb_num_max,nl%N))
+		allocate(nl%moddr(nl%neighb_num_max,nl%N))
 		nl%particle_index = 0
 		nl%nnum = 0
 		nl%lessnnum = 0
@@ -653,30 +722,35 @@ subroutine create_neibour_list(nl)
 	endif
 	
 	return
-end subroutine create_neibour_list
+end subroutine create_neighbour_list
 
-subroutine update_neibour_list(md_step,nl,atoms,group1,group2,box)
+subroutine update_neighbour_list(md_step,nl,atoms,group1,group2,box,exe_time_nlsearch,exe_time_nldistance)
 	type(particles)::	atoms
 	type(particle_group):: group1,group2
 	type(simulation_cell):: box
-	type(neibour_list):: nl
+	type(neighbour_list):: nl
 	integer:: md_step
+	real:: exe_t,exe_time_nlsearch,exe_time_nldistance,omp_get_wtime
 
 	if (group1%N>0 .and. group2%N>0 .and. nl%N>0) then
 		if (mod(md_step,nl%update_period)==0) then
+			exe_t = omp_get_wtime()
 			call find_neibours(nl,atoms,group1,group2,box)
+			exe_time_nlsearch = exe_time_nlsearch+omp_get_wtime()-exe_t
 		else
+			exe_t = omp_get_wtime()
 			call find_neibour_distances(nl,atoms,group1,group2,box)
+			exe_time_nldistance = exe_time_nldistance+omp_get_wtime()-exe_t
 		endif
 	endif
 	
-end subroutine update_neibour_list
+end subroutine update_neighbour_list
 
 subroutine find_neibours(nl,atoms,group1,group2,box)
 	type(particles)::	atoms
 	type(particle_group):: group1,group2
 	type(simulation_cell):: box
-	type(neibour_list):: nl
+	type(neighbour_list):: nl
 	real:: dr(3),dr2
 	integer:: i,j,k,ind,jnd,nnumind,lessnnumind
 
@@ -696,7 +770,7 @@ subroutine find_neibours(nl,atoms,group1,group2,box)
 				if (dr2<nl%r_cut*nl%r_cut) then
 					if (lessnnumind==-1 .and. i<j) lessnnumind = nnumind
 					nnumind = nnumind+1
-					if (nnumind>nl%neib_num_max) then; write(*,*) 'error: too many neibours',ind,nnumind; stop; endif
+					if (nnumind>nl%neighb_num_max) then; write(*,*) 'error: too many neibours',ind,nnumind; stop; endif
 					nl%nlist(nnumind,ind) = jnd
 					nl%dr(1,nnumind,ind) = dr(1)
 					nl%dr(2,nnumind,ind) = dr(2)
@@ -722,7 +796,7 @@ subroutine find_neibour_distances(nl,atoms,group1,group2,box)
 	type(particles)::	atoms
 	type(particle_group):: group1,group2
 	type(simulation_cell):: box
-	type(neibour_list):: nl
+	type(neighbour_list):: nl
 	real:: dr2
 	integer:: i,p
 
@@ -741,7 +815,7 @@ subroutine find_neibour_distances(nl,atoms,group1,group2,box)
 end subroutine find_neibour_distances
 
 subroutine converce_neigbour_list(cnl,group,nl)
-	type(neibour_list):: nl,cnl
+	type(neighbour_list):: nl,cnl
 	type(particle_group):: group
 	integer::		i,j,p
 
@@ -763,7 +837,7 @@ subroutine converce_neigbour_list(cnl,group,nl)
 			do p=1,nl%nnum(i)
 				j = nl%nlist(p,i)
 				cnl%nnum(j) = cnl%nnum(j)+1
-				if (cnl%nnum(j)>cnl%neib_num_max) then; write(*,*) 'error: too many neibours',j,cnl%nnum(j); stop; endif
+				if (cnl%nnum(j)>cnl%neighb_num_max) then; write(*,*) 'error: too many neibours',j,cnl%nnum(j); stop; endif
 				cnl%nlist(cnl%nnum(j),j) = i
 				cnl%dr(:,cnl%nnum(j),j) = -nl%dr(:,p,i)
 				cnl%moddr(cnl%nnum(j),j) = nl%moddr(p,i)

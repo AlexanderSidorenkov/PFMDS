@@ -22,7 +22,7 @@ end subroutine read_RJL_parameters
 
 subroutine RJL_energy(energy,nl,RJLp)
 	type(RosatoGuillopeLegrand_parameters):: RJLp
-	type(neibour_list):: nl
+	type(neighbour_list):: nl
 	integer:: i,p
 	real:: energy,energy_priv,Eb2,Er
 	
@@ -51,9 +51,9 @@ end subroutine RJL_energy
 subroutine RJL_forces(atoms,nl,RJLp)
 	type(RosatoGuillopeLegrand_parameters):: RJLp
 	type(particles)::	atoms
-	type(neibour_list):: nl
+	type(neighbour_list):: nl
 	integer:: i,p
-	real:: fc,dfc,Eb(nl%N),expp(nl%neib_num_max,nl%N),expq(nl%neib_num_max,nl%N)
+	real:: fc,dfc,Eb(nl%N),expp(nl%neighb_num_max,nl%N),expq(nl%neighb_num_max,nl%N)
 
 	!$OMP PARALLEL firstprivate(i,p,fc,dfc)
 	!$OMP DO

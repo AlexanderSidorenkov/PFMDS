@@ -7,6 +7,11 @@ SET lmf=ljc_and_morsec_moire_graphene_fitting\
 SET mod=mods\my_pc_gfortran\
 SET exe=..\executables\
 
+( date /t & time /t & gfortran -v 
+) 1>compilation.txt 2>&1
+SET optall=-fopt-info-optall=compilation_optall.txt
+SET missed=-fopt-info-missed=compilation_missed.txt
+
 SET optimizations=-Ofast -funroll-all-loops -ffast-math -funsafe-math-optimizations -flto -march=native -fschedule-fusion -freorder-blocks-algorithm=stc -floop-interchange
 SET compiler=gfortran -fdefault-real-8 -fopenmp -Wsurprising -Wunused %optimizations% -J %mod% -I %mod%
 SET modules=

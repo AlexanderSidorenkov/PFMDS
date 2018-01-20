@@ -24,7 +24,7 @@ subroutine read_LJC_parameters(LJCp,filename)
 end subroutine read_LJC_parameters
 
 subroutine LJC_energy(energy,nl,LJCp)
-	type(neibour_list):: nl
+	type(neighbour_list):: nl
 	type(LennardJonesCosine_parameters):: LJCp
 	integer:: i,p
 	real:: energy,energy_priv,V1,V2,V3
@@ -52,7 +52,7 @@ end subroutine LJC_energy
 
 subroutine LJC_forces_for_graphene(atoms,nl,nl_nn,LJCp)
 	type(particles)::	atoms
-	type(neibour_list):: nl,nl_nn
+	type(neighbour_list):: nl,nl_nn
 	type(LennardJonesCosine_parameters):: LJCp
 	integer:: i,p,q,l1,l2,l3,j,k,nnum_nn
 	real:: drj12(3),drj31(3),drj23(3),V1,V2,V3,f_c,df_c
@@ -111,7 +111,7 @@ end subroutine LJC_forces_for_graphene
 
 subroutine LJC_forces_for_other_atoms(atoms,nl,LJCp)
 	type(particles)::	atoms
-	type(neibour_list):: nl
+	type(neighbour_list):: nl
 	type(LennardJonesCosine_parameters):: LJCp
 	integer:: i,p
 	real:: gr_n(3),V1,V2,V3,f_c,df_c

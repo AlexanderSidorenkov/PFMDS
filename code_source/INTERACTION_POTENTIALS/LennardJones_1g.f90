@@ -26,7 +26,7 @@ subroutine read_LJ1g_parameters(LJp,filename)
 end subroutine read_LJ1g_parameters
 
 subroutine LJ1g_energy(energy,nl,LJp)
-	type(neibour_list):: nl
+	type(neighbour_list):: nl
 	type(LennardJones1g_parameters):: LJp
 	integer:: i,p
 	real:: energy,energy_priv,U
@@ -50,15 +50,15 @@ end subroutine LJ1g_energy
 
 subroutine LJ1g_forces(atoms,nl,LJp)
 	type(particles) ::	atoms
-	type(neibour_list) :: nl
+	type(neighbour_list) :: nl
 	type(LennardJones1g_parameters) :: LJp
 	integer:: i,p,k,ind,jnd
 	real,allocatable:: priv_force(:,:),F(:),fp(:,:)
 	
 	!$OMP PARALLEL private(i,p,k,ind,jnd,F,fp,priv_force)
 	if(.not. allocated(priv_force)) allocate(priv_force(3,atoms%N))!realloc if N changed
-	if(.not. allocated(F)) allocate(F(nl%neib_num_max))!realloc if neib_num_max changed
-	if(.not. allocated(fp)) allocate(fp(3,nl%neib_num_max))!realloc if neib_num_max changed
+	if(.not. allocated(F)) allocate(F(nl%neighb_num_max))!realloc if neighb_num_max changed
+	if(.not. allocated(fp)) allocate(fp(3,nl%neighb_num_max))!realloc if neighb_num_max changed
 	F = 0.
 	fp = 0.
 	priv_force = 0.	
@@ -95,7 +95,7 @@ subroutine LJ1g_forces(atoms,nl,LJp)
 end subroutine LJ1g_forces
 
 function scalar_lj_force(r,R1,R2,c12,c6,c12t12,c6t6)
-	! DECLARE SIMD(scalar_lj_force) UNIFORM(R1,R2,c12,c6,c12t12,c6t6)
+	!$OMP DECLARE SIMD(scalar_lj_force) UNIFORM(R1,R2,c12,c6,c12t12,c6t6)
 	real, intent(in) :: r
 	real, intent(in) :: R1,R2,c12,c6,c12t12,c6t6
 	real scalar_lj_force

@@ -25,10 +25,10 @@ subroutine read_REBOsc_parameters(REBOscp,filename)
 end subroutine read_REBOsc_parameters
 
 subroutine REBOsc_energy(energy,nl,REBOscp)
-	type(neibour_list):: nl
+	type(neighbour_list):: nl
 	type(REBOsc_parameters):: REBOscp
 	integer:: i,p,q,l,j
-	real:: energy,energy_priv,bsp(nl%neib_num_max,nl%N),bdh(nl%neib_num_max,nl%N),aa,ab,ac,bc,cosine
+	real:: energy,energy_priv,bsp(nl%neighb_num_max,nl%N),bdh(nl%neighb_num_max,nl%N),aa,ab,ac,bc,cosine
 	
 	energy = 0.
 	energy_priv = 0.

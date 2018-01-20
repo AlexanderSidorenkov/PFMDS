@@ -5,11 +5,11 @@ implicit none
 contains
 
 subroutine find_gr_nearest_neibors(nl_nn,nl)
-	type(neibour_list):: nl,nl_nn
+	type(neighbour_list):: nl,nl_nn
 	integer:: nnum_nn,i,p,k	
 	
 	nnum_nn = 3
-	if(nl_nn%neib_num_max/=nnum_nn) then; write(*,*) 'error: nl_nn%neib_num_max/=nnum_nn'; stop; endif
+	if(nl_nn%neighb_num_max/=nnum_nn) then; write(*,*) 'error: nl_nn%neighb_num_max/=nnum_nn'; stop; endif
 	!$OMP PARALLEL firstprivate(i,p,k)
 	!$OMP DO
 	do i=1,nl%N
@@ -56,7 +56,7 @@ end subroutine find_norm_in_graphene
 
 subroutine update_nearest_neibours_in_graphene(md_step,nl_nn,nl,atoms,group,box)
 	type(particles)::	atoms
-	type(neibour_list):: nl,nl_nn
+	type(neighbour_list):: nl,nl_nn
 	type(particle_group):: group
 	type(simulation_cell):: box
 	integer:: md_step
