@@ -54,7 +54,7 @@ subroutine RJL_forces(atoms,nl,RJLp)
 	type(neighbour_list):: nl
 	integer:: i,p
 	real:: fc,dfc,Eb(nl%N),expp(nl%neighb_num_max,nl%N),expq(nl%neighb_num_max,nl%N)
-
+	
 	!$OMP PARALLEL firstprivate(i,p,fc,dfc)
 	!$OMP DO
 	do i=1,nl%N

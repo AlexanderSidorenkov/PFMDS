@@ -17,7 +17,7 @@ real									::	exe_t,exe_time_start,exe_time_md,exe_time_pos_vel,&
 											exe_time_nlists,exe_time_nlsearch,exe_time_nldistance,exe_time_forces,exe_time_energy,&
 											conserved_energy,total_energy,kinetic_energy,potential_energy,prev_potential_energy,&
 											ms_de,fs(3),initial_temperature,target_temperature,temperature,nhc_q1
-integer									::	i,num_of_omp_treads,md_step,time_step_limit,integrators_num,integrator_index,&
+integer									::	i,num_of_omp_treads,md_step,md_step_limit,integrators_num,integrator_index,&
 											file_id,out_id,log_id,out_period,all_out_id,&
 											all_atoms_group_num,termo_atoms_group_num,&
 											all_moving_atoms_group_num,xyz_moving_atoms_group_num,z_moving_atoms_group_num
@@ -31,16 +31,16 @@ log_id = 108
 file_id = 2017
 
 open(file_id,file=trim(input_path)//settings_filename);	write(out_id,'(A,A)') 'settings_filename: ',trim(settings_filename)
-read(file_id,*) str,time_step_limit;					write(out_id,'(A32,i12)') str,time_step_limit
+read(file_id,*) str,md_step_limit;						write(out_id,'(A32,i12)') str,md_step_limit
 read(file_id,*) str,logfilename;						write(out_id,'(A32,A,A)') str,'	',trim(logfilename)
 read(file_id,*) str,init_xyz_filename;					write(out_id,'(A32,A,A)') str,'	',trim(init_xyz_filename)
 call read_box_size(cell,trim(input_path)//init_xyz_filename);	write(out_id,'(A,3f16.6)') 	'box_size: ',cell%box_size
 call read_particles(atoms,trim(input_path)//init_xyz_filename);	write(out_id,'(A,i12)') 	'particles_num: ',atoms%N
 read(file_id,*) str,new_velocities;						write(out_id,'(A32,l8)') str,new_velocities
 call create_groups(groups,file_id,out_id,atoms)
-read(file_id,*) str,all_moving_atoms_group_num;				write(out_id,'(A32,i12)') str,all_moving_atoms_group_num
-read(file_id,*) str,xyz_moving_atoms_group_num;				write(out_id,'(A32,i12)') str,xyz_moving_atoms_group_num
-read(file_id,*) str,z_moving_atoms_group_num;				write(out_id,'(A32,i12)') str,z_moving_atoms_group_num
+read(file_id,*) str,all_moving_atoms_group_num;			write(out_id,'(A32,i12)') str,all_moving_atoms_group_num
+read(file_id,*) str,xyz_moving_atoms_group_num;			write(out_id,'(A32,i12)') str,xyz_moving_atoms_group_num
+read(file_id,*) str,z_moving_atoms_group_num;			write(out_id,'(A32,i12)') str,z_moving_atoms_group_num
 read(file_id,*) str,termo_atoms_group_num;				write(out_id,'(A32,i12)') str,termo_atoms_group_num
 read(file_id,*) str,all_atoms_group_num;				write(out_id,'(A32,i12)') str,all_atoms_group_num
 read(file_id,*) str,integrators_num;					write(out_id,'(A32,i12)') str,integrators_num
@@ -73,26 +73,33 @@ exe_time_forces = 0.
 exe_time_energy = 0.
 integrator_index = 0
 dt%simulation_time = 0.
-do md_step=0,time_step_limit
+do md_step=0,md_step_limit
 
 	if (md_step==sum(integrators(0:integrator_index)%l)) then
 		integrator_index = integrator_index +1
 		do i=integrator_index,integrators_num
 			if (integrators(i)%l>0) then
-				integrator_index = i; integrator_name = integrators(i)%int_name; call init_time_steps(dt,integrators(i)%dt)
+				integrator_index = i
+				integrator_name = integrators(i)%int_name
+				call init_time_steps(dt,integrators(i)%dt)
 				if (integrator_name=='nvt') call set_nose_hoover_chain(nhc,target_temperature,nhc_q1,groups(termo_atoms_group_num)%N)
 				exit
 			endif
 		enddo
-		if (integrator_index>integrators_num) exit
+		if (integrator_index>integrators_num) then
+			write(out_id,*) 'no more integrators'
+			exit
+		endif
 	endif
-	
+
 	exe_t = omp_get_wtime()
 	call check_positions(out_id,atoms,cell)
 	if (md_step/=0) then
 		if (integrator_name=='nvms') then
-			if (abs(potential_energy-prev_potential_energy)<=ms_de) exit
-			prev_potential_energy = potential_energy
+			if (abs(potential_energy-prev_potential_energy)<=ms_de) then
+				write(out_id,*) 'potential energy diffrence is small enough'
+				exit
+			endif
 		endif
 		if (integrator_name=='nvt') call integrate_nose_hoover_chain(nhc,atoms,groups(termo_atoms_group_num),dt)
 		call integrate_verlet_xyz_velocities(atoms,groups(xyz_moving_atoms_group_num),dt)
@@ -100,18 +107,18 @@ do md_step=0,time_step_limit
 		call integrate_verlet_xyz_positions(atoms,groups(xyz_moving_atoms_group_num),dt,cell)
 		call integrate_verlet_z_positions(atoms,groups(z_moving_atoms_group_num),dt,cell)
 	endif
+	prev_potential_energy = potential_energy
 	exe_time_pos_vel = exe_time_pos_vel+omp_get_wtime()-exe_t
-	
+
 	exe_t = omp_get_wtime()
 	call update_interactions_neighbour_lists(md_step,interactions,atoms,groups,cell,exe_time_nlsearch,exe_time_nldistance)
 	exe_time_nlists = exe_time_nlists+omp_get_wtime()-exe_t
-	
 	exe_t = omp_get_wtime()
 	call zero_forces(atoms,groups(all_atoms_group_num))
 	call calculate_forces(atoms,interactions)
 	call calculate_forces_numerically(atoms,interactions)
 	exe_time_forces = exe_time_forces+omp_get_wtime()-exe_t
-	
+
 	exe_t = omp_get_wtime()
 	if (md_step/=0) then
 		call integrate_verlet_xyz_velocities(atoms,groups(xyz_moving_atoms_group_num),dt)
@@ -158,19 +165,19 @@ do md_step=0,time_step_limit
 
 enddo
 exe_time_md = omp_get_wtime()-exe_time_md 
-if (integrator_name=='nvms') write(out_id,*) 'potential_energy_difference:', potential_energy-prev_potential_energy
+if (integrator_name=='nvms') write(out_id,*) 'potential energy difference: ',potential_energy-prev_potential_energy
 write(out_id,*) 'steps number:', md_step
 
-write(out_id,'(A24,f10.2,A,f10.2,A)') 'MD:  ',exe_time_md,' S ',exe_time_md/exe_time_md*100,'%'
-write(out_id,'(A24,f10.2,A,f10.2,A)') 'POSITION AND VELOCITY:  ',exe_time_pos_vel,' S ',exe_time_pos_vel/exe_time_md*100,'%'
-write(out_id,'(A24,f10.2,A,f10.2,A)') 'NEIGHBOURS :  ',exe_time_nlists,' S ',exe_time_nlists/exe_time_md*100,'%'
+write(out_id,'(A24,f10.2,A,f10.2,A)') 'MD:',exe_time_md,' S ',exe_time_md/exe_time_md*100,'%'
+write(out_id,'(A24,f10.2,A,f10.2,A)') 'POSITION AND VELOCITY:',exe_time_pos_vel,' S ',exe_time_pos_vel/exe_time_md*100,'%'
+write(out_id,'(A24,f10.2,A,f10.2,A)') 'NEIGHBOURS:',exe_time_nlists,' S ',exe_time_nlists/exe_time_md*100,'%'
 write(out_id,'(A24,f10.2,A,f10.2,A)') 'NEIGHBOURS SEARCH:',exe_time_nlsearch,' S ',exe_time_nlsearch/exe_time_md*100,'%'
 write(out_id,'(A24,f10.2,A,f10.2,A)') 'NEIGHBOURS DISTANCE:',exe_time_nldistance,' S ',exe_time_nldistance/exe_time_md*100,'%'
-write(out_id,'(A24,f10.2,A,f10.2,A)') 'FORCES:  ',exe_time_forces,' S ',exe_time_forces/exe_time_md*100,'%'
-write(out_id,'(A24,f10.2,A,f10.2,A)') 'ENERGY:  ',exe_time_energy,' S ',exe_time_energy/exe_time_md*100,'%'
-write(out_id,'(A24,f10.2,A,f10.2,A)') 'REST:  ',exe_time_md-exe_time_pos_vel-exe_time_nlists-exe_time_forces-exe_time_energy,&
+write(out_id,'(A24,f10.2,A,f10.2,A)') 'FORCES:',exe_time_forces,' S ',exe_time_forces/exe_time_md*100,'%'
+write(out_id,'(A24,f10.2,A,f10.2,A)') 'ENERGY:',exe_time_energy,' S ',exe_time_energy/exe_time_md*100,'%'
+write(out_id,'(A24,f10.2,A,f10.2,A)') 'REST:',exe_time_md-exe_time_pos_vel-exe_time_nlists-exe_time_forces-exe_time_energy,&
 ' S ',(exe_time_md-exe_time_pos_vel-exe_time_nlists-exe_time_forces-exe_time_energy)/exe_time_md*100,'%'
-write(out_id,'(A24,f10.2)') 'TIME STEPS PER HOUR:  ',md_step/exe_time_md*3600
+write(out_id,'(A24,f10.2)') 'TIME STEPS PER HOUR:',md_step/exe_time_md*3600
 
 write(all_out_id,'(A32,i9,5f20.9)',advance='no') trim(output_prefix),md_step-1,dt%simulation_time,&
 total_energy,potential_energy,kinetic_energy,temperature

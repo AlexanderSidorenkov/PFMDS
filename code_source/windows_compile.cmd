@@ -12,7 +12,8 @@ SET exe=..\executables\
 SET optall=-fopt-info-optall=compilation_optall.txt
 SET missed=-fopt-info-missed=compilation_missed.txt
 
-SET optimizations=-Ofast -funroll-all-loops -ffast-math -funsafe-math-optimizations -flto -march=native -fschedule-fusion -freorder-blocks-algorithm=stc -floop-interchange
+SET optimizations_bug=-Ofast -funroll-all-loops -ffast-math -funsafe-math-optimizations -flto -march=native -fschedule-fusion -freorder-blocks-algorithm=stc -floop-interchange
+SET optimizations=-O3 -funroll-all-loops -ffast-math -flto -march=native -fschedule-fusion -freorder-blocks-algorithm=stc -floop-interchange
 SET compiler=gfortran -fdefault-real-8 -fopenmp -Wsurprising -Wunused %optimizations% -J %mod% -I %mod%
 SET modules=
 
