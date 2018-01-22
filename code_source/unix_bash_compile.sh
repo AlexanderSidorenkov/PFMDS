@@ -19,8 +19,10 @@ p=" -fpconstant -r8 -openmp -fast -unroll-aggressive -module $mod -I $mod "
 elif [ $compiler = 'gfortran' ]
 then
 module add gcc
+gfortran -v
 mod="$mod"lomonosov_gfortran/
-p=" -fdefault-real-8 -fopenmp -Ofast -funroll-all-loops -ffast-math -funsafe-math-optimizations -flto -march=native -Wsurprising -Wunused -J $mod -I $mod "
+#p=" -fdefault-real-8 -fopenmp -Ofast -funroll-all-loops -ffast-math -funsafe-math-optimizations -flto -march=native -Wsurprising -Wunused -J $mod -I $mod "
+p=" -fdefault-real-8 -fopenmp -O3 -funroll-all-loops -flto -march=native -Wsurprising -Wunused -J $mod -I $mod "
 $compiler $p -c "$md"IFPORT_illusion.f90 -o "$mod"IFPORT_illusion.o
 modules="$modules $mod"'IFPORT_illusion.o '
 fi
@@ -67,5 +69,3 @@ $compiler $p -o "$exe"run_gr_moire_fitting_"$compiler" "$rns"run_gr_moire_fittin
 
 module rm intel
 module rm gcc
-
-
