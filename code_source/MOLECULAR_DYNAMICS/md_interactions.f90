@@ -45,9 +45,8 @@ subroutine create_groups(groups,file_id,out_id,atoms)
 	write(out_id,'(A32,i12)') str,particle_types_num
 	read(file_id,*) str,groups_num
 	write(out_id,'(A32,i12)') str,groups_num
-	allocate(groups(0:groups_num),type_names(particle_types_num,groups_num))
+	allocate(groups(groups_num),type_names(particle_types_num,groups_num))
 	write(frmt,'("(i6,A,",i0,"A12,i9)")') particle_types_num
-	groups(0)%N = 0
 	do i=1,groups_num
 		read(file_id,*) str,type_names(:,i)
 		call create_particle_group(groups(i),type_names(:,i),atoms)
