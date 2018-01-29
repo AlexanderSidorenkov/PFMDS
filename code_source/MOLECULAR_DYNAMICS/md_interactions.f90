@@ -1,5 +1,6 @@
 module md_interactions
 use md_general
+use md_neighbours
 use LennardJones
 use LennardJones_1g
 !use Morse
@@ -149,7 +150,7 @@ subroutine update_interactions_neighbour_lists(md_step,interactions,atoms,groups
 		
 		select case (interactions(i)%interaction_name)
 		case('lj','morse','ljc','morsec')
-			call converce_neigbour_list(interactions(i)%nl(2),&
+			call converce_neighbour_list(interactions(i)%nl(2),&
 			groups(interactions(i)%group_nums(2)),interactions(i)%nl(1))
 		end select
 		
@@ -162,7 +163,7 @@ subroutine update_interactions_neighbour_lists(md_step,interactions,atoms,groups
 				end select
 			enddo
 			if (j<=size(interactions)) then
-				call update_nearest_neibours_in_graphene(md_step,interactions(i)%nl(3),interactions(j)%nl(1),atoms,&
+				call update_nearest_neighbours_in_graphene(md_step,interactions(i)%nl(3),interactions(j)%nl(1),atoms,&
 				groups(interactions(j)%group_nums(1)),cell)
 			else
 				call update_neighbour_list(md_step,interactions(i)%nl(3),atoms,&

@@ -31,6 +31,12 @@ $compiler $p -c "$md"perfomance_settings.f90 -o "$mod"perfomance_settings.o
 modules="$modules $mod"'perfomance_settings.o '
 $compiler $p -c "$md"md_general.f90 -o "$mod"md_general.o
 modules="$modules $mod"'md_general.o '
+$compiler $p -c "$md"md_integrators.f90 -o "$mod"md_integrators.o
+modules="$modules $mod"'md_integrators.o '
+$compiler $p -c "$md"md_neighbours.f90 -o "$mod"md_neighbours.o
+modules="$modules $mod"'md_neighbours.o '
+$compiler $p -c "$md"md_read_write.f90 -o "$mod"md_read_write.o
+modules="$modules $mod"'md_read_write.o '
 $compiler $p -c "$int"cut_off_function.f90 -o "$mod"cut_off_function.o
 modules="$modules $mod"'cut_off_function.o '
 $compiler $p -c "$int"cut_off_poly.f90 -o "$mod"cut_off_poly.o
@@ -61,7 +67,7 @@ $compiler $p -o "$exe"run_md_simulation_"$compiler" "$rns"run_md_simulation.f90 
 
 $compiler $p -c "$anl"graphene_on_surface_analysis.f90 -o "$mod"graphene_on_surface_analysis.o
 modules="$modules $mod"'graphene_on_surface_analysis.o '
-$compiler $p -o "$exe"run_gr_analysis_"$compiler" "$rns"run_gr_analysis.f90 "$mod"graphene_on_surface_analysis.o "$mod"md_general.o
+$compiler $p -o "$exe"run_gr_analysis_"$compiler" "$rns"run_gr_analysis.f90 "$mod"graphene_on_surface_analysis.o "$mod"md_general.o "$mod"md_read_write.o
 
 $compiler $p -c "$lmf"fit_gr_moire.f90 -o "$mod"fit_gr_moire.o
 modules="$modules $mod"'fit_gr_moire.o'

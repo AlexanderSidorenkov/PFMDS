@@ -1,10 +1,11 @@
 module graphenenorm
 use md_general
+use md_neighbours
 implicit none
 
 contains
 
-subroutine find_gr_nearest_neibors(nl_nn,nl)
+subroutine find_gr_nearest_neighbors(nl_nn,nl)
 	type(neighbour_list):: nl,nl_nn
 	integer:: nnum_nn,i,p,k	
 	
@@ -32,7 +33,7 @@ subroutine find_gr_nearest_neibors(nl_nn,nl)
 	!$OMP END DO
 	!$OMP END PARALLEL
 	
-end subroutine find_gr_nearest_neibors
+end subroutine find_gr_nearest_neighbors
 
 subroutine find_norm_in_graphene(gr_norm,dr_nn)
 	integer:: nnum_nn,i,p,k
@@ -54,7 +55,7 @@ subroutine find_norm_in_graphene(gr_norm,dr_nn)
 	!$OMP END PARALLEL	
 end subroutine find_norm_in_graphene
 
-subroutine update_nearest_neibours_in_graphene(md_step,nl_nn,nl,atoms,group,box)
+subroutine update_nearest_neighbours_in_graphene(md_step,nl_nn,nl,atoms,group,box)
 	type(particles)::	atoms
 	type(neighbour_list):: nl,nl_nn
 	type(particle_group):: group
@@ -62,11 +63,11 @@ subroutine update_nearest_neibours_in_graphene(md_step,nl_nn,nl,atoms,group,box)
 	integer:: md_step
 
 	if (mod(md_step,nl%update_period)==0) then
-		call find_gr_nearest_neibors(nl_nn,nl)
+		call find_gr_nearest_neighbors(nl_nn,nl)
 	else
-		call find_neibour_distances(nl_nn,atoms,group,group,box)
+		call find_neighbour_distances(nl_nn,atoms,group,group,box)
 	endif
 	
-end subroutine update_nearest_neibours_in_graphene
+end subroutine update_nearest_neighbours_in_graphene
 
 end module graphenenorm

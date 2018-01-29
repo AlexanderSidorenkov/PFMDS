@@ -23,6 +23,12 @@ SET modules=%modules% %mod%perfomance_settings.o
 SET modules=%modules% %mod%IFPORT_illusion.o
 %compiler% -c %md%md_general.f90 -o %mod%md_general.o
 SET modules=%modules% %mod%md_general.o
+%compiler% -c %md%md_integrators.f90 -o %mod%md_integrators.o
+SET modules=%modules% %mod%md_integrators.o
+%compiler% -c %md%md_neighbours.f90 -o %mod%md_neighbours.o
+SET modules=%modules% %mod%md_neighbours.o
+%compiler% -c %md%md_read_write.f90 -o %mod%md_read_write.o
+SET modules=%modules% %mod%md_read_write.o
 %compiler% -c %int%cut_off_function.f90 -o %mod%cut_off_function.o
 SET modules=%modules% %mod%cut_off_function.o
 %compiler% -c %int%cut_off_poly.f90 -o %mod%cut_off_poly.o
@@ -53,7 +59,7 @@ SET modules=%modules% %mod%md_simulation.o
 
 %compiler% -c %anl%graphene_on_surface_analysis.f90 -o %mod%graphene_on_surface_analysis.o
 SET modules=%modules% %mod%graphene_on_surface_analysis.o
-%compiler% -o %exe%run_gr_analysis.exe %rns%run_gr_analysis.f90 %mod%graphene_on_surface_analysis.o %mod%md_general.o
+%compiler% -o %exe%run_gr_analysis.exe %rns%run_gr_analysis.f90 %mod%graphene_on_surface_analysis.o %mod%md_general.o %mod%md_read_write.o
 
 %compiler% -c %lmf%fit_gr_moire.f90 -o %mod%fit_gr_moire.o
 SET modules=%modules% %mod%fit_gr_moire.o

@@ -1,6 +1,8 @@
 module md_simulation
 use perfomance_settings
 use md_general
+use md_integrators
+use md_read_write
 use md_interactions
 implicit none 
 contains
@@ -20,7 +22,8 @@ real									::	exe_t,exe_time_start,exe_time_md,exe_time_pos_vel,&
 integer									::	i,num_of_omp_treads,md_step,md_step_limit,integrators_num,integrator_index,&
 											file_id,out_id,log_id,out_period,all_out_id,&
 											all_atoms_group_num,termo_atoms_group_num,&
-											all_moving_atoms_group_num,xyz_moving_atoms_group_num,z_moving_atoms_group_num
+											all_moving_atoms_group_num,xyz_moving_atoms_group_num,z_moving_atoms_group_num,&
+											traj_group_num,period_traj
 character(len=128)						::	str,filename,logfilename,init_xyz_filename,input_path,settings_filename,output_prefix
 character(len=32)						::	integrator_name,interactions_energies_format
 logical 								::	new_velocities
@@ -43,6 +46,8 @@ read(file_id,*) str,xyz_moving_atoms_group_num;			write(out_id,'(A32,i12)') str,
 read(file_id,*) str,z_moving_atoms_group_num;			write(out_id,'(A32,i12)') str,z_moving_atoms_group_num
 read(file_id,*) str,termo_atoms_group_num;				write(out_id,'(A32,i12)') str,termo_atoms_group_num
 read(file_id,*) str,all_atoms_group_num;				write(out_id,'(A32,i12)') str,all_atoms_group_num
+read(file_id,*) str,traj_group_num;						write(out_id,'(A32,i12)') str,traj_group_num
+read(file_id,*) str,period_traj;						write(out_id,'(A32,i12)') str,period_traj
 read(file_id,*) str,integrators_num;					write(out_id,'(A32,i12)') str,integrators_num
 allocate(integrators(0:integrators_num)); integrators(0)%int_name='none'; integrators(0)%dt=0.; integrators(0)%l=0
 read(file_id,'(A)') str;								write(out_id,'(A32)') str
@@ -73,6 +78,7 @@ exe_time_forces = 0.
 exe_time_energy = 0.
 integrator_index = 0
 dt%simulation_time = 0.
+
 do md_step=0,md_step_limit
 
 	if (md_step==sum(integrators(0:integrator_index)%l)) then
@@ -163,7 +169,13 @@ do md_step=0,md_step_limit
 		call write_particle_group(filename,atoms,groups(all_atoms_group_num),cell)
 	endif
 
+	if (mod(md_step,period_traj)==0) then
+		write(filename,'(A,A,i2.2,A)') trim(output_prefix),'traj_',traj_group_num,'.xyz'
+		call write_particle_group_append(filename,atoms,groups(traj_group_num),cell)
+	endif
+	
 enddo
+
 exe_time_md = omp_get_wtime()-exe_time_md 
 if (integrator_name=='nvms') write(out_id,*) 'potential energy difference: ',potential_energy-prev_potential_energy
 write(out_id,*) 'steps number:', md_step
