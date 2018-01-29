@@ -81,21 +81,21 @@ dt%simulation_time = 0.
 
 do md_step=0,md_step_limit
 
-	if (md_step==sum(integrators(0:integrator_index)%l)) then
-		integrator_index = integrator_index +1
+	if (md_step-1==sum(integrators(0:integrator_index)%l)) then
+		integrator_index = integrator_index+1
 		do i=integrator_index,integrators_num
 			if (integrators(i)%l>0) then
-				integrator_index = i
 				integrator_name = integrators(i)%int_name
 				call init_time_steps(dt,integrators(i)%dt)
 				if (integrator_name=='nvt') call set_nose_hoover_chain(nhc,target_temperature,nhc_q1,groups(termo_atoms_group_num)%N)
 				exit
 			endif
 		enddo
-		if (integrator_index>integrators_num) then
+		if (i>integrators_num .or. (i==integrators_num .and. integrators(integrators_num)%l<1)) then
 			write(out_id,*) 'no more integrators'
 			exit
 		endif
+		integrator_index = i
 	endif
 
 	exe_t = omp_get_wtime()
@@ -178,7 +178,7 @@ enddo
 
 exe_time_md = omp_get_wtime()-exe_time_md 
 if (integrator_name=='nvms') write(out_id,*) 'potential energy difference: ',potential_energy-prev_potential_energy
-write(out_id,*) 'steps number:', md_step
+write(out_id,*) 'steps number:', md_step-1
 
 write(out_id,'(A24,f10.2,A,f10.2,A)') 'MD:',exe_time_md,' S ',exe_time_md/exe_time_md*100,'%'
 write(out_id,'(A24,f10.2,A,f10.2,A)') 'POSITION AND VELOCITY:',exe_time_pos_vel,' S ',exe_time_pos_vel/exe_time_md*100,'%'
