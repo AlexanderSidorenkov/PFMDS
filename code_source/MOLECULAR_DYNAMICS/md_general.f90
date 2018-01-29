@@ -79,6 +79,19 @@ subroutine create_particle_group(group,type_names,atoms)
 	return
 end subroutine create_particle_group
 
+subroutine change_particle_group_N(group,md_step,change_ts1,change_ts2,change_frec,init_group)
+	type(particle_group)::	group,init_group
+	integer:: md_step,change_ts1,change_ts2,change_frec
+
+	if(md_step<change_ts1) then
+		group%N = init_group%N
+	else
+		if(md_step<change_ts2 .and. mod(md_step-change_ts1,change_frec)==0) group%N = group%N+1
+	endif
+	if(group%N>size(group%indexes)) group%N = size(group%indexes)
+	
+end subroutine change_particle_group_N
+
 subroutine scale_velocities(atoms,group,s)
 	type(particles)::	atoms
 	type(particle_group):: group
@@ -348,6 +361,24 @@ subroutine check_velocities(out_id,atoms)
 	write(out_id,'(A,f16.8,A)') ' max velocity: ',sqrt(maxvel2),' A/fs '
 	
 end subroutine check_velocities
+
+subroutine invert_z_velocities(atoms,z_low_border,z_high_border)
+	type(particles)::	atoms
+	integer:: i
+	real:: z_low_border,z_high_border
+
+	!$OMP PARALLEL DO private(i)
+	do i=1,atoms%N
+		if(	(atoms%positions(3,i)>z_low_border .and.&
+			atoms%positions(3,i)<(z_low_border+z_high_border)/2 .and.&
+			atoms%velocities(3,i)>0.) .or.&
+			(atoms%positions(3,i)<z_high_border .and.&
+			atoms%positions(3,i)>(z_low_border+z_high_border)/2 .and.&
+			atoms%velocities(3,i)<0.)	)	atoms%velocities(3,i) = -atoms%velocities(3,i)
+	enddo
+	!$OMP END PARALLEL DO
+	
+end subroutine invert_z_velocities
 
 subroutine position_analysis(av,mi,ma,atoms,group,direction,minimum,maximum)
 	type(particles)::	atoms
