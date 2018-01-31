@@ -83,7 +83,7 @@ subroutine change_particle_group_N(group,md_step,change_ts1,change_ts2,change_fr
 	type(particle_group)::	group,init_group
 	integer:: md_step,change_ts1,change_ts2,change_frec
 
-	if(md_step<change_ts1) then
+	if(md_step<=change_ts1) then
 		group%N = init_group%N
 	else
 		if(md_step<change_ts2 .and. mod(md_step-change_ts1,change_frec)==0) group%N = group%N+1

@@ -23,10 +23,11 @@ integer									::	i,num_of_omp_treads,md_step,md_step_limit,integrators_num,int
 											file_id,out_id,log_id,out_period,all_out_id,&
 											all_atoms_group_num,termo_atoms_group_num,&
 											all_moving_atoms_group_num,xyz_moving_atoms_group_num,z_moving_atoms_group_num,&
-											traj_group_num,period_traj,group_change_from,group_change_to,change_ts1,change_ts2,change_frec
+											traj_group_num,period_traj,change_group_num
+integer,allocatable						::	group_change_from(:),group_change_to(:),change_ts1(:),change_ts2(:),change_frec(:)
 character(len=128)						::	str,filename,logfilename,init_xyz_filename,input_path,settings_filename,output_prefix
 character(len=32)						::	integrator_name,interactions_energies_format
-logical 								::	new_velocities
+logical 								::	new_velocities,invert_z_vel
 real									::	omp_get_wtime
 	
 exe_time_start = omp_get_wtime()
@@ -48,11 +49,19 @@ read(file_id,*) str,termo_atoms_group_num;				write(out_id,'(A32,i12)') str,term
 read(file_id,*) str,all_atoms_group_num;				write(out_id,'(A32,i12)') str,all_atoms_group_num
 read(file_id,*) str,traj_group_num;						write(out_id,'(A32,i12)') str,traj_group_num
 read(file_id,*) str,period_traj;						write(out_id,'(A32,i12)') str,period_traj
-read(file_id,*) str,group_change_from,group_change_to;	write(out_id,'(A32,2i12)') str,group_change_from,group_change_to
-read(file_id,*) str,change_ts1,change_ts2,change_frec;	write(out_id,'(A32,3i12)') str,change_ts1,change_ts2,change_frec
+read(file_id,*) str,change_group_num;					write(out_id,'(A32,i12)') str,change_group_num
+allocate(group_change_from(change_group_num),group_change_to(change_group_num),&
+change_ts1(change_group_num),change_ts2(change_group_num),change_frec(change_group_num))
+do i=1,change_group_num
+	read(file_id,*) str,group_change_from(i),group_change_to(i);
+	write(out_id,'(A32,2i12)') str,group_change_from(i),group_change_to(i)
+	read(file_id,*) str,change_ts1(i),change_ts2(i),change_frec(i)
+	write(out_id,'(A32,3i12)') str,change_ts1(i),change_ts2(i),change_frec(i)
+enddo
+read(file_id,*) str,invert_z_vel;						write(out_id,'(A32,l8)') str,invert_z_vel
 read(file_id,*) str,integrators_num;					write(out_id,'(A32,i12)') str,integrators_num
 allocate(integrators(0:integrators_num)); integrators(0)%int_name='none'; integrators(0)%dt=0.; integrators(0)%l=0
-read(file_id,'(A)') str;								write(out_id,'(A32)') str
+read(file_id,'(A)') str;								write(out_id,'(A)') str
 do i=1,integrators_num
 	call read_integrator_params(integrators(i),file_id)
 	write(out_id,'(A,A6,f10.5,4i9)') '  ',integrators(i)%int_name,&
@@ -83,8 +92,10 @@ dt%simulation_time = 0.
 
 do md_step=0,md_step_limit
 
-	call change_particle_group_N(groups(group_change_to),md_step,change_ts1,change_ts2,change_frec,groups(group_change_from))
-	call invert_z_velocities(atoms,0.8*cell%box_size(3),0.9*cell%box_size(3))
+	do i=1,change_group_num
+		call change_particle_group_N(groups(group_change_to(i)),md_step,change_ts1(i),change_ts2(i),&
+		change_frec(i),groups(group_change_from(i)))
+	enddo
 	
 	if (md_step-1==sum(integrators(0:integrator_index)%l) .or. integrator_index==0) then
 		integrator_index = integrator_index+1
@@ -105,6 +116,7 @@ do md_step=0,md_step_limit
 
 	exe_t = omp_get_wtime()
 	call check_positions(out_id,atoms,cell)
+	if (invert_z_vel) call invert_z_velocities(atoms,0.8*cell%box_size(3),0.9*cell%box_size(3))
 	if (md_step/=0) then
 		if (integrator_name=='nvms') then
 			if (abs(potential_energy-prev_potential_energy)<=ms_de) then
