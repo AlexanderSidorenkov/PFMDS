@@ -78,16 +78,18 @@ subroutine write_particle_group_append(filename,atoms,group,box,md_step)
 	character(*):: 	filename
 	integer::		i,ind,md_step
 
-	open(2,file=filename,action='write',position='append')
-	write(2,*) group%N
-	write(2,'(A,i9,A,9f10.4,A)') 'time_step: ',md_step,&
-	'    Lattice="',box%box_size(1), 0., 0., 0., box%box_size(2), 0., 0., 0., box%box_size(3),&
-	' " Properties=pos:R:3:vel:R:3:mass:R:1:species:S:1'
-	do ind=1,group%N
-		i = group%indexes(ind)
-		write(2,'(7f10.4,A,A)') atoms%positions(:,i),atoms%velocities(:,i),atoms%masses(i),'    ',trim(atoms%atom_types(i))
-	enddo
-	close(2)
+	if(group%N>0) then
+		open(2,file=filename,action='write',position='append')
+		write(2,*) group%N
+		write(2,'(A,i9,A,9f10.4,A)') 'time_step: ',md_step,&
+		'    Lattice="',box%box_size(1), 0., 0., 0., box%box_size(2), 0., 0., 0., box%box_size(3),&
+		' " Properties=pos:R:3:vel:R:3:mass:R:1:species:S:1'
+		do ind=1,group%N
+			i = group%indexes(ind)
+			write(2,'(7f10.4,A,A)') atoms%positions(:,i),atoms%velocities(:,i),atoms%masses(i),'    ',trim(atoms%atom_types(i))
+		enddo
+		close(2)
+	endif
 	
 	return
 end subroutine write_particle_group_append

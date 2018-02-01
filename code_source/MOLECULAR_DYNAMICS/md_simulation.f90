@@ -166,8 +166,8 @@ do md_step=0,md_step_limit
 		exe_time_energy = exe_time_energy+omp_get_wtime()-exe_t
 		
 		if (mod(md_step,integrators(integrator_index)%period_log)==0) then
-			write(log_id,'(A6,i9,5f24.6)',advance='no') trim(integrator_name),md_step,dt%simulation_time,&
-			total_energy,potential_energy,kinetic_energy,temperature
+			write(log_id,'(A6,i9,6f24.6)',advance='no') trim(integrator_name),md_step,dt%simulation_time,&
+			conserved_energy,total_energy,potential_energy,kinetic_energy,temperature
 			write(log_id,interactions_energies_format) interactions%energy
 		endif
 		
