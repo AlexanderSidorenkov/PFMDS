@@ -53,21 +53,18 @@ subroutine find_neighbours(nl,atoms,group1,group2,box)
 	type(simulation_cell):: box
 	type(neighbour_list):: nl
 	real:: dr(3),dr2
-	integer:: i,j,k,ind,jnd,nnumind,lessnnumind,group1N,group2N
-
-	group1N = size(group1%indexes)
-	group2N = size(group2%indexes)
+	integer:: i,j,k,ind,jnd,nnumind,lessnnumind
 	
-	if (group1N/=nl%N) then; write(*,*) 'error: group1N/=nl%N',group1N,nl%N; stop; endif
+	if (group1%N>nl%N) then; write(*,*) 'error: group1%N>nl%N',group1%N,nl%N; stop; endif
 	!$OMP PARALLEL firstprivate(i,j,k,ind,jnd,dr,dr2,nnumind,lessnnumind)
 	!$OMP DO
-	do ind=1,group1N
+	do ind=1,group1%N
 		i = group1%indexes(ind)
 		nl%particle_index(ind) = group1%indexes(ind)
 		!nl%nlist(:nl%nnum(ind),ind) = 0
 		nnumind = 0
 		lessnnumind = -1
-		do jnd=1,group2N
+		do jnd=1,group2%N
 			j = group2%indexes(jnd)
 			if (i/=j) then
 				call find_distance(dr,dr2,atoms%positions(:,i),atoms%positions(:,j),box)
@@ -121,12 +118,10 @@ end subroutine find_neighbour_distances
 subroutine converce_neighbour_list(cnl,group,nl)
 	type(neighbour_list):: nl,cnl
 	type(particle_group):: group
-	integer::		i,j,p,groupN
-
-	groupN = size(group%indexes)
+	integer::		i,j,p
 	
-	if (groupN>0 .and. nl%N>0 .and. cnl%N>0) then
-		if (groupN/=cnl%N) then; write(*,*) 'error: groupN/=cnl%N',groupN,cnl%N; stop; endif
+	if (group%N>0 .and. nl%N>0 .and. cnl%N>0) then
+		if (group%N>cnl%N) then; write(*,*) 'error: group%N>cnl%N',group%N,cnl%N; stop; endif
 		!$OMP PARALLEL firstprivate(i)
 		!$OMP DO
 		do i=1,group%N
