@@ -85,6 +85,7 @@ subroutine change_particle_group_N(group,md_step,change_ts1,change_ts2,change_fr
 
 	if(md_step<=change_ts1) then
 		group%N = init_group%N
+		if(md_step==change_ts1) group%N = group%N+1
 	else
 		if(md_step<change_ts2 .and. mod(md_step-change_ts1,change_frec)==0) group%N = group%N+1
 	endif
