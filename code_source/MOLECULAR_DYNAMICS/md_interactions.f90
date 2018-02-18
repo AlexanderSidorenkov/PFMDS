@@ -427,11 +427,17 @@ end subroutine shift_gr_norm
 subroutine nlists_load(out_id,interactions)
 	type(interaction):: interactions(:)
 	integer:: i,j,out_id
-	 
+	
+	if(size(interactions)>0) write(out_id,'(A)') ' neib lists load:'	 
 	do i=1,size(interactions)
 		do j=1,interactions(i)%nl_n
-			write(out_id,*) trim(interactions(i)%interaction_name),' ',j,' neib lists load:',&
-			maxval(interactions(i)%nl(j)%nnum),'/',interactions(i)%nl(j)%neighb_num_max
+			if(interactions(i)%nl(j)%N>0) then
+				write(out_id,'(A12,i6,i6,A,i6)') trim(interactions(i)%interaction_name),j,&
+				maxval(interactions(i)%nl(j)%nnum),'/',interactions(i)%nl(j)%neighb_num_max
+			else
+				write(out_id,'(A12,i6,i6,A,i6)') trim(interactions(i)%interaction_name),j,&
+				0,'/',interactions(i)%nl(j)%neighb_num_max
+			endif
 		enddo
 	enddo
 	

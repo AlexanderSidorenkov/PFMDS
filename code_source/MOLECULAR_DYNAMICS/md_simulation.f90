@@ -206,11 +206,14 @@ write(out_id,'(A24,f10.2,A,f10.2,A)') 'FORCES:',exe_time_forces,' S ',exe_time_f
 write(out_id,'(A24,f10.2,A,f10.2,A)') 'ENERGY:',exe_time_energy,' S ',exe_time_energy/exe_time_md*100,'%'
 write(out_id,'(A24,f10.2,A,f10.2,A)') 'REST:',exe_time_md-exe_time_pos_vel-exe_time_nlists-exe_time_forces-exe_time_energy,&
 ' S ',(exe_time_md-exe_time_pos_vel-exe_time_nlists-exe_time_forces-exe_time_energy)/exe_time_md*100,'%'
-write(out_id,'(A24,f10.2)') 'TIME STEPS PER HOUR:',md_step/exe_time_md*3600
+write(out_id,'(A24,f16.2)') 'TIME STEPS PER HOUR:',md_step/exe_time_md*3600
 
 write(all_out_id,'(A32,i9,5f20.9)',advance='no') trim(output_prefix),md_step-1,dt%simulation_time,&
 total_energy,potential_energy,kinetic_energy,temperature
 write(all_out_id,interactions_energies_format,advance='no') interactions%energy
+write(log_id,'(A32,i9,5f20.9)',advance='no') trim(output_prefix),md_step-1,dt%simulation_time,&
+total_energy,potential_energy,kinetic_energy,temperature
+write(log_id,interactions_energies_format,advance='no') interactions%energy
 
 write(filename,'(A,A,A)') trim(output_prefix),'final_',trim(init_xyz_filename)
 if (md_step/=0) call write_particle_group(filename,atoms,groups(all_atoms_group_num),cell)

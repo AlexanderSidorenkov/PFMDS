@@ -12,6 +12,7 @@ do i=1,80
 	line(i:i) = '_'
 enddo
 out_id = 6
+all_out_id = 66
 out_period = 1
 settings_files_list = ''
 settings_filename = 'md_run_settings.txt'
