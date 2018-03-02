@@ -18,12 +18,13 @@ type(nose_hoover_chain)					:: nhc
 real									::	exe_t,exe_time_start,exe_time_md,exe_time_pos_vel,&
 											exe_time_nlists,exe_time_nlsearch,exe_time_nldistance,exe_time_forces,exe_time_energy,&
 											conserved_energy,total_energy,kinetic_energy,potential_energy,prev_potential_energy,&
-											ms_de,fs(3),initial_temperature,target_temperature,temperature,nhc_q1
+											ms_de,fs(3),mcv(3),initial_temperature,target_temperature,temperature,nhc_q1
 integer									::	i,num_of_omp_treads,md_step,md_step_limit,integrators_num,integrator_index,&
 											file_id,out_id,log_id,out_period,all_out_id,&
 											all_atoms_group_num,termo_atoms_group_num,&
 											all_moving_atoms_group_num,xyz_moving_atoms_group_num,z_moving_atoms_group_num,&
-											traj_group_num,period_traj,change_group_num
+											traj_group_num,period_traj,change_group_num,&
+											zero_momentum_period
 integer,allocatable						::	group_change_from(:),group_change_to(:),change_ts1(:),change_ts2(:),change_frec(:)
 character(len=128)						::	str,filename,logfilename,init_xyz_filename,input_path,settings_filename,output_prefix
 character(len=32)						::	integrator_name,interactions_energies_format
@@ -41,6 +42,7 @@ read(file_id,*) str,init_xyz_filename;					write(out_id,'(A32,A,A)') str,'	',tri
 call read_box_size(cell,trim(input_path)//init_xyz_filename);	write(out_id,'(A,3f16.6)') 	'box_size: ',cell%box_size
 call read_particles(atoms,trim(input_path)//init_xyz_filename);	write(out_id,'(A,i12)') 	'particles_num: ',atoms%N
 read(file_id,*) str,new_velocities;						write(out_id,'(A32,l8)') str,new_velocities
+read(file_id,*) str,zero_momentum_period;				write(out_id,'(A32,i12)') str,zero_momentum_period
 call create_groups(groups,file_id,out_id,atoms)
 read(file_id,*) str,all_moving_atoms_group_num;			write(out_id,'(A32,i12)') str,all_moving_atoms_group_num
 read(file_id,*) str,xyz_moving_atoms_group_num;			write(out_id,'(A32,i12)') str,xyz_moving_atoms_group_num
@@ -137,6 +139,7 @@ do md_step=0,md_step_limit
 	call update_interactions_neighbour_lists(md_step,interactions,atoms,groups,cell,exe_time_nlsearch,exe_time_nldistance)
 	exe_time_nlists = exe_time_nlists+omp_get_wtime()-exe_t
 	exe_t = omp_get_wtime()
+	if (mod(md_step,zero_momentum_period)==0) call zero_momentum(atoms,groups(all_atoms_group_num))
 	call zero_forces(atoms,groups(all_atoms_group_num))
 	call calculate_forces(atoms,interactions)
 	call calculate_forces_numerically(atoms,interactions)
@@ -173,8 +176,9 @@ do md_step=0,md_step_limit
 		
 		if (mod(md_step,out_period)==0) then
 			call calculate_force_sum(fs,atoms,groups(all_atoms_group_num))
-			write(out_id,'(f12.2,A,A6,i12,f27.9,e14.4)') omp_get_wtime()-exe_time_start,' ',&
-			trim(integrator_name),md_step,conserved_energy,sqrt(sum(fs**2))
+			call calculate_mass_center_velosity(mcv,atoms,groups(all_atoms_group_num))
+			write(out_id,'(f9.2,A6,i10,f21.9,2e11.4)') omp_get_wtime()-exe_time_start,&
+			trim(integrator_name),md_step,conserved_energy,sqrt(sum(fs**2)),sqrt(sum(mcv**2))
 			call nlists_load(out_id,interactions)
 			call check_velocities(out_id,atoms)
 		endif
