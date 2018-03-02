@@ -18,7 +18,7 @@ type(nose_hoover_chain)					:: nhc
 real									::	exe_t,exe_time_start,exe_time_md,exe_time_pos_vel,&
 											exe_time_nlists,exe_time_nlsearch,exe_time_nldistance,exe_time_forces,exe_time_energy,&
 											conserved_energy,total_energy,kinetic_energy,potential_energy,prev_potential_energy,&
-											ms_de,fs(3),mcv(3),initial_temperature,target_temperature,temperature,nhc_q1
+											ms_de,fs(3),mcv(3),mc(3),initial_temperature,target_temperature,temperature,nhc_q1
 integer									::	i,num_of_omp_treads,md_step,md_step_limit,integrators_num,integrator_index,&
 											file_id,out_id,log_id,out_period,all_out_id,&
 											all_atoms_group_num,termo_atoms_group_num,&
@@ -176,9 +176,10 @@ do md_step=0,md_step_limit
 		
 		if (mod(md_step,out_period)==0) then
 			call calculate_force_sum(fs,atoms,groups(all_atoms_group_num))
+			call calculate_mass_center(mc,atoms,groups(all_atoms_group_num))
 			call calculate_mass_center_velosity(mcv,atoms,groups(all_atoms_group_num))
-			write(out_id,'(f9.2,A6,i10,f21.9,2e11.4)') omp_get_wtime()-exe_time_start,&
-			trim(integrator_name),md_step,conserved_energy,sqrt(sum(fs**2)),sqrt(sum(mcv**2))
+			write(out_id,'(f9.2,A6,i10,f21.9,2e11.4,3f9.4)') omp_get_wtime()-exe_time_start,&
+			trim(integrator_name),md_step,conserved_energy,sqrt(sum(fs**2)),sqrt(sum(mcv**2)),mc
 			call nlists_load(out_id,interactions)
 			call check_velocities(out_id,atoms)
 		endif
