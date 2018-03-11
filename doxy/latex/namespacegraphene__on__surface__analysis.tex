@@ -1,0 +1,51 @@
+\hypertarget{namespacegraphene__on__surface__analysis}{}\section{Модуль graphene\+\_\+on\+\_\+surface\+\_\+analysis}
+\label{namespacegraphene__on__surface__analysis}\index{graphene\+\_\+on\+\_\+surface\+\_\+analysis@{graphene\+\_\+on\+\_\+surface\+\_\+analysis}}
+\subsection*{Функции/подпрограммы}
+\begin{DoxyCompactItemize}
+\item 
+subroutine \mbox{\hyperlink{namespacegraphene__on__surface__analysis_a02cffcc8904565bfaf36c4503f30f759}{gr\+\_\+on\+\_\+cu\+\_\+analysis}} (arr1, arr2, filename, z)
+\end{DoxyCompactItemize}
+
+
+\subsection{Функции/подпрограммы}
+\mbox{\Hypertarget{namespacegraphene__on__surface__analysis_a02cffcc8904565bfaf36c4503f30f759}\label{namespacegraphene__on__surface__analysis_a02cffcc8904565bfaf36c4503f30f759}} 
+\index{graphene\+\_\+on\+\_\+surface\+\_\+analysis@{graphene\+\_\+on\+\_\+surface\+\_\+analysis}!gr\+\_\+on\+\_\+cu\+\_\+analysis@{gr\+\_\+on\+\_\+cu\+\_\+analysis}}
+\index{gr\+\_\+on\+\_\+cu\+\_\+analysis@{gr\+\_\+on\+\_\+cu\+\_\+analysis}!graphene\+\_\+on\+\_\+surface\+\_\+analysis@{graphene\+\_\+on\+\_\+surface\+\_\+analysis}}
+\subsubsection{\texorpdfstring{gr\+\_\+on\+\_\+cu\+\_\+analysis()}{gr\_on\_cu\_analysis()}}
+{\footnotesize\ttfamily subroutine graphene\+\_\+on\+\_\+surface\+\_\+analysis\+::gr\+\_\+on\+\_\+cu\+\_\+analysis (\begin{DoxyParamCaption}\item[{real, dimension(3)}]{arr1,  }\item[{real, dimension(3)}]{arr2,  }\item[{character(len=256)}]{filename,  }\item[{real}]{z }\end{DoxyParamCaption})}
+
+
+
+См. определение в файле graphene\+\_\+on\+\_\+surface\+\_\+analysis.\+f90 строка 9
+
+
+\begin{DoxyCode}
+9     \textcolor{keywordtype}{type}(particles)                         :: atoms
+10     \textcolor{keywordtype}{type}(particle\_group)                    :: groupC,groupCU
+11     \textcolor{keywordtype}{character}(len=256)                      :: filename
+12     \textcolor{keywordtype}{character}(len=32)                       :: type\_names(3)
+13     real                                    :: z,arr1(3),arr2(3)
+14 
+15     \textcolor{keyword}{call }read\_particles(atoms,filename)
+16     type\_names(1) = \textcolor{stringliteral}{'C'};    type\_names(2) = \textcolor{stringliteral}{'C\_a'};      type\_names(3) = \textcolor{stringliteral}{'C\_b'}
+17     \textcolor{keyword}{call }create\_particle\_group(groupc,type\_names,atoms)
+18     \textcolor{keyword}{call }position\_analysis(arr1(1),arr1(2),arr1(3),atoms,groupc,3,z,1000.)
+19     type\_names(1) = \textcolor{stringliteral}{'CU'};   type\_names(2) = \textcolor{stringliteral}{'CU\_fixed'}; type\_names(3) = \textcolor{stringliteral}{'#'}
+20     \textcolor{keyword}{call }create\_particle\_group(groupcu,type\_names,atoms)
+21     \textcolor{keyword}{call }position\_analysis(arr2(1),arr2(2),arr2(3),atoms,groupcu,3,z,1000.)
+22     \textcolor{keyword}{deallocate}(atoms%positions)
+23     \textcolor{keyword}{deallocate}(atoms%velocities)
+24     \textcolor{keyword}{deallocate}(atoms%forces)
+25     \textcolor{keyword}{deallocate}(atoms%masses)
+26     \textcolor{keyword}{deallocate}(atoms%atom\_types)
+27     \textcolor{keyword}{deallocate}(groupc%indexes)
+28     \textcolor{keyword}{deallocate}(groupcu%indexes)
+29     
+\end{DoxyCode}
+Граф вызовов\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=332pt]{namespacegraphene__on__surface__analysis_a02cffcc8904565bfaf36c4503f30f759_cgraph}
+\end{center}
+\end{figure}

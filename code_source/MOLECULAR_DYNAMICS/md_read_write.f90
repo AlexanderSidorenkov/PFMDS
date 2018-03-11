@@ -1,17 +1,24 @@
+!> \brief Модуль ввода вывода .xyz файлов и настроек моделирования.
+!> \todo Добавить чтение файла настроек.
 module md_read_write
 use md_general
 implicit none
 
 contains
 
+!> Читает параметры интегратора.
 subroutine read_integrator_params(integr,file_id)
 	type(integrator_params):: integr
-	integer:: file_id
+	integer:: file_id 
 
 	read(file_id,*) integr%int_name,integr%dt,integr%l,integr%period_snapshot,integr%period_log
 
+	return
 end subroutine read_integrator_params
 
+!> \brief Читает параметры моделируемой ячейки в файле .xyz.
+!> \detailed Читает второю строку в xyz файле. В размер ячейки задается тремя векторами. В общем случае ячейка триклинная.
+!> \warning Данная подпрограмма (как и вся программа) рассчитана только на прямоугольные ячейки.
 subroutine read_box_size(box,filename)
 	type(simulation_cell):: box
 	real:: boxmatrix(9)
@@ -30,6 +37,8 @@ subroutine read_box_size(box,filename)
 	return
 end subroutine read_box_size
 
+!> \brief Читает информацию о частицах из .xyz файла.
+!> \detailed Первая строка файла содержит количество частиц. Третья и последующие - координаты по X, Y, Z, скорости по X, Y, Z, массу и название частицы. Всего 8 столбцов для каждой частицы.
 subroutine read_particles(atoms,filename)
 	type(particles)::	atoms
 	character(*):: 	filename
@@ -51,6 +60,8 @@ subroutine read_particles(atoms,filename)
 	return
 end subroutine read_particles
 
+!> \brief Выводит информацию о группе частиц в новый файл.
+!> \warning Если файл с таким именем уже существует, он будет заменен новым.
 subroutine write_particle_group(filename,atoms,group,box)
 	type(particles)::	atoms
 	type(particle_group)::	group
@@ -71,6 +82,7 @@ subroutine write_particle_group(filename,atoms,group,box)
 	return
 end subroutine write_particle_group
 
+!> \brief Выводит информацию о группе частиц в конец уже имеющегося файла.
 subroutine write_particle_group_append(filename,atoms,group,box,md_step)
 	type(particles)::	atoms
 	type(particle_group)::	group

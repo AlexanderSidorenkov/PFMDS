@@ -1,0 +1,130 @@
+\hypertarget{namespacerebosolidcarbon}{}\section{Модуль rebosolidcarbon}
+\label{namespacerebosolidcarbon}\index{rebosolidcarbon@{rebosolidcarbon}}
+\subsection*{Типы данных}
+\begin{DoxyCompactItemize}
+\item 
+type \mbox{\hyperlink{structrebosolidcarbon_1_1rebosc__parameters}{rebosc\+\_\+parameters}}
+\end{DoxyCompactItemize}
+\subsection*{Функции/подпрограммы}
+\begin{DoxyCompactItemize}
+\item 
+subroutine \mbox{\hyperlink{namespacerebosolidcarbon_ac08d3d8f908fa0578d4565b200e96df0}{read\+\_\+rebosc\+\_\+parameters}} (R\+E\+B\+Oscp, filename)
+\item 
+subroutine \mbox{\hyperlink{namespacerebosolidcarbon_a300f2042f4b21284cfa42c0e4de3f0a8}{rebosc\+\_\+energy}} (energy, nl, R\+E\+B\+Oscp)
+\end{DoxyCompactItemize}
+
+
+\subsection{Функции/подпрограммы}
+\mbox{\Hypertarget{namespacerebosolidcarbon_ac08d3d8f908fa0578d4565b200e96df0}\label{namespacerebosolidcarbon_ac08d3d8f908fa0578d4565b200e96df0}} 
+\index{rebosolidcarbon@{rebosolidcarbon}!read\+\_\+rebosc\+\_\+parameters@{read\+\_\+rebosc\+\_\+parameters}}
+\index{read\+\_\+rebosc\+\_\+parameters@{read\+\_\+rebosc\+\_\+parameters}!rebosolidcarbon@{rebosolidcarbon}}
+\subsubsection{\texorpdfstring{read\+\_\+rebosc\+\_\+parameters()}{read\_rebosc\_parameters()}}
+{\footnotesize\ttfamily subroutine rebosolidcarbon\+::read\+\_\+rebosc\+\_\+parameters (\begin{DoxyParamCaption}\item[{type(\mbox{\hyperlink{structrebosolidcarbon_1_1rebosc__parameters}{rebosc\+\_\+parameters}})}]{R\+E\+B\+Oscp,  }\item[{character($\ast$)}]{filename }\end{DoxyParamCaption})}
+
+
+
+См. определение в файле R\+E\+B\+Osolidcarbon.\+f90 строка 13
+
+
+\begin{DoxyCode}
+13     \textcolor{keywordtype}{type}(REBOsc\_parameters):: REBOscp
+14     \textcolor{keywordtype}{character(*)}::  filename
+15 
+16     \textcolor{keyword}{open}(1,file=filename)
+17     \textcolor{keyword}{read}(1,*) reboscp%A,reboscp%Q,reboscp%alpha
+18     \textcolor{keyword}{read}(1,*) reboscp%B
+19     \textcolor{keyword}{read}(1,*) reboscp%beta
+20     \textcolor{keyword}{read}(1,*) reboscp%T
+21     \textcolor{keyword}{read}(1,*) reboscp%g
+22     \textcolor{keyword}{read}(1,*) reboscp%R1,reboscp%R2
+23     \textcolor{keyword}{close}(1)
+24     
+\end{DoxyCode}
+\mbox{\Hypertarget{namespacerebosolidcarbon_a300f2042f4b21284cfa42c0e4de3f0a8}\label{namespacerebosolidcarbon_a300f2042f4b21284cfa42c0e4de3f0a8}} 
+\index{rebosolidcarbon@{rebosolidcarbon}!rebosc\+\_\+energy@{rebosc\+\_\+energy}}
+\index{rebosc\+\_\+energy@{rebosc\+\_\+energy}!rebosolidcarbon@{rebosolidcarbon}}
+\subsubsection{\texorpdfstring{rebosc\+\_\+energy()}{rebosc\_energy()}}
+{\footnotesize\ttfamily subroutine rebosolidcarbon\+::rebosc\+\_\+energy (\begin{DoxyParamCaption}\item[{real}]{energy,  }\item[{type(\mbox{\hyperlink{structmd__general_1_1neighbour__list}{neighbour\+\_\+list}})}]{nl,  }\item[{type(\mbox{\hyperlink{structrebosolidcarbon_1_1rebosc__parameters}{rebosc\+\_\+parameters}})}]{R\+E\+B\+Oscp }\end{DoxyParamCaption})}
+
+
+
+См. определение в файле R\+E\+B\+Osolidcarbon.\+f90 строка 28
+
+
+\begin{DoxyCode}
+28     \textcolor{keywordtype}{type}(neighbour\_list):: nl
+29     \textcolor{keywordtype}{type}(REBOsc\_parameters):: REBOscp
+30     \textcolor{keywordtype}{integer}:: i,p,q,l,j
+31     \textcolor{keywordtype}{real}:: energy,energy\_priv,bsp(nl%neighb\_num\_max,nl%N),bdh(nl%neighb\_num\_max,nl%N),aa,ab,ac,bc,cosine
+32     
+33     energy = 0.
+34     energy\_priv = 0.
+35     \textcolor{comment}{!$OMP PARALLEL firstprivate(energy\_priv,i,p,q,l,j,aa,ab,ac,bc,cosine)}
+36     \textcolor{comment}{!$OMP DO}
+37     \textcolor{keywordflow}{do} i=1,nl%N
+38         bsp(:,i) = 0. \textcolor{comment}{!not very optimal but hides a bug(?) in numerical forse calc in parallel}
+39         bdh(:,i) = 0.
+40         \textcolor{keywordflow}{do} p=1,nl%nnum(i)
+41             \textcolor{comment}{!bsp(p,i) = 0.}
+42             \textcolor{comment}{!bdh(p,i) = 0.}
+43             \textcolor{keywordflow}{if} (nl%moddr(p,i)<reboscp%R2) \textcolor{keywordflow}{then}
+44                 j = nl%nlist(p,i)
+45                 \textcolor{keywordflow}{do} q=1,nl%nnum(i)
+46                     \textcolor{keywordflow}{if}(p/=q .and. nl%moddr(q,i)<reboscp%R2) \textcolor{keywordflow}{then}
+47                         cosine = sum(nl%dr(:,p,i)*nl%dr(:,q,i))/(nl%moddr(p,i)*nl%moddr(q,i))
+48                         bsp(p,i) = bsp(p,i)+f\_cut(nl%moddr(q,i),reboscp%R1,reboscp%R2)*(reboscp%g(1)+
+      reboscp%g(2)*cosine+&
+49                         reboscp%g(3)*cosine**2+reboscp%g(4)*cosine**3+reboscp%g(5)*cosine**4+reboscp%g(6)*
+      cosine**5)
+50                         \textcolor{keywordflow}{do} l=1,nl%nnum(j) \textcolor{comment}{!mb if j>i?}
+51                             \textcolor{keywordflow}{if}(nl%nlist(l,j)/=i .and. nl%moddr(l,j)<reboscp%R2) \textcolor{keywordflow}{then}
+52                                 aa = nl%moddr(p,i)**2
+53                                 ab = sum(nl%dr(:,p,i)*nl%dr(:,q,i))
+54                                 ac = sum(nl%dr(:,p,i)*nl%dr(:,l,j))
+55                                 bc = sum(nl%dr(:,q,i)*nl%dr(:,l,j))
+56                                 bdh(p,i) = bdh(p,i)+f\_cut(nl%moddr(q,i),reboscp%R1,reboscp%R2)*f\_cut(nl
+      %moddr(l,j),reboscp%R1,reboscp%R2)*&
+57                                 (1.-(aa*bc-ab*ac)**2/(aa*nl%moddr(q,i)**2-ab**2)/(aa*nl%moddr(l,j)**2-ac**2
+      ))
+58 \textcolor{keywordflow}{                            endif}
+59 \textcolor{keywordflow}{                        enddo}
+60 \textcolor{keywordflow}{                    endif}
+61 \textcolor{keywordflow}{                enddo}
+62                 bsp(p,i) = (1.+bsp(p,i))**(-0.5)
+63                 bdh(p,i) = reboscp%T*bdh(p,i)
+64 \textcolor{keywordflow}{            endif}
+65 \textcolor{keywordflow}{        enddo}
+66 \textcolor{keywordflow}{    enddo}
+67     \textcolor{comment}{!$OMP END DO}
+68     \textcolor{comment}{!$OMP DO}
+69     \textcolor{keywordflow}{do} i=1,nl%N
+70         \textcolor{keywordflow}{do} p=1,nl%nnum(i)
+71             \textcolor{keywordflow}{if} (nl%moddr(p,i)<reboscp%R2) \textcolor{keywordflow}{then}
+72                 j = nl%nlist(p,i)
+73                 \textcolor{keywordflow}{if} (j>i) \textcolor{keywordflow}{then}
+74                     \textcolor{keywordflow}{do} q=1,nl%nnum(j)
+75                         \textcolor{keywordflow}{if}(nl%nlist(q,j)==i) \textcolor{keywordflow}{exit}
+76 \textcolor{keywordflow}{                    enddo}
+77                     energy\_priv = energy\_priv+f\_cut(nl%moddr(p,i),reboscp%R1,reboscp%R2)*&
+78                     ((1+reboscp%Q/nl%moddr(p,i))*reboscp%A*exp(-reboscp%alpha*nl%moddr(p,i))-&
+79                     ((bsp(p,i)+bsp(q,j))/2+bdh(p,i))*&
+80                     (reboscp%B(1)*exp(-reboscp%beta(1)*nl%moddr(p,i))+&
+81                     reboscp%B(2)*exp(-reboscp%beta(2)*nl%moddr(p,i))+&
+82                     reboscp%B(3)*exp(-reboscp%beta(3)*nl%moddr(p,i))))
+83 \textcolor{keywordflow}{                endif}
+84 \textcolor{keywordflow}{            endif}
+85 \textcolor{keywordflow}{        enddo}
+86 \textcolor{keywordflow}{    enddo}
+87     \textcolor{comment}{!$OMP END DO}
+88     \textcolor{comment}{!$OMP ATOMIC}
+89         energy = energy+energy\_priv
+90     \textcolor{comment}{!$OMP END PARALLEL}
+91     
+\end{DoxyCode}
+Граф вызовов\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=347pt]{namespacerebosolidcarbon_a300f2042f4b21284cfa42c0e4de3f0a8_cgraph}
+\end{center}
+\end{figure}

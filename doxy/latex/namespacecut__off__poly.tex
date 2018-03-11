@@ -1,0 +1,83 @@
+\hypertarget{namespacecut__off__poly}{}\section{Модуль cut\+\_\+off\+\_\+poly}
+\label{namespacecut__off__poly}\index{cut\+\_\+off\+\_\+poly@{cut\+\_\+off\+\_\+poly}}
+\subsection*{Функции/подпрограммы}
+\begin{DoxyCompactItemize}
+\item 
+real function \mbox{\hyperlink{namespacecut__off__poly_a86929565d0a548608692680a8cd98cdc}{f\+\_\+cut}} (r, R1, R2)
+\item 
+real function \mbox{\hyperlink{namespacecut__off__poly_a5c318e9af5df6d48494b93a14ac45f00}{df\+\_\+cut}} (r, R1, R2)
+\item 
+pure subroutine \mbox{\hyperlink{namespacecut__off__poly_aa06a8a5bc68fa128e1a5bb543fce787b}{f\+\_\+dfr\+\_\+cut}} (f, dfr, r, R1, R2)
+\end{DoxyCompactItemize}
+
+
+\subsection{Функции/подпрограммы}
+\mbox{\Hypertarget{namespacecut__off__poly_a5c318e9af5df6d48494b93a14ac45f00}\label{namespacecut__off__poly_a5c318e9af5df6d48494b93a14ac45f00}} 
+\index{cut\+\_\+off\+\_\+poly@{cut\+\_\+off\+\_\+poly}!df\+\_\+cut@{df\+\_\+cut}}
+\index{df\+\_\+cut@{df\+\_\+cut}!cut\+\_\+off\+\_\+poly@{cut\+\_\+off\+\_\+poly}}
+\subsubsection{\texorpdfstring{df\+\_\+cut()}{df\_cut()}}
+{\footnotesize\ttfamily real function cut\+\_\+off\+\_\+poly\+::df\+\_\+cut (\begin{DoxyParamCaption}\item[{real}]{r,  }\item[{real}]{R1,  }\item[{real}]{R2 }\end{DoxyParamCaption})}
+
+
+
+См. определение в файле cut\+\_\+off\+\_\+poly.\+f90 строка 20
+
+
+\begin{DoxyCode}
+20     \textcolor{keywordtype}{real} df\_cut
+21     \textcolor{keywordtype}{real} :: r,R1,R2
+22 
+23     \textcolor{keywordflow}{if}(r>r1 .and. r<r2) \textcolor{keywordflow}{then}
+24         df\_cut = (-30.*(r-r1)**2*(r2-r1)**2+60.*(r-r1)**3*(r2-r1)-30.*(r-r1)**4)/(r2-r1)**5/r
+25     \textcolor{keywordflow}{else}
+26         df\_cut = 0.
+27 \textcolor{keywordflow}{    endif}   
+\end{DoxyCode}
+\mbox{\Hypertarget{namespacecut__off__poly_a86929565d0a548608692680a8cd98cdc}\label{namespacecut__off__poly_a86929565d0a548608692680a8cd98cdc}} 
+\index{cut\+\_\+off\+\_\+poly@{cut\+\_\+off\+\_\+poly}!f\+\_\+cut@{f\+\_\+cut}}
+\index{f\+\_\+cut@{f\+\_\+cut}!cut\+\_\+off\+\_\+poly@{cut\+\_\+off\+\_\+poly}}
+\subsubsection{\texorpdfstring{f\+\_\+cut()}{f\_cut()}}
+{\footnotesize\ttfamily real function cut\+\_\+off\+\_\+poly\+::f\+\_\+cut (\begin{DoxyParamCaption}\item[{real}]{r,  }\item[{real}]{R1,  }\item[{real}]{R2 }\end{DoxyParamCaption})}
+
+
+
+См. определение в файле cut\+\_\+off\+\_\+poly.\+f90 строка 7
+
+
+\begin{DoxyCode}
+7     \textcolor{keywordtype}{real} f\_cut
+8     \textcolor{keywordtype}{real} :: r,R1,R2
+9     
+10     \textcolor{keywordflow}{if}(r>r1 .and. r<r2) \textcolor{keywordflow}{then}
+11         f\_cut = 1.+(-10.*(r-r1)**3*(r2-r1)**2+15.*(r-r1)**4*(r2-r1)-6.*(r-r1)**5)/(r2-r1)**5
+12     \textcolor{keywordflow}{elseif}(r<r1) \textcolor{keywordflow}{then}
+13         f\_cut = 1.
+14     \textcolor{keywordflow}{else}
+15         f\_cut = 0.
+16 \textcolor{keywordflow}{    endif}
+\end{DoxyCode}
+\mbox{\Hypertarget{namespacecut__off__poly_aa06a8a5bc68fa128e1a5bb543fce787b}\label{namespacecut__off__poly_aa06a8a5bc68fa128e1a5bb543fce787b}} 
+\index{cut\+\_\+off\+\_\+poly@{cut\+\_\+off\+\_\+poly}!f\+\_\+dfr\+\_\+cut@{f\+\_\+dfr\+\_\+cut}}
+\index{f\+\_\+dfr\+\_\+cut@{f\+\_\+dfr\+\_\+cut}!cut\+\_\+off\+\_\+poly@{cut\+\_\+off\+\_\+poly}}
+\subsubsection{\texorpdfstring{f\+\_\+dfr\+\_\+cut()}{f\_dfr\_cut()}}
+{\footnotesize\ttfamily pure subroutine cut\+\_\+off\+\_\+poly\+::f\+\_\+dfr\+\_\+cut (\begin{DoxyParamCaption}\item[{real, intent(out)}]{f,  }\item[{real, intent(out)}]{dfr,  }\item[{real, intent(in)}]{r,  }\item[{real, intent(in)}]{R1,  }\item[{real, intent(in)}]{R2 }\end{DoxyParamCaption})}
+
+
+
+См. определение в файле cut\+\_\+off\+\_\+poly.\+f90 строка 31
+
+
+\begin{DoxyCode}
+31     \textcolor{keywordtype}{real}, \textcolor{keywordtype}{intent(in)} :: r,R1,R2
+32     \textcolor{keywordtype}{real}, \textcolor{keywordtype}{intent(out)} :: f,dfr
+33     \textcolor{keywordtype}{real} :: tempr,x,x2
+34     
+35     tempr = r
+36     tempr = max(tempr,r1)
+37     tempr = min(tempr,r2)
+38     x = (tempr-r1)/(r2-r1)
+39     x2 = x*x
+40     f = 1.+x2*x*(-10.+15.*x-6.*x2)
+41     dfr = tempr*x2*(-30.+60.*x-30.*x2)
+42     
+\end{DoxyCode}

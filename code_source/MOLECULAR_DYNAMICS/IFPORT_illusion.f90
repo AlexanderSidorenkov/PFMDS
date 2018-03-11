@@ -1,3 +1,5 @@
+!> \brief Заглушка для удобства компиляции.
+!> \detailed В IFPORT находится функция rand() при компиляции с ifort. При компиляции с gfortran такого модуля нет. Этот пустой модуль нужен чтобы не убирать use IFPORT в md_general при компиляции с gfortran.
 module IFPORT
 implicit none
 

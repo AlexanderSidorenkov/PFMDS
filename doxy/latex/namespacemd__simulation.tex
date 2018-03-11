@@ -1,0 +1,275 @@
+\hypertarget{namespacemd__simulation}{}\section{Модуль md\+\_\+simulation}
+\label{namespacemd__simulation}\index{md\+\_\+simulation@{md\+\_\+simulation}}
+\subsection*{Функции/подпрограммы}
+\begin{DoxyCompactItemize}
+\item 
+subroutine \mbox{\hyperlink{namespacemd__simulation_ab2107f3ca598f6a748991632633ee760}{md}} (out\+\_\+id, all\+\_\+out\+\_\+id, input\+\_\+path, settings\+\_\+filename, output\+\_\+prefix, out\+\_\+period, num\+\_\+of\+\_\+omp\+\_\+treads)
+\end{DoxyCompactItemize}
+
+
+\subsection{Функции/подпрограммы}
+\mbox{\Hypertarget{namespacemd__simulation_ab2107f3ca598f6a748991632633ee760}\label{namespacemd__simulation_ab2107f3ca598f6a748991632633ee760}} 
+\index{md\+\_\+simulation@{md\+\_\+simulation}!md@{md}}
+\index{md@{md}!md\+\_\+simulation@{md\+\_\+simulation}}
+\subsubsection{\texorpdfstring{md()}{md()}}
+{\footnotesize\ttfamily subroutine md\+\_\+simulation\+::md (\begin{DoxyParamCaption}\item[{integer}]{out\+\_\+id,  }\item[{integer}]{all\+\_\+out\+\_\+id,  }\item[{character(len=128)}]{input\+\_\+path,  }\item[{character(len=128)}]{settings\+\_\+filename,  }\item[{character(len=128)}]{output\+\_\+prefix,  }\item[{integer}]{out\+\_\+period,  }\item[{integer}]{num\+\_\+of\+\_\+omp\+\_\+treads }\end{DoxyParamCaption})}
+
+
+
+См. определение в файле md\+\_\+simulation.\+f90 строка 10
+
+
+\begin{DoxyCode}
+10 
+11 \textcolor{keywordtype}{type}(simulation\_cell)                   :: cell
+12 \textcolor{keywordtype}{type}(time\_steps)                        :: dt
+13 \textcolor{keywordtype}{type}(particles)                         :: atoms
+14 \textcolor{keywordtype}{type}(particle\_group),allocatable        :: groups(:)
+15 \textcolor{keywordtype}{type}(interaction),allocatable           :: interactions(:)
+16 \textcolor{keywordtype}{type}(integrator\_params),allocatable     :: integrators(:)
+17 \textcolor{keywordtype}{type}(nose\_hoover\_chain)                 :: nhc
+18 real                                    ::  exe\_t,exe\_time\_start,exe\_time\_md,exe\_time\_pos\_vel,&
+19                                             exe\_time\_nlists,exe\_time\_nlsearch,exe\_time\_nldistance,
+      exe\_time\_forces,exe\_time\_energy,&
+20                                             conserved\_energy,total\_energy,kinetic\_energy,potential\_energy,
+      prev\_potential\_energy,&
+21                                             ms\_de,fs(3),mcv(3),mc(3),initial\_temperature,target\_temperature
+      ,temperature,nhc\_q1
+22 integer                                 ::  i,num\_of\_omp\_treads,md\_step,md\_step\_limit,integrators\_num,
+      integrator\_index,&
+23                                             file\_id,out\_id,log\_id,out\_period,all\_out\_id,&
+24                                             all\_atoms\_group\_num,termo\_atoms\_group\_num,&
+25                                             all\_moving\_atoms\_group\_num,xyz\_moving\_atoms\_group\_num,
+      z\_moving\_atoms\_group\_num,&
+26                                             traj\_group\_num,period\_traj,change\_group\_num,&
+27                                             zero\_momentum\_period
+28 \textcolor{keywordtype}{integer},allocatable                     ::  group\_change\_from(:),group\_change\_to(:),change\_ts1(:),
+      change\_ts2(:),change\_frec(:)
+29 \textcolor{keywordtype}{character}(len=128)                      ::  str,filename,logfilename,init\_xyz\_filename,input\_path,
+      settings\_filename,output\_prefix
+30 \textcolor{keywordtype}{character}(len=32)                       ::  integrator\_name,interactions\_energies\_format
+31 \textcolor{keywordtype}{logical}                                 ::  new\_velocities,invert\_z\_vel
+32 real                                    ::  omp\_get\_wtime
+33     
+34 exe\_time\_start = omp\_get\_wtime()
+35 log\_id = 108
+36 file\_id = 2017
+37 
+38 \textcolor{keyword}{open}(file\_id,file=trim(input\_path)//settings\_filename); \textcolor{keyword}{write}(out\_id,\textcolor{stringliteral}{'(A,A)'}) \textcolor{stringliteral}{'settings\_filename: '},trim(
+      settings\_filename)
+39 \textcolor{keyword}{read}(file\_id,*) str,md\_step\_limit;                      \textcolor{keyword}{write}(out\_id,\textcolor{stringliteral}{'(A32,i12)'}) str,md\_step\_limit
+40 \textcolor{keyword}{read}(file\_id,*) str,logfilename;                        \textcolor{keyword}{write}(out\_id,\textcolor{stringliteral}{'(A32,A,A)'}) str,\textcolor{stringliteral}{' '},trim(logfilename)
+41 \textcolor{keyword}{read}(file\_id,*) str,init\_xyz\_filename;                  \textcolor{keyword}{write}(out\_id,\textcolor{stringliteral}{'(A32,A,A)'}) str,\textcolor{stringliteral}{' '},trim(
+      init\_xyz\_filename)
+42 \textcolor{keyword}{call }read\_box\_size(cell,trim(input\_path)//init\_xyz\_filename);   \textcolor{keyword}{write}(out\_id,\textcolor{stringliteral}{'(A,3f16.6)'})  \textcolor{stringliteral}{'box\_size: '},
+      cell%box\_size
+43 \textcolor{keyword}{call }read\_particles(atoms,trim(input\_path)//init\_xyz\_filename); \textcolor{keyword}{write}(out\_id,\textcolor{stringliteral}{'(A,i12)'})     \textcolor{stringliteral}{'particles\_num:
+       '},atoms%N
+44 \textcolor{keyword}{read}(file\_id,*) str,new\_velocities;                     \textcolor{keyword}{write}(out\_id,\textcolor{stringliteral}{'(A32,l8)'}) str,new\_velocities
+45 \textcolor{keyword}{read}(file\_id,*) str,zero\_momentum\_period;               \textcolor{keyword}{write}(out\_id,\textcolor{stringliteral}{'(A32,i12)'}) str,zero\_momentum\_period
+46 \textcolor{keyword}{call }create\_groups(groups,file\_id,out\_id,atoms)
+47 \textcolor{keyword}{read}(file\_id,*) str,all\_moving\_atoms\_group\_num;         \textcolor{keyword}{write}(out\_id,\textcolor{stringliteral}{'(A32,i12)'}) str,
+      all\_moving\_atoms\_group\_num
+48 \textcolor{keyword}{read}(file\_id,*) str,xyz\_moving\_atoms\_group\_num;         \textcolor{keyword}{write}(out\_id,\textcolor{stringliteral}{'(A32,i12)'}) str,
+      xyz\_moving\_atoms\_group\_num
+49 \textcolor{keyword}{read}(file\_id,*) str,z\_moving\_atoms\_group\_num;           \textcolor{keyword}{write}(out\_id,\textcolor{stringliteral}{'(A32,i12)'}) str,
+      z\_moving\_atoms\_group\_num
+50 \textcolor{keyword}{read}(file\_id,*) str,termo\_atoms\_group\_num;              \textcolor{keyword}{write}(out\_id,\textcolor{stringliteral}{'(A32,i12)'}) str,termo\_atoms\_group\_num
+51 \textcolor{keyword}{read}(file\_id,*) str,all\_atoms\_group\_num;                \textcolor{keyword}{write}(out\_id,\textcolor{stringliteral}{'(A32,i12)'}) str,all\_atoms\_group\_num
+52 \textcolor{keyword}{read}(file\_id,*) str,traj\_group\_num;                     \textcolor{keyword}{write}(out\_id,\textcolor{stringliteral}{'(A32,i12)'}) str,traj\_group\_num
+53 \textcolor{keyword}{read}(file\_id,*) str,period\_traj;                        \textcolor{keyword}{write}(out\_id,\textcolor{stringliteral}{'(A32,i12)'}) str,period\_traj
+54 \textcolor{keyword}{read}(file\_id,*) str,change\_group\_num;                   \textcolor{keyword}{write}(out\_id,\textcolor{stringliteral}{'(A32,i12)'}) str,change\_group\_num
+55 \textcolor{keyword}{allocate}(group\_change\_from(change\_group\_num),group\_change\_to(change\_group\_num),&
+56 change\_ts1(change\_group\_num),change\_ts2(change\_group\_num),change\_frec(change\_group\_num))
+57 \textcolor{keywordflow}{do} i=1,change\_group\_num
+58     \textcolor{keyword}{read}(file\_id,*) str,group\_change\_from(i),group\_change\_to(i);
+59     \textcolor{keyword}{write}(out\_id,\textcolor{stringliteral}{'(A32,2i12)'}) str,group\_change\_from(i),group\_change\_to(i)
+60     \textcolor{keyword}{read}(file\_id,*) str,change\_ts1(i),change\_ts2(i),change\_frec(i)
+61     \textcolor{keyword}{write}(out\_id,\textcolor{stringliteral}{'(A32,3i12)'}) str,change\_ts1(i),change\_ts2(i),change\_frec(i)
+62 \textcolor{keywordflow}{enddo}
+63 \textcolor{keyword}{read}(file\_id,*) str,invert\_z\_vel;                       \textcolor{keyword}{write}(out\_id,\textcolor{stringliteral}{'(A32,l8)'}) str,invert\_z\_vel
+64 \textcolor{keyword}{read}(file\_id,*) str,integrators\_num;                    \textcolor{keyword}{write}(out\_id,\textcolor{stringliteral}{'(A32,i12)'}) str,integrators\_num
+65 \textcolor{keyword}{allocate}(integrators(0:integrators\_num)); integrators(0)%int\_name=\textcolor{stringliteral}{'none'}; integrators(0)%dt=0.; integrators
+      (0)%l=0
+66 \textcolor{keyword}{read}(file\_id,\textcolor{stringliteral}{'(A)'}) str;                                \textcolor{keyword}{write}(out\_id,\textcolor{stringliteral}{'(A)'}) str
+67 \textcolor{keywordflow}{do} i=1,integrators\_num
+68     \textcolor{keyword}{call }read\_integrator\_params(integrators(i),file\_id)
+69     \textcolor{keyword}{write}(out\_id,\textcolor{stringliteral}{'(A,A6,f10.5,4i9)'}) \textcolor{stringliteral}{'  '},integrators(i)%int\_name,&
+70     integrators(i)%dt,integrators(i)%l,integrators(i)%period\_snapshot,integrators(i)%period\_log
+71 \textcolor{keywordflow}{enddo}
+72 \textcolor{keyword}{read}(file\_id,*) str,ms\_de;                              \textcolor{keyword}{write}(out\_id,\textcolor{stringliteral}{'(A32,f16.6)'}) str,ms\_de
+73 \textcolor{keyword}{read}(file\_id,*) str,target\_temperature,nhc%M,nhc\_q1;    \textcolor{keyword}{write}(out\_id,\textcolor{stringliteral}{'(A32,f16.6,i6,f16.6)'}) str,
+      target\_temperature,nhc%M,nhc\_q1
+74 \textcolor{keyword}{call }create\_nose\_hoover\_chain(nhc)
+75 \textcolor{keyword}{read}(file\_id,*) str,initial\_temperature;                \textcolor{keyword}{write}(out\_id,\textcolor{stringliteral}{'(A32,f16.6)'}) str,initial\_temperature
+76 \textcolor{keywordflow}{if} (initial\_temperature<0.) initial\_temperature=0.
+77 \textcolor{keywordflow}{if} (new\_velocities) \textcolor{keyword}{call }set\_new\_temperature(atoms,groups(all\_moving\_atoms\_group\_num),initial\_temperature)
+78 \textcolor{keyword}{call }create\_interactions(interactions,groups,file\_id,out\_id,input\_path)
+79 \textcolor{keyword}{close}(file\_id)
+80 
+81 \textcolor{keyword}{write}(interactions\_energies\_format,\textcolor{stringliteral}{'("(",i0,"f20.9)")'}) \textcolor{keyword}{size}(interactions)
+82 \textcolor{keyword}{write}(str,\textcolor{stringliteral}{'(A,A)'}) trim(output\_prefix),trim(logfilename)
+83 \textcolor{keyword}{open}(log\_id,file=str)
+84 \textcolor{keyword}{write}(out\_id,\textcolor{stringliteral}{'(A24,1f10.2,A)'}) \textcolor{stringliteral}{'PREPARATIONS TIME: '},omp\_get\_wtime()-exe\_time\_start,\textcolor{stringliteral}{' S '}
+85 \textcolor{keyword}{write}(out\_id,\textcolor{stringliteral}{'(A24,i6,A)'}) \textcolor{stringliteral}{'RUNNING ON '},num\_of\_omp\_treads,\textcolor{stringliteral}{' OPENMP THREADS'}
+86 \textcolor{keyword}{call }set\_openmp\_perfomance(num\_of\_omp\_treads,atoms%N)
+87 exe\_time\_md = omp\_get\_wtime()
+88 exe\_time\_pos\_vel = 0.
+89 exe\_time\_nlists = 0.
+90 exe\_time\_forces = 0.
+91 exe\_time\_energy = 0.
+92 integrator\_index = 0
+93 dt%simulation\_time = 0.
+94 
+95 \textcolor{keywordflow}{do} md\_step=0,md\_step\_limit
+96 
+97     \textcolor{keywordflow}{do} i=1,change\_group\_num
+98         \textcolor{keyword}{call }change\_particle\_group\_n(groups(group\_change\_to(i)),md\_step,change\_ts1(i),change\_ts2(i),&
+99         change\_frec(i),groups(group\_change\_from(i)))
+100 \textcolor{keywordflow}{    enddo}
+101     
+102     \textcolor{keywordflow}{if} (md\_step-1==sum(integrators(0:integrator\_index)%l) .or. integrator\_index==0) \textcolor{keywordflow}{then}
+103         integrator\_index = integrator\_index+1
+104         \textcolor{keywordflow}{do} i=integrator\_index,integrators\_num
+105             \textcolor{keywordflow}{if} (integrators(i)%l>0) \textcolor{keywordflow}{then}
+106                 integrator\_name = integrators(i)%int\_name
+107                 \textcolor{keyword}{call }init\_time\_steps(dt,integrators(i)%dt)
+108                 \textcolor{keywordflow}{if} (integrator\_name==\textcolor{stringliteral}{'nvt'}) \textcolor{keyword}{call }set\_nose\_hoover\_chain(nhc,target\_temperature,nhc\_q1,groups
+      (termo\_atoms\_group\_num)%N)
+109                 \textcolor{keywordflow}{exit}
+110 \textcolor{keywordflow}{            endif}
+111 \textcolor{keywordflow}{        enddo}
+112         \textcolor{keywordflow}{if} (i>integrators\_num .or. (i==integrators\_num .and. integrators(integrators\_num)%l<1)) \textcolor{keywordflow}{then}
+113             \textcolor{keyword}{write}(out\_id,*) \textcolor{stringliteral}{'no more integrators'}
+114             \textcolor{keywordflow}{exit}
+115 \textcolor{keywordflow}{        endif}
+116         integrator\_index = i
+117 \textcolor{keywordflow}{    endif}
+118 
+119     exe\_t = omp\_get\_wtime()
+120     \textcolor{keyword}{call }check\_positions(out\_id,atoms,cell)
+121     \textcolor{keywordflow}{if} (invert\_z\_vel) \textcolor{keyword}{call }invert\_z\_velocities(atoms,0.8*cell%box\_size(3),0.9*cell%box\_size(3))
+122     \textcolor{keywordflow}{if} (md\_step/=0) \textcolor{keywordflow}{then}
+123         \textcolor{keywordflow}{if} (integrator\_name==\textcolor{stringliteral}{'nvms'}) \textcolor{keywordflow}{then}
+124             \textcolor{keywordflow}{if} (abs(potential\_energy-prev\_potential\_energy)<=ms\_de) \textcolor{keywordflow}{then}
+125                 \textcolor{keyword}{write}(out\_id,*) \textcolor{stringliteral}{'potential energy diffrence is small enough'}
+126                 \textcolor{keywordflow}{exit}
+127 \textcolor{keywordflow}{            endif}
+128 \textcolor{keywordflow}{        endif}
+129         \textcolor{keywordflow}{if} (integrator\_name==\textcolor{stringliteral}{'nvt'}) \textcolor{keyword}{call }integrate\_nose\_hoover\_chain(nhc,atoms,groups(termo\_atoms\_group\_num
+      ),dt)
+130         \textcolor{keyword}{call }integrate\_verlet\_xyz\_velocities(atoms,groups(xyz\_moving\_atoms\_group\_num),dt)
+131         \textcolor{keyword}{call }integrate\_verlet\_z\_velocities(atoms,groups(z\_moving\_atoms\_group\_num),dt)
+132         \textcolor{keyword}{call }integrate\_verlet\_xyz\_positions(atoms,groups(xyz\_moving\_atoms\_group\_num),dt,cell)
+133         \textcolor{keyword}{call }integrate\_verlet\_z\_positions(atoms,groups(z\_moving\_atoms\_group\_num),dt,cell)
+134 \textcolor{keywordflow}{    endif}
+135     prev\_potential\_energy = potential\_energy
+136     exe\_time\_pos\_vel = exe\_time\_pos\_vel+omp\_get\_wtime()-exe\_t
+137 
+138     exe\_t = omp\_get\_wtime()
+139     \textcolor{keyword}{call }update\_interactions\_neighbour\_lists(md\_step,interactions,atoms,groups,cell,exe\_time\_nlsearch,
+      exe\_time\_nldistance)
+140     exe\_time\_nlists = exe\_time\_nlists+omp\_get\_wtime()-exe\_t
+141     exe\_t = omp\_get\_wtime()
+142     \textcolor{keywordflow}{if} (mod(md\_step,zero\_momentum\_period)==0) \textcolor{keyword}{call }zero\_momentum(atoms,groups(all\_atoms\_group\_num))
+143     \textcolor{keyword}{call }zero\_forces(atoms,groups(all\_atoms\_group\_num))
+144     \textcolor{keyword}{call }calculate\_forces(atoms,interactions)
+145     \textcolor{keyword}{call }calculate\_forces\_numerically(atoms,interactions)
+146     exe\_time\_forces = exe\_time\_forces+omp\_get\_wtime()-exe\_t
+147 
+148     exe\_t = omp\_get\_wtime()
+149     \textcolor{keywordflow}{if} (md\_step/=0) \textcolor{keywordflow}{then}
+150         \textcolor{keyword}{call }integrate\_verlet\_xyz\_velocities(atoms,groups(xyz\_moving\_atoms\_group\_num),dt)
+151         \textcolor{keyword}{call }integrate\_verlet\_z\_velocities(atoms,groups(z\_moving\_atoms\_group\_num),dt)
+152         \textcolor{keywordflow}{if} (integrator\_name==\textcolor{stringliteral}{'nvt'}) \textcolor{keyword}{call }integrate\_nose\_hoover\_chain(nhc,atoms,groups(termo\_atoms\_group\_num
+      ),dt)
+153         \textcolor{keywordflow}{if} (integrator\_name==\textcolor{stringliteral}{'nvms'}) \textcolor{keyword}{call }molecular\_static\_xyz\_velocities(atoms,groups(
+      xyz\_moving\_atoms\_group\_num))
+154         \textcolor{keywordflow}{if} (integrator\_name==\textcolor{stringliteral}{'nvms'}) \textcolor{keyword}{call }molecular\_static\_1d\_velocities(atoms,groups(
+      z\_moving\_atoms\_group\_num))
+155         dt%simulation\_time = dt%simulation\_time+dt%ts(1)
+156 \textcolor{keywordflow}{    endif}
+157     exe\_time\_pos\_vel = exe\_time\_pos\_vel+omp\_get\_wtime()-exe\_t
+158     
+159     \textcolor{keywordflow}{if} (mod(md\_step,integrators(integrator\_index)%period\_log)==0 .or. mod(md\_step,out\_period)==0 &
+160     .or. mod(md\_step,out\_period)==0 .or. integrator\_name==\textcolor{stringliteral}{'nvms'}) \textcolor{keywordflow}{then}
+161 
+162         exe\_t = omp\_get\_wtime()
+163         \textcolor{keyword}{call }calculate\_potential\_energies(interactions)
+164         potential\_energy = sum(interactions%energy)
+165         \textcolor{keyword}{call }calculate\_temperature(temperature,kinetic\_energy,atoms,groups(all\_moving\_atoms\_group\_num))
+166         total\_energy = potential\_energy+kinetic\_energy
+167         \textcolor{keywordflow}{if} (integrator\_name==\textcolor{stringliteral}{'nvt'}) \textcolor{keyword}{call }calculate\_nose\_hoover\_chain\_energy(nhc)
+168         conserved\_energy = total\_energy+nhc%e
+169         exe\_time\_energy = exe\_time\_energy+omp\_get\_wtime()-exe\_t
+170         
+171         \textcolor{keywordflow}{if} (mod(md\_step,integrators(integrator\_index)%period\_log)==0) \textcolor{keywordflow}{then}
+172             \textcolor{keyword}{write}(log\_id,\textcolor{stringliteral}{'(A6,i9,6f24.6)'},advance=\textcolor{stringliteral}{'no'}) trim(integrator\_name),md\_step,dt%simulation\_time,&
+173             conserved\_energy,total\_energy,potential\_energy,kinetic\_energy,temperature
+174             \textcolor{keyword}{write}(log\_id,interactions\_energies\_format) interactions%energy
+175 \textcolor{keywordflow}{        endif}
+176         
+177         \textcolor{keywordflow}{if} (mod(md\_step,out\_period)==0) \textcolor{keywordflow}{then}
+178             \textcolor{keyword}{call }calculate\_force\_sum(fs,atoms,groups(all\_atoms\_group\_num))
+179             \textcolor{keyword}{call }calculate\_mass\_center(mc,atoms,groups(all\_atoms\_group\_num))
+180             \textcolor{keyword}{call }calculate\_mass\_center\_velosity(mcv,atoms,groups(all\_atoms\_group\_num))
+181             \textcolor{keyword}{write}(out\_id,\textcolor{stringliteral}{'(f9.2,A6,i10,f21.9,2e11.4,3f9.4)'}) omp\_get\_wtime()-exe\_time\_start,&
+182             trim(integrator\_name),md\_step,conserved\_energy,sqrt(sum(fs**2)),sqrt(sum(mcv**2)),mc
+183             \textcolor{keyword}{call }nlists\_load(out\_id,interactions)
+184             \textcolor{keyword}{call }check\_velocities(out\_id,atoms)
+185 \textcolor{keywordflow}{        endif}
+186         
+187 \textcolor{keywordflow}{    endif}
+188 
+189     \textcolor{keywordflow}{if} (mod(md\_step,integrators(integrator\_index)%period\_snapshot)==0 .and. md\_step/=0) \textcolor{keywordflow}{then}
+190         \textcolor{keyword}{write}(filename,\textcolor{stringliteral}{'(A,A,i6.6,A)'}) trim(output\_prefix),\textcolor{stringliteral}{'snapshot\_'},md\_step,\textcolor{stringliteral}{'.xyz'}
+191         \textcolor{keyword}{call }write\_particle\_group(filename,atoms,groups(all\_atoms\_group\_num),cell)
+192 \textcolor{keywordflow}{    endif}
+193 
+194     \textcolor{keywordflow}{if} (mod(md\_step,period\_traj)==0) \textcolor{keywordflow}{then}
+195         \textcolor{keyword}{write}(filename,\textcolor{stringliteral}{'(A,A,i2.2,A)'}) trim(output\_prefix),\textcolor{stringliteral}{'traj\_'},traj\_group\_num,\textcolor{stringliteral}{'.xyz'}
+196         \textcolor{keyword}{call }write\_particle\_group\_append(filename,atoms,groups(traj\_group\_num),cell,md\_step)
+197 \textcolor{keywordflow}{    endif}
+198     
+199 \textcolor{keywordflow}{enddo}
+200 
+201 exe\_time\_md = omp\_get\_wtime()-exe\_time\_md 
+202 \textcolor{keywordflow}{if} (integrator\_name==\textcolor{stringliteral}{'nvms'}) \textcolor{keyword}{write}(out\_id,*) \textcolor{stringliteral}{'potential energy difference: '},potential\_energy-
+      prev\_potential\_energy
+203 \textcolor{keyword}{write}(out\_id,*) \textcolor{stringliteral}{'steps number:'}, md\_step-1
+204 
+205 \textcolor{keyword}{write}(out\_id,\textcolor{stringliteral}{'(A24,f10.2,A,f10.2,A)'}) \textcolor{stringliteral}{'MD:'},exe\_time\_md,\textcolor{stringliteral}{' S '},exe\_time\_md/exe\_time\_md*100,\textcolor{stringliteral}{'%'}
+206 \textcolor{keyword}{write}(out\_id,\textcolor{stringliteral}{'(A24,f10.2,A,f10.2,A)'}) \textcolor{stringliteral}{'POSITION AND VELOCITY:'},exe\_time\_pos\_vel,\textcolor{stringliteral}{' S '},exe\_time\_pos\_vel/
+      exe\_time\_md*100,\textcolor{stringliteral}{'%'}
+207 \textcolor{keyword}{write}(out\_id,\textcolor{stringliteral}{'(A24,f10.2,A,f10.2,A)'}) \textcolor{stringliteral}{'NEIGHBOURS:'},exe\_time\_nlists,\textcolor{stringliteral}{' S '},exe\_time\_nlists/exe\_time\_md*100,\textcolor{stringliteral}{
+      '%'}
+208 \textcolor{keyword}{write}(out\_id,\textcolor{stringliteral}{'(A24,f10.2,A,f10.2,A)'}) \textcolor{stringliteral}{'NEIGHBOURS SEARCH:'},exe\_time\_nlsearch,\textcolor{stringliteral}{' S '},exe\_time\_nlsearch/
+      exe\_time\_md*100,\textcolor{stringliteral}{'%'}
+209 \textcolor{keyword}{write}(out\_id,\textcolor{stringliteral}{'(A24,f10.2,A,f10.2,A)'}) \textcolor{stringliteral}{'NEIGHBOURS DISTANCE:'},exe\_time\_nldistance,\textcolor{stringliteral}{' S '},exe\_time\_nldistance/
+      exe\_time\_md*100,\textcolor{stringliteral}{'%'}
+210 \textcolor{keyword}{write}(out\_id,\textcolor{stringliteral}{'(A24,f10.2,A,f10.2,A)'}) \textcolor{stringliteral}{'FORCES:'},exe\_time\_forces,\textcolor{stringliteral}{' S '},exe\_time\_forces/exe\_time\_md*100,\textcolor{stringliteral}{'%'}
+211 \textcolor{keyword}{write}(out\_id,\textcolor{stringliteral}{'(A24,f10.2,A,f10.2,A)'}) \textcolor{stringliteral}{'ENERGY:'},exe\_time\_energy,\textcolor{stringliteral}{' S '},exe\_time\_energy/exe\_time\_md*100,\textcolor{stringliteral}{'%'}
+212 \textcolor{keyword}{write}(out\_id,\textcolor{stringliteral}{'(A24,f10.2,A,f10.2,A)'}) \textcolor{stringliteral}{'REST:'},exe\_time\_md-exe\_time\_pos\_vel-exe\_time\_nlists-exe\_time\_forces-
+      exe\_time\_energy,&
+213 \textcolor{stringliteral}{' S '},(exe\_time\_md-exe\_time\_pos\_vel-exe\_time\_nlists-exe\_time\_forces-exe\_time\_energy)/exe\_time\_md*100,\textcolor{stringliteral}{'%'}
+214 \textcolor{keyword}{write}(out\_id,\textcolor{stringliteral}{'(A24,f16.2)'}) \textcolor{stringliteral}{'TIME STEPS PER HOUR:'},md\_step/exe\_time\_md*3600
+215 
+216 \textcolor{keyword}{write}(all\_out\_id,\textcolor{stringliteral}{'(A32,i9,5f20.9)'},advance=\textcolor{stringliteral}{'no'}) trim(output\_prefix),md\_step-1,dt%simulation\_time,&
+217 total\_energy,potential\_energy,kinetic\_energy,temperature
+218 \textcolor{keyword}{write}(all\_out\_id,interactions\_energies\_format,advance=\textcolor{stringliteral}{'no'}) interactions%energy
+219 \textcolor{keyword}{write}(log\_id,\textcolor{stringliteral}{'(A32,i9,5f20.9)'},advance=\textcolor{stringliteral}{'no'}) trim(output\_prefix),md\_step-1,dt%simulation\_time,&
+220 total\_energy,potential\_energy,kinetic\_energy,temperature
+221 \textcolor{keyword}{write}(log\_id,interactions\_energies\_format,advance=\textcolor{stringliteral}{'no'}) interactions%energy
+222 
+223 \textcolor{keyword}{write}(filename,\textcolor{stringliteral}{'(A,A,A)'}) trim(output\_prefix),\textcolor{stringliteral}{'final\_'},trim(init\_xyz\_filename)
+224 \textcolor{keywordflow}{if} (md\_step/=0) \textcolor{keyword}{call }write\_particle\_group(filename,atoms,groups(all\_atoms\_group\_num),cell)
+225 \textcolor{keyword}{close}(log\_id)
+226 
+\end{DoxyCode}
+Граф вызовов\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=550pt]{namespacemd__simulation_ab2107f3ca598f6a748991632633ee760_cgraph}
+\end{center}
+\end{figure}

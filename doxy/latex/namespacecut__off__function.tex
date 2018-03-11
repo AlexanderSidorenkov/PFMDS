@@ -1,0 +1,56 @@
+\hypertarget{namespacecut__off__function}{}\section{Модуль cut\+\_\+off\+\_\+function}
+\label{namespacecut__off__function}\index{cut\+\_\+off\+\_\+function@{cut\+\_\+off\+\_\+function}}
+\subsection*{Функции/подпрограммы}
+\begin{DoxyCompactItemize}
+\item 
+real function \mbox{\hyperlink{namespacecut__off__function_acbf245e7d7bceb779e0510765042488b}{f\+\_\+cut}} (r, R1, R2)
+\item 
+real function \mbox{\hyperlink{namespacecut__off__function_af45796458c2774f2b3b30c3592efcae5}{df\+\_\+cut}} (r, R1, R2)
+\end{DoxyCompactItemize}
+
+
+\subsection{Функции/подпрограммы}
+\mbox{\Hypertarget{namespacecut__off__function_af45796458c2774f2b3b30c3592efcae5}\label{namespacecut__off__function_af45796458c2774f2b3b30c3592efcae5}} 
+\index{cut\+\_\+off\+\_\+function@{cut\+\_\+off\+\_\+function}!df\+\_\+cut@{df\+\_\+cut}}
+\index{df\+\_\+cut@{df\+\_\+cut}!cut\+\_\+off\+\_\+function@{cut\+\_\+off\+\_\+function}}
+\subsubsection{\texorpdfstring{df\+\_\+cut()}{df\_cut()}}
+{\footnotesize\ttfamily real function cut\+\_\+off\+\_\+function\+::df\+\_\+cut (\begin{DoxyParamCaption}\item[{real}]{r,  }\item[{real}]{R1,  }\item[{real}]{R2 }\end{DoxyParamCaption})}
+
+
+
+См. определение в файле cut\+\_\+off\+\_\+function.\+f90 строка 19
+
+
+\begin{DoxyCode}
+19     \textcolor{keywordtype}{real} df\_cut,r,R1,R2,pi
+20     pi=3.14159265358979
+21     \textcolor{keywordflow}{if}(r<r1) \textcolor{keywordflow}{then}
+22         df\_cut = 0.
+23     \textcolor{keywordflow}{elseif}(r<r2) \textcolor{keywordflow}{then}
+24         df\_cut = -sin( pi*(r-r1)/(r2-r1) )*pi/(r2-r1)/r/2
+25     \textcolor{keywordflow}{else}
+26         df\_cut = 0.
+27 \textcolor{keywordflow}{    endif}   
+\end{DoxyCode}
+\mbox{\Hypertarget{namespacecut__off__function_acbf245e7d7bceb779e0510765042488b}\label{namespacecut__off__function_acbf245e7d7bceb779e0510765042488b}} 
+\index{cut\+\_\+off\+\_\+function@{cut\+\_\+off\+\_\+function}!f\+\_\+cut@{f\+\_\+cut}}
+\index{f\+\_\+cut@{f\+\_\+cut}!cut\+\_\+off\+\_\+function@{cut\+\_\+off\+\_\+function}}
+\subsubsection{\texorpdfstring{f\+\_\+cut()}{f\_cut()}}
+{\footnotesize\ttfamily real function cut\+\_\+off\+\_\+function\+::f\+\_\+cut (\begin{DoxyParamCaption}\item[{real}]{r,  }\item[{real}]{R1,  }\item[{real}]{R2 }\end{DoxyParamCaption})}
+
+
+
+См. определение в файле cut\+\_\+off\+\_\+function.\+f90 строка 7
+
+
+\begin{DoxyCode}
+7     \textcolor{keywordtype}{real} f\_cut,r,R1,R2,pi
+8     pi=3.14159265358979
+9     \textcolor{keywordflow}{if}(r<r1) \textcolor{keywordflow}{then}
+10         f\_cut = 1.
+11     \textcolor{keywordflow}{elseif}(r<r2) \textcolor{keywordflow}{then}
+12         f\_cut = (1.+cos( pi*(r-r1)/(r2-r1) ))/2
+13     \textcolor{keywordflow}{else}
+14         f\_cut = 0.
+15 \textcolor{keywordflow}{    endif}
+\end{DoxyCode}

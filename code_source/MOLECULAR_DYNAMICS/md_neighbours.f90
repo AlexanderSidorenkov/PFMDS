@@ -1,9 +1,11 @@
+!> \brief Модуль содержит подпрограммы относящиеся к спискам соседей частиц
 module md_neighbours
 use md_general
 implicit none
 
 contains
 
+!> \brief Инициализирует пустой список соседей.
 subroutine create_neighbour_list(nl)
 	type(neighbour_list):: nl
 
@@ -25,6 +27,8 @@ subroutine create_neighbour_list(nl)
 	return
 end subroutine create_neighbour_list
 
+!> \brief Вычисляет расстояния между соседями. Обновляет список соседей с нужной частотой.
+!> \detailed Расстояния между соседями вычисляются всегда. Список соседей обнавляется с периодом указанным в списке. Также замеряется затраченное время.
 subroutine update_neighbour_list(md_step,nl,atoms,group1,group2,box,exe_time_nlsearch,exe_time_nldistance)
 	type(particles)::	atoms
 	type(particle_group):: group1,group2
@@ -47,6 +51,8 @@ subroutine update_neighbour_list(md_step,nl,atoms,group1,group2,box,exe_time_nls
 	
 end subroutine update_neighbour_list
 
+!> \brief Ищет соседей для частиц из первой группы среди второй группы.
+!> \detailed Группы могут совпадать.
 subroutine find_neighbours(nl,atoms,group1,group2,box)
 	type(particles)::	atoms
 	type(particle_group):: group1,group2
@@ -93,6 +99,8 @@ subroutine find_neighbours(nl,atoms,group1,group2,box)
 	return
 end subroutine find_neighbours
 
+!> \brief Пересчитывает взаимное расположение соседей.
+!> \todo Сделать sqrt(dr2) быстрее. 
 subroutine find_neighbour_distances(nl,atoms,group1,group2,box)
 	type(particles)::	atoms
 	type(particle_group):: group1,group2
@@ -115,17 +123,19 @@ subroutine find_neighbour_distances(nl,atoms,group1,group2,box)
 	return
 end subroutine find_neighbour_distances
 
-subroutine converce_neighbour_list(cnl,group,nl)
+!> \brief Делает список соседей для второй группы из списка соседей для первой группы.
+!> \detailed Эквивалентно find_neighbours(сnl,atoms,group2,group1,box). Обращенный список соседей заполняется данными из списка полученного подпрогаммой find_neighbours(nl,atoms,group1,group2,box)
+subroutine converce_neighbour_list(cnl,group2,nl)
 	type(neighbour_list):: nl,cnl
-	type(particle_group):: group
+	type(particle_group):: group2
 	integer::		i,j,p
 	
-	if (group%N>0 .and. nl%N>0 .and. cnl%N>0) then
-		if (group%N>cnl%N) then; write(*,*) 'error: group%N>cnl%N',group%N,cnl%N; stop; endif
+	if (group2%N>0 .and. nl%N>0 .and. cnl%N>0) then
+		if (group2%N>cnl%N) then; write(*,*) 'error: group2%N>cnl%N',group2%N,cnl%N; stop; endif
 		!$OMP PARALLEL firstprivate(i)
 		!$OMP DO
-		do i=1,group%N
-			cnl%particle_index(i) = group%indexes(i)
+		do i=1,group2%N
+			cnl%particle_index(i) = group2%indexes(i)
 		enddo
 		!$OMP END DO
 		!$OMP DO

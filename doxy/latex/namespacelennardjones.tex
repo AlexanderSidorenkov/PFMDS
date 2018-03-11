@@ -1,0 +1,123 @@
+\hypertarget{namespacelennardjones}{}\section{Модуль lennardjones}
+\label{namespacelennardjones}\index{lennardjones@{lennardjones}}
+\subsection*{Типы данных}
+\begin{DoxyCompactItemize}
+\item 
+type \mbox{\hyperlink{structlennardjones_1_1lennardjones__parameters}{lennardjones\+\_\+parameters}}
+\end{DoxyCompactItemize}
+\subsection*{Функции/подпрограммы}
+\begin{DoxyCompactItemize}
+\item 
+subroutine \mbox{\hyperlink{namespacelennardjones_ace8630f2bebc2a2aac8ab12a64aedffa}{read\+\_\+lj\+\_\+parameters}} (L\+Jp, filename)
+\item 
+subroutine \mbox{\hyperlink{namespacelennardjones_af8b565355907ac9a41a6336acd884a37}{lj\+\_\+energy}} (energy, nl, L\+Jp)
+\item 
+subroutine \mbox{\hyperlink{namespacelennardjones_af88358c174f20878507192477e6b8dde}{lj\+\_\+forces}} (atoms, nl, L\+Jp)
+\end{DoxyCompactItemize}
+
+
+\subsection{Функции/подпрограммы}
+\mbox{\Hypertarget{namespacelennardjones_af8b565355907ac9a41a6336acd884a37}\label{namespacelennardjones_af8b565355907ac9a41a6336acd884a37}} 
+\index{lennardjones@{lennardjones}!lj\+\_\+energy@{lj\+\_\+energy}}
+\index{lj\+\_\+energy@{lj\+\_\+energy}!lennardjones@{lennardjones}}
+\subsubsection{\texorpdfstring{lj\+\_\+energy()}{lj\_energy()}}
+{\footnotesize\ttfamily subroutine lennardjones\+::lj\+\_\+energy (\begin{DoxyParamCaption}\item[{real}]{energy,  }\item[{type(\mbox{\hyperlink{structmd__general_1_1neighbour__list}{neighbour\+\_\+list}})}]{nl,  }\item[{type(\mbox{\hyperlink{structlennardjones_1_1lennardjones__parameters}{lennardjones\+\_\+parameters}})}]{L\+Jp }\end{DoxyParamCaption})}
+
+
+
+См. определение в файле Lennard\+Jones.\+f90 строка 24
+
+
+\begin{DoxyCode}
+24     \textcolor{keywordtype}{type}(neighbour\_list):: nl
+25     \textcolor{keywordtype}{type}(LennardJones\_parameters):: LJp
+26     \textcolor{keywordtype}{integer}:: i,p
+27     \textcolor{keywordtype}{real}:: energy,energy\_priv,V
+28     
+29     energy = 0.
+30     energy\_priv = 0.
+31     \textcolor{comment}{!$OMP PARALLEL firstprivate(energy\_priv,i,p,V)}
+32     \textcolor{comment}{!$OMP DO}
+33     \textcolor{keywordflow}{do} i=1,nl%N
+34         \textcolor{keywordflow}{do} p=1,nl%nnum(i)
+35             \textcolor{keywordflow}{if} (nl%moddr(p,i)<ljp%R2) \textcolor{keywordflow}{then}
+36                 v = (ljp%sig/nl%moddr(p,i))**6
+37                 energy\_priv = energy\_priv+4*ljp%eps*v*(v-1.)*f\_cut(nl%moddr(p,i),ljp%R1,ljp%R2)
+38 \textcolor{keywordflow}{            endif}   
+39 \textcolor{keywordflow}{        enddo}
+40 \textcolor{keywordflow}{    enddo}
+41     \textcolor{comment}{!$OMP END DO}
+42     \textcolor{comment}{!$OMP ATOMIC}
+43         energy = energy+energy\_priv
+44     \textcolor{comment}{!$OMP END PARALLEL}
+45     
+\end{DoxyCode}
+Граф вызовов\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=343pt]{namespacelennardjones_af8b565355907ac9a41a6336acd884a37_cgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{namespacelennardjones_af88358c174f20878507192477e6b8dde}\label{namespacelennardjones_af88358c174f20878507192477e6b8dde}} 
+\index{lennardjones@{lennardjones}!lj\+\_\+forces@{lj\+\_\+forces}}
+\index{lj\+\_\+forces@{lj\+\_\+forces}!lennardjones@{lennardjones}}
+\subsubsection{\texorpdfstring{lj\+\_\+forces()}{lj\_forces()}}
+{\footnotesize\ttfamily subroutine lennardjones\+::lj\+\_\+forces (\begin{DoxyParamCaption}\item[{type(\mbox{\hyperlink{structmd__general_1_1particles}{particles}})}]{atoms,  }\item[{type(\mbox{\hyperlink{structmd__general_1_1neighbour__list}{neighbour\+\_\+list}})}]{nl,  }\item[{type(\mbox{\hyperlink{structlennardjones_1_1lennardjones__parameters}{lennardjones\+\_\+parameters}})}]{L\+Jp }\end{DoxyParamCaption})}
+
+
+
+См. определение в файле Lennard\+Jones.\+f90 строка 49
+
+
+\begin{DoxyCode}
+49     \textcolor{keywordtype}{type}(particles)::   atoms
+50     \textcolor{keywordtype}{type}(neighbour\_list):: nl
+51     \textcolor{keywordtype}{type}(LennardJones\_parameters):: LJp
+52     \textcolor{keywordtype}{integer}:: i,p
+53     \textcolor{keywordtype}{real}:: V
+54     
+55     \textcolor{comment}{!$OMP PARALLEL firstprivate(i,p,V)}
+56     \textcolor{comment}{!$OMP DO}
+57     \textcolor{keywordflow}{do} i=1,nl%N
+58         \textcolor{keywordflow}{do} p=1,nl%nnum(i)
+59             \textcolor{keywordflow}{if} (nl%moddr(p,i)<ljp%R2) \textcolor{keywordflow}{then}
+60                 v = (ljp%sig/nl%moddr(p,i))**6
+61                 atoms%forces(:,nl%particle\_index(i)) = atoms%forces(:,nl%particle\_index(i))-4.*ljp%eps*&
+62                 (v*(12.*v-6.)/nl%moddr(p,i)**2*f\_cut(nl%moddr(p,i),ljp%R1,ljp%R2)-v*(v-1.)*df\_cut(nl%moddr(
+      p,i),ljp%R1,ljp%R2))*nl%dr(:,p,i)
+63 \textcolor{keywordflow}{            endif}
+64 \textcolor{keywordflow}{        enddo}
+65 \textcolor{keywordflow}{    enddo}
+66     \textcolor{comment}{!$OMP END DO}
+67     \textcolor{comment}{!$OMP END PARALLEL}
+68     
+\end{DoxyCode}
+Граф вызовов\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=345pt]{namespacelennardjones_af88358c174f20878507192477e6b8dde_cgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{namespacelennardjones_ace8630f2bebc2a2aac8ab12a64aedffa}\label{namespacelennardjones_ace8630f2bebc2a2aac8ab12a64aedffa}} 
+\index{lennardjones@{lennardjones}!read\+\_\+lj\+\_\+parameters@{read\+\_\+lj\+\_\+parameters}}
+\index{read\+\_\+lj\+\_\+parameters@{read\+\_\+lj\+\_\+parameters}!lennardjones@{lennardjones}}
+\subsubsection{\texorpdfstring{read\+\_\+lj\+\_\+parameters()}{read\_lj\_parameters()}}
+{\footnotesize\ttfamily subroutine lennardjones\+::read\+\_\+lj\+\_\+parameters (\begin{DoxyParamCaption}\item[{type(\mbox{\hyperlink{structlennardjones_1_1lennardjones__parameters}{lennardjones\+\_\+parameters}})}]{L\+Jp,  }\item[{character($\ast$)}]{filename }\end{DoxyParamCaption})}
+
+
+
+См. определение в файле Lennard\+Jones.\+f90 строка 13
+
+
+\begin{DoxyCode}
+13     \textcolor{keywordtype}{type}(LennardJones\_parameters):: LJp
+14     \textcolor{keywordtype}{character(*)}::  filename
+15     
+16     \textcolor{keyword}{open}(1,file=filename)
+17     \textcolor{keyword}{read}(1,*) ljp%eps,ljp%sig
+18     \textcolor{keyword}{read}(1,*) ljp%R1,ljp%R2
+19     \textcolor{keyword}{close}(1)
+20     
+\end{DoxyCode}

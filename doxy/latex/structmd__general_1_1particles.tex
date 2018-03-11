@@ -1,0 +1,104 @@
+\hypertarget{structmd__general_1_1particles}{}\section{md\+\_\+general\+:\+:particles Шаблон типа}
+\label{structmd__general_1_1particles}\index{md\+\_\+general\+::particles@{md\+\_\+general\+::particles}}
+\subsection*{Открытые атрибуты}
+\begin{DoxyCompactItemize}
+\item 
+integer \mbox{\hyperlink{structmd__general_1_1particles_aeace4d645aa37734b6204936be3d528e}{n}}
+\item 
+real, dimension(\+:,\+:), allocatable \mbox{\hyperlink{structmd__general_1_1particles_a39f160de26e2d4fd6998e57f46fad846}{positions}}
+\item 
+real, dimension(\+:,\+:), allocatable \mbox{\hyperlink{structmd__general_1_1particles_af4164f454743cd600f1f96b5f8bd57a7}{velocities}}
+\item 
+real, dimension(\+:), allocatable \mbox{\hyperlink{structmd__general_1_1particles_a3f42e69b5affa491731cdd18733b443a}{masses}}
+\item 
+real, dimension(\+:,\+:), allocatable \mbox{\hyperlink{structmd__general_1_1particles_a87bc129db48217c4312de873a2215616}{forces}}
+\item 
+character(len=32), dimension(\+:), allocatable \mbox{\hyperlink{structmd__general_1_1particles_a566eeeb59bf158139e232701253e7cab}{atom\+\_\+types}}
+\end{DoxyCompactItemize}
+
+
+\subsection{Подробное описание}
+
+
+См. определение в файле md\+\_\+general.\+f90 строка 13
+
+
+
+\subsection{Данные класса}
+\mbox{\Hypertarget{structmd__general_1_1particles_a566eeeb59bf158139e232701253e7cab}\label{structmd__general_1_1particles_a566eeeb59bf158139e232701253e7cab}} 
+\index{md\+\_\+general\+::particles@{md\+\_\+general\+::particles}!atom\+\_\+types@{atom\+\_\+types}}
+\index{atom\+\_\+types@{atom\+\_\+types}!md\+\_\+general\+::particles@{md\+\_\+general\+::particles}}
+\subsubsection{\texorpdfstring{atom\+\_\+types}{atom\_types}}
+{\footnotesize\ttfamily character(len=32), dimension(\+:), allocatable md\+\_\+general\+::particles\+::atom\+\_\+types}
+
+
+
+См. определение в файле md\+\_\+general.\+f90 строка 16
+
+
+\begin{DoxyCode}
+16     \textcolor{keywordtype}{character(len=32)},\textcolor{keywordtype}{allocatable}:: atom\_types(:)
+\end{DoxyCode}
+\mbox{\Hypertarget{structmd__general_1_1particles_a87bc129db48217c4312de873a2215616}\label{structmd__general_1_1particles_a87bc129db48217c4312de873a2215616}} 
+\index{md\+\_\+general\+::particles@{md\+\_\+general\+::particles}!forces@{forces}}
+\index{forces@{forces}!md\+\_\+general\+::particles@{md\+\_\+general\+::particles}}
+\subsubsection{\texorpdfstring{forces}{forces}}
+{\footnotesize\ttfamily real, dimension(\+:,\+:), allocatable md\+\_\+general\+::particles\+::forces}
+
+
+
+См. определение в файле md\+\_\+general.\+f90 строка 15
+
+\mbox{\Hypertarget{structmd__general_1_1particles_a3f42e69b5affa491731cdd18733b443a}\label{structmd__general_1_1particles_a3f42e69b5affa491731cdd18733b443a}} 
+\index{md\+\_\+general\+::particles@{md\+\_\+general\+::particles}!masses@{masses}}
+\index{masses@{masses}!md\+\_\+general\+::particles@{md\+\_\+general\+::particles}}
+\subsubsection{\texorpdfstring{masses}{masses}}
+{\footnotesize\ttfamily real, dimension(\+:), allocatable md\+\_\+general\+::particles\+::masses}
+
+
+
+См. определение в файле md\+\_\+general.\+f90 строка 15
+
+\mbox{\Hypertarget{structmd__general_1_1particles_aeace4d645aa37734b6204936be3d528e}\label{structmd__general_1_1particles_aeace4d645aa37734b6204936be3d528e}} 
+\index{md\+\_\+general\+::particles@{md\+\_\+general\+::particles}!n@{n}}
+\index{n@{n}!md\+\_\+general\+::particles@{md\+\_\+general\+::particles}}
+\subsubsection{\texorpdfstring{n}{n}}
+{\footnotesize\ttfamily integer md\+\_\+general\+::particles\+::n}
+
+
+
+См. определение в файле md\+\_\+general.\+f90 строка 14
+
+
+\begin{DoxyCode}
+14     \textcolor{keywordtype}{integer}:: N
+\end{DoxyCode}
+\mbox{\Hypertarget{structmd__general_1_1particles_a39f160de26e2d4fd6998e57f46fad846}\label{structmd__general_1_1particles_a39f160de26e2d4fd6998e57f46fad846}} 
+\index{md\+\_\+general\+::particles@{md\+\_\+general\+::particles}!positions@{positions}}
+\index{positions@{positions}!md\+\_\+general\+::particles@{md\+\_\+general\+::particles}}
+\subsubsection{\texorpdfstring{positions}{positions}}
+{\footnotesize\ttfamily real, dimension(\+:,\+:), allocatable md\+\_\+general\+::particles\+::positions}
+
+
+
+См. определение в файле md\+\_\+general.\+f90 строка 15
+
+
+\begin{DoxyCode}
+15     \textcolor{keywordtype}{real},\textcolor{keywordtype}{allocatable}::  positions(:,:),velocities(:,:),masses(:),forces(:,:)
+\end{DoxyCode}
+\mbox{\Hypertarget{structmd__general_1_1particles_af4164f454743cd600f1f96b5f8bd57a7}\label{structmd__general_1_1particles_af4164f454743cd600f1f96b5f8bd57a7}} 
+\index{md\+\_\+general\+::particles@{md\+\_\+general\+::particles}!velocities@{velocities}}
+\index{velocities@{velocities}!md\+\_\+general\+::particles@{md\+\_\+general\+::particles}}
+\subsubsection{\texorpdfstring{velocities}{velocities}}
+{\footnotesize\ttfamily real, dimension(\+:,\+:), allocatable md\+\_\+general\+::particles\+::velocities}
+
+
+
+См. определение в файле md\+\_\+general.\+f90 строка 15
+
+
+
+Документация по типу сгенерирована на основе следующего файла\+:\begin{DoxyCompactItemize}
+\item 
+M\+O\+L\+E\+C\+U\+L\+A\+R\+\_\+\+D\+Y\+N\+A\+M\+I\+C\+S/\mbox{\hyperlink{md__general_8f90}{md\+\_\+general.\+f90}}\end{DoxyCompactItemize}

@@ -1,0 +1,386 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<meta name="generator" content="Doxygen 1.8.14"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>PFMDS: Модуль md_neighbours</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
+  $(document).ready(initResizable);
+/* @license-end */</script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr style="height: 56px;">
+  <td id="projectalign" style="padding-left: 0.5em;">
+   <div id="projectname">PFMDS
+   </div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Создано системой Doxygen 1.8.14 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
+var searchBox = new SearchBox("searchBox", "search",false,'Поиск');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
+$(function() {
+  initMenu('',true,false,'search.php','Поиск');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */</script>
+<div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
+$(document).ready(function(){initNavTree('namespacemd__neighbours.html','');});
+/* @license-end */
+</script>
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<iframe src="javascript:void(0)" frameborder="0" 
+        name="MSearchResults" id="MSearchResults">
+</iframe>
+</div>
+
+<div class="header">
+  <div class="summary">
+<a href="#func-members">Функции/подпрограммы</a>  </div>
+  <div class="headertitle">
+<div class="title">Модуль md_neighbours</div>  </div>
+</div><!--header-->
+<div class="contents">
+
+<p>Модуль содержит подпрограммы относящиеся к спискам соседей частиц  
+<a href="#details">Подробнее...</a></p>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
+Функции/подпрограммы</h2></td></tr>
+<tr class="memitem:a7246ea26ccbca29fb308ef82c2740bc9"><td class="memItemLeft" align="right" valign="top">subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacemd__neighbours.html#a7246ea26ccbca29fb308ef82c2740bc9">create_neighbour_list</a> (nl)</td></tr>
+<tr class="memdesc:a7246ea26ccbca29fb308ef82c2740bc9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Инициализирует пустой список соседей.  <a href="#a7246ea26ccbca29fb308ef82c2740bc9">Подробнее...</a><br /></td></tr>
+<tr class="separator:a7246ea26ccbca29fb308ef82c2740bc9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa3afc442e82c37b20e8963af79455747"><td class="memItemLeft" align="right" valign="top">subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacemd__neighbours.html#aa3afc442e82c37b20e8963af79455747">update_neighbour_list</a> (md_step, nl, atoms, group1, group2, box, exe_time_nlsearch, exe_time_nldistance)</td></tr>
+<tr class="memdesc:aa3afc442e82c37b20e8963af79455747"><td class="mdescLeft">&#160;</td><td class="mdescRight">Вычисляет расстояния между соседями. Обновляет список соседей с нужной частотой.  Расстояния между соседями вычисляются всегда. Список соседей обнавляется с периодом указанным в списке. Также замеряется затраченное время.  <a href="#aa3afc442e82c37b20e8963af79455747">Подробнее...</a><br /></td></tr>
+<tr class="separator:aa3afc442e82c37b20e8963af79455747"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a037f048abc67c7d83799c76aabaa8dac"><td class="memItemLeft" align="right" valign="top">subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacemd__neighbours.html#a037f048abc67c7d83799c76aabaa8dac">find_neighbours</a> (nl, atoms, group1, group2, box)</td></tr>
+<tr class="memdesc:a037f048abc67c7d83799c76aabaa8dac"><td class="mdescLeft">&#160;</td><td class="mdescRight">Ищет соседей для частиц из первой группы среди второй группы.  Группы могут совпадать.  <a href="#a037f048abc67c7d83799c76aabaa8dac">Подробнее...</a><br /></td></tr>
+<tr class="separator:a037f048abc67c7d83799c76aabaa8dac"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad313293c81b7fa1b52e8376710c84c0f"><td class="memItemLeft" align="right" valign="top">subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacemd__neighbours.html#ad313293c81b7fa1b52e8376710c84c0f">find_neighbour_distances</a> (nl, atoms, group1, group2, box)</td></tr>
+<tr class="memdesc:ad313293c81b7fa1b52e8376710c84c0f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Пересчитывает взаимное расположение соседей.  <a href="#ad313293c81b7fa1b52e8376710c84c0f">Подробнее...</a><br /></td></tr>
+<tr class="separator:ad313293c81b7fa1b52e8376710c84c0f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3f6d619145cba9b77814f398056c243f"><td class="memItemLeft" align="right" valign="top">subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacemd__neighbours.html#a3f6d619145cba9b77814f398056c243f">converce_neighbour_list</a> (cnl, group2, nl)</td></tr>
+<tr class="memdesc:a3f6d619145cba9b77814f398056c243f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Делает список соседей для второй группы из списка соседей для первой группы.  Эквивалентно find_neighbours(сnl,atoms,group2,group1,box). Обращенный список соседей заполняется данными из списка полученного подпрогаммой find_neighbours(nl,atoms,group1,group2,box)  <a href="#a3f6d619145cba9b77814f398056c243f">Подробнее...</a><br /></td></tr>
+<tr class="separator:a3f6d619145cba9b77814f398056c243f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<a name="details" id="details"></a><h2 class="groupheader">Подробное описание</h2>
+<div class="textblock"><p>Модуль содержит подпрограммы относящиеся к спискам соседей частиц </p>
+</div><h2 class="groupheader">Функции/подпрограммы</h2>
+<a id="a3f6d619145cba9b77814f398056c243f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3f6d619145cba9b77814f398056c243f">&#9670;&nbsp;</a></span>converce_neighbour_list()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">subroutine md_neighbours::converce_neighbour_list </td>
+          <td>(</td>
+          <td class="paramtype">type(<a class="el" href="structmd__general_1_1neighbour__list.html">neighbour_list</a>)&#160;</td>
+          <td class="paramname"><em>cnl</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">type(<a class="el" href="structmd__general_1_1particle__group.html">particle_group</a>)&#160;</td>
+          <td class="paramname"><em>group2</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">type(<a class="el" href="structmd__general_1_1neighbour__list.html">neighbour_list</a>)&#160;</td>
+          <td class="paramname"><em>nl</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Делает список соседей для второй группы из списка соседей для первой группы.  Эквивалентно find_neighbours(сnl,atoms,group2,group1,box). Обращенный список соседей заполняется данными из списка полученного подпрогаммой find_neighbours(nl,atoms,group1,group2,box) </p>
+
+<p class="definition">См. определение в файле <a class="el" href="md__neighbours_8f90_source.html">md_neighbours.f90</a> строка <a class="el" href="md__neighbours_8f90_source.html#l00129">129</a></p>
+<div class="fragment"><div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;    <span class="keywordtype">type</span>(neighbour_list):: nl,cnl</div><div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;    <span class="keywordtype">type</span>(particle_group):: group2</div><div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;    <span class="keywordtype">integer</span>::       i,j,p</div><div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;    </div><div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;    <span class="keywordflow">if</span> (group2%N&gt;0 .and. nl%N&gt;0 .and. cnl%N&gt;0) <span class="keywordflow">then</span></div><div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;        <span class="keywordflow">if</span> (group2%N&gt;cnl%N) then; <span class="keyword">write</span>(*,*) <span class="stringliteral">&#39;error: group2%N&gt;cnl%N&#39;</span>,group2%N,cnl%N; stop;<span class="keywordflow"> endif</span></div><div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;        <span class="comment">!$OMP PARALLEL firstprivate(i)</span></div><div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;        <span class="comment">!$OMP DO</span></div><div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;        <span class="keywordflow">do</span> i=1,group2%N</div><div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;            cnl%particle_index(i) = group2%indexes(i)</div><div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160;<span class="keywordflow">        enddo</span></div><div class="line"><a name="l00140"></a><span class="lineno">  140</span>&#160;        <span class="comment">!$OMP END DO</span></div><div class="line"><a name="l00141"></a><span class="lineno">  141</span>&#160;        <span class="comment">!$OMP DO</span></div><div class="line"><a name="l00142"></a><span class="lineno">  142</span>&#160;        <span class="keywordflow">do</span> i=1,cnl%N</div><div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160;            cnl%nnum(i) = 0</div><div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160;<span class="keywordflow">        enddo</span></div><div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160;        <span class="comment">!$OMP END DO</span></div><div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;        <span class="comment">!$OMP END PARALLEL</span></div><div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;        <span class="keywordflow">do</span> i=1,nl%N <span class="comment">!can not be parallel!</span></div><div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;            <span class="keywordflow">do</span> p=1,nl%nnum(i)</div><div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;                j = nl%nlist(p,i)</div><div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;                cnl%nnum(j) = cnl%nnum(j)+1</div><div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;                <span class="keywordflow">if</span> (cnl%nnum(j)&gt;cnl%neighb_num_max) then; <span class="keyword">write</span>(*,*) <span class="stringliteral">&#39;error: too many neighbours&#39;</span>,j,cnl%nnum(j); stop;<span class="keywordflow"> endif</span></div><div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;                cnl%nlist(cnl%nnum(j),j) = i</div><div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160;                cnl%dr(:,cnl%nnum(j),j) = -nl%dr(:,p,i)</div><div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;                cnl%moddr(cnl%nnum(j),j) = nl%moddr(p,i)</div><div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160;<span class="keywordflow">            enddo</span></div><div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160;<span class="keywordflow">        enddo</span></div><div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160;<span class="keywordflow">    endif</span></div><div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160;    </div><div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160;    <span class="keywordflow">return</span></div></div><!-- fragment -->
+</div>
+</div>
+<a id="a7246ea26ccbca29fb308ef82c2740bc9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7246ea26ccbca29fb308ef82c2740bc9">&#9670;&nbsp;</a></span>create_neighbour_list()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">subroutine md_neighbours::create_neighbour_list </td>
+          <td>(</td>
+          <td class="paramtype">type(<a class="el" href="structmd__general_1_1neighbour__list.html">neighbour_list</a>)&#160;</td>
+          <td class="paramname"><em>nl</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Инициализирует пустой список соседей. </p>
+
+<p class="definition">См. определение в файле <a class="el" href="md__neighbours_8f90_source.html">md_neighbours.f90</a> строка <a class="el" href="md__neighbours_8f90_source.html#l00010">10</a></p>
+<div class="fragment"><div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;    <span class="keywordtype">type</span>(neighbour_list):: nl</div><div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;</div><div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;    <span class="keywordflow">if</span> (nl%N&gt;0) <span class="keywordflow">then</span></div><div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;        <span class="keyword">allocate</span>(nl%particle_index(nl%N))</div><div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;        <span class="keyword">allocate</span>(nl%nnum(nl%N))</div><div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;        <span class="keyword">allocate</span>(nl%lessnnum(nl%N))</div><div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;        <span class="keyword">allocate</span>(nl%nlist(nl%neighb_num_max,nl%N))</div><div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;        <span class="keyword">allocate</span>(nl%dr(3,nl%neighb_num_max,nl%N))</div><div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;        <span class="keyword">allocate</span>(nl%moddr(nl%neighb_num_max,nl%N))</div><div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;        nl%particle_index = 0</div><div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;        nl%nnum = 0</div><div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;        nl%lessnnum = 0</div><div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;        nl%nlist = 0</div><div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;        nl%dr = 0.</div><div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;        nl%moddr = 0.</div><div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="keywordflow">    endif</span></div><div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;    </div><div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;    <span class="keywordflow">return</span></div></div><!-- fragment -->
+</div>
+</div>
+<a id="ad313293c81b7fa1b52e8376710c84c0f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad313293c81b7fa1b52e8376710c84c0f">&#9670;&nbsp;</a></span>find_neighbour_distances()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">subroutine md_neighbours::find_neighbour_distances </td>
+          <td>(</td>
+          <td class="paramtype">type(<a class="el" href="structmd__general_1_1neighbour__list.html">neighbour_list</a>)&#160;</td>
+          <td class="paramname"><em>nl</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">type(<a class="el" href="structmd__general_1_1particles.html">particles</a>)&#160;</td>
+          <td class="paramname"><em>atoms</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">type(<a class="el" href="structmd__general_1_1particle__group.html">particle_group</a>)&#160;</td>
+          <td class="paramname"><em>group1</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">type(<a class="el" href="structmd__general_1_1particle__group.html">particle_group</a>)&#160;</td>
+          <td class="paramname"><em>group2</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">type(<a class="el" href="structmd__general_1_1simulation__cell.html">simulation_cell</a>)&#160;</td>
+          <td class="paramname"><em>box</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Пересчитывает взаимное расположение соседей. </p>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000001">Необходимо сделать:</a></b></dt><dd>Сделать sqrt(dr2) быстрее. </dd></dl>
+
+<p class="definition">См. определение в файле <a class="el" href="md__neighbours_8f90_source.html">md_neighbours.f90</a> строка <a class="el" href="md__neighbours_8f90_source.html#l00105">105</a></p>
+<div class="fragment"><div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;    <span class="keywordtype">type</span>(particles)::   atoms</div><div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;    <span class="keywordtype">type</span>(particle_group):: group1,group2</div><div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;    <span class="keywordtype">type</span>(simulation_cell):: box</div><div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;    <span class="keywordtype">type</span>(neighbour_list):: nl</div><div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;    <span class="keywordtype">real</span>:: dr2</div><div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;    <span class="keywordtype">integer</span>:: i,p</div><div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;</div><div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;    <span class="comment">!$OMP PARALLEL firstprivate(i,p,dr2)</span></div><div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;    <span class="comment">!$OMP DO</span></div><div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;    <span class="keywordflow">do</span> i=1,nl%N</div><div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;        <span class="keywordflow">do</span> p=1,nl%nnum(i)</div><div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;            <span class="keyword">call </span>find_distance(nl%dr(:,p,i),dr2,atoms%positions(:,group1%indexes(i)),atoms%positions(:,group2%indexes(nl%nlist(p,i))),box)</div><div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;            nl%moddr(p,i) = sqrt(dr2)</div><div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;<span class="keywordflow">        enddo</span></div><div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;<span class="keywordflow">    enddo</span></div><div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;    <span class="comment">!$OMP END DO</span></div><div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;    <span class="comment">!$OMP END PARALLEL</span></div><div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;</div><div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;    <span class="keywordflow">return</span></div></div><!-- fragment --><div class="dynheader">
+Граф вызовов:</div>
+<div class="dyncontent">
+<div class="center"><img src="namespacemd__neighbours_ad313293c81b7fa1b52e8376710c84c0f_cgraph.png" border="0" usemap="#namespacemd__neighbours_ad313293c81b7fa1b52e8376710c84c0f_cgraph" alt=""/></div>
+<map name="namespacemd__neighbours_ad313293c81b7fa1b52e8376710c84c0f_cgraph" id="namespacemd__neighbours_ad313293c81b7fa1b52e8376710c84c0f_cgraph">
+<area shape="rect" id="node2" href="namespacemd__general.html#a33570f37733690b0634f039ad1bcf35e" title="md_general::find_distance" alt="" coords="201,13,375,39"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="a037f048abc67c7d83799c76aabaa8dac"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a037f048abc67c7d83799c76aabaa8dac">&#9670;&nbsp;</a></span>find_neighbours()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">subroutine md_neighbours::find_neighbours </td>
+          <td>(</td>
+          <td class="paramtype">type(<a class="el" href="structmd__general_1_1neighbour__list.html">neighbour_list</a>)&#160;</td>
+          <td class="paramname"><em>nl</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">type(<a class="el" href="structmd__general_1_1particles.html">particles</a>)&#160;</td>
+          <td class="paramname"><em>atoms</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">type(<a class="el" href="structmd__general_1_1particle__group.html">particle_group</a>)&#160;</td>
+          <td class="paramname"><em>group1</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">type(<a class="el" href="structmd__general_1_1particle__group.html">particle_group</a>)&#160;</td>
+          <td class="paramname"><em>group2</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">type(<a class="el" href="structmd__general_1_1simulation__cell.html">simulation_cell</a>)&#160;</td>
+          <td class="paramname"><em>box</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Ищет соседей для частиц из первой группы среди второй группы.  Группы могут совпадать. </p>
+
+<p class="definition">См. определение в файле <a class="el" href="md__neighbours_8f90_source.html">md_neighbours.f90</a> строка <a class="el" href="md__neighbours_8f90_source.html#l00057">57</a></p>
+<div class="fragment"><div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    <span class="keywordtype">type</span>(particles)::   atoms</div><div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    <span class="keywordtype">type</span>(particle_group):: group1,group2</div><div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    <span class="keywordtype">type</span>(simulation_cell):: box</div><div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    <span class="keywordtype">type</span>(neighbour_list):: nl</div><div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    <span class="keywordtype">real</span>:: dr(3),dr2</div><div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    <span class="keywordtype">integer</span>:: i,j,k,ind,jnd,nnumind,lessnnumind</div><div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    </div><div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;    <span class="keywordflow">if</span> (group1%N&gt;nl%N) then; <span class="keyword">write</span>(*,*) <span class="stringliteral">&#39;error: group1%N&gt;nl%N&#39;</span>,group1%N,nl%N; stop;<span class="keywordflow"> endif</span></div><div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    <span class="comment">!$OMP PARALLEL firstprivate(i,j,k,ind,jnd,dr,dr2,nnumind,lessnnumind)</span></div><div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;    <span class="comment">!$OMP DO</span></div><div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    <span class="keywordflow">do</span> ind=1,group1%N</div><div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;        i = group1%indexes(ind)</div><div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;        nl%particle_index(ind) = group1%indexes(ind)</div><div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;        <span class="comment">!nl%nlist(:nl%nnum(ind),ind) = 0</span></div><div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;        nnumind = 0</div><div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;        lessnnumind = -1</div><div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;        <span class="keywordflow">do</span> jnd=1,group2%N</div><div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;            j = group2%indexes(jnd)</div><div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;            <span class="keywordflow">if</span> (i/=j) <span class="keywordflow">then</span></div><div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;                <span class="keyword">call </span>find_distance(dr,dr2,atoms%positions(:,i),atoms%positions(:,j),box)</div><div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;                <span class="keywordflow">if</span> (dr2&lt;nl%r_cut*nl%r_cut) <span class="keywordflow">then</span></div><div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;                    <span class="keywordflow">if</span> (lessnnumind==-1 .and. i&lt;j) lessnnumind = nnumind</div><div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;                    nnumind = nnumind+1</div><div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;                    <span class="keywordflow">if</span> (nnumind&gt;nl%neighb_num_max) then; <span class="keyword">write</span>(*,*) <span class="stringliteral">&#39;error: too many neighbours&#39;</span>,ind,nnumind; stop;<span class="keywordflow"> endif</span></div><div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;                    nl%nlist(nnumind,ind) = jnd</div><div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;                    nl%dr(1,nnumind,ind) = dr(1)</div><div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;                    nl%dr(2,nnumind,ind) = dr(2)</div><div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;                    nl%dr(3,nnumind,ind) = dr(3)</div><div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;                    nl%moddr(nnumind,ind) = sqrt(dr2)</div><div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;<span class="keywordflow">                endif</span></div><div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;<span class="keywordflow">            endif</span></div><div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;<span class="keywordflow">        enddo</span></div><div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;        <span class="keywordflow">if</span>(lessnnumind==-1) <span class="keywordflow">then</span></div><div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;            nl%lessnnum(ind) = nnumind</div><div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;        <span class="keywordflow">else</span></div><div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;            nl%lessnnum(ind) = lessnnumind</div><div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;<span class="keywordflow">        endif</span></div><div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;        nl%nnum(ind) = nnumind</div><div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;<span class="keywordflow">    enddo</span></div><div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;    <span class="comment">!$OMP END DO</span></div><div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;    <span class="comment">!$OMP END PARALLEL</span></div><div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;</div><div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;    <span class="keywordflow">return</span></div></div><!-- fragment --><div class="dynheader">
+Граф вызовов:</div>
+<div class="dyncontent">
+<div class="center"><img src="namespacemd__neighbours_a037f048abc67c7d83799c76aabaa8dac_cgraph.png" border="0" usemap="#namespacemd__neighbours_a037f048abc67c7d83799c76aabaa8dac_cgraph" alt=""/></div>
+<map name="namespacemd__neighbours_a037f048abc67c7d83799c76aabaa8dac_cgraph" id="namespacemd__neighbours_a037f048abc67c7d83799c76aabaa8dac_cgraph">
+<area shape="rect" id="node2" href="namespacemd__general.html#a33570f37733690b0634f039ad1bcf35e" title="md_general::find_distance" alt="" coords="192,13,365,39"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="aa3afc442e82c37b20e8963af79455747"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa3afc442e82c37b20e8963af79455747">&#9670;&nbsp;</a></span>update_neighbour_list()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">subroutine md_neighbours::update_neighbour_list </td>
+          <td>(</td>
+          <td class="paramtype">integer&#160;</td>
+          <td class="paramname"><em>md_step</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">type(<a class="el" href="structmd__general_1_1neighbour__list.html">neighbour_list</a>)&#160;</td>
+          <td class="paramname"><em>nl</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">type(<a class="el" href="structmd__general_1_1particles.html">particles</a>)&#160;</td>
+          <td class="paramname"><em>atoms</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">type(<a class="el" href="structmd__general_1_1particle__group.html">particle_group</a>)&#160;</td>
+          <td class="paramname"><em>group1</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">type(<a class="el" href="structmd__general_1_1particle__group.html">particle_group</a>)&#160;</td>
+          <td class="paramname"><em>group2</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">type(<a class="el" href="structmd__general_1_1simulation__cell.html">simulation_cell</a>)&#160;</td>
+          <td class="paramname"><em>box</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">real&#160;</td>
+          <td class="paramname"><em>exe_time_nlsearch</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">real&#160;</td>
+          <td class="paramname"><em>exe_time_nldistance</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Вычисляет расстояния между соседями. Обновляет список соседей с нужной частотой.  Расстояния между соседями вычисляются всегда. Список соседей обнавляется с периодом указанным в списке. Также замеряется затраченное время. </p>
+
+<p class="definition">См. определение в файле <a class="el" href="md__neighbours_8f90_source.html">md_neighbours.f90</a> строка <a class="el" href="md__neighbours_8f90_source.html#l00033">33</a></p>
+<div class="fragment"><div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;    <span class="keywordtype">type</span>(particles)::   atoms</div><div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    <span class="keywordtype">type</span>(particle_group):: group1,group2</div><div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    <span class="keywordtype">type</span>(simulation_cell):: box</div><div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    <span class="keywordtype">type</span>(neighbour_list):: nl</div><div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    <span class="keywordtype">integer</span>:: md_step</div><div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    <span class="keywordtype">real</span>:: exe_t,exe_time_nlsearch,exe_time_nldistance,omp_get_wtime</div><div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;</div><div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    <span class="keywordflow">if</span> (group1%N&gt;0 .and. group2%N&gt;0 .and. nl%N&gt;0) <span class="keywordflow">then</span></div><div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;        <span class="keywordflow">if</span> (mod(md_step,nl%update_period)==0) <span class="keywordflow">then</span></div><div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;            exe_t = omp_get_wtime()</div><div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;            <span class="keyword">call </span>find_neighbours(nl,atoms,group1,group2,box)</div><div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;            exe_time_nlsearch = exe_time_nlsearch+omp_get_wtime()-exe_t</div><div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;        <span class="keywordflow">else</span></div><div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;            exe_t = omp_get_wtime()</div><div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;            <span class="keyword">call </span>find_neighbour_distances(nl,atoms,group1,group2,box)</div><div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;            exe_time_nldistance = exe_time_nldistance+omp_get_wtime()-exe_t</div><div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="keywordflow">        endif</span></div><div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<span class="keywordflow">    endif</span></div><div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    </div></div><!-- fragment --><div class="dynheader">
+Граф вызовов:</div>
+<div class="dyncontent">
+<div class="center"><img src="namespacemd__neighbours_aa3afc442e82c37b20e8963af79455747_cgraph.png" border="0" usemap="#namespacemd__neighbours_aa3afc442e82c37b20e8963af79455747_cgraph" alt=""/></div>
+<map name="namespacemd__neighbours_aa3afc442e82c37b20e8963af79455747_cgraph" id="namespacemd__neighbours_aa3afc442e82c37b20e8963af79455747_cgraph">
+<area shape="rect" id="node2" href="namespacemd__neighbours.html#a037f048abc67c7d83799c76aabaa8dac" title="Ищет соседей для частиц из первой группы среди второй группы. &#160;Группы могут совпадать. " alt="" coords="215,5,354,47"/>
+<area shape="rect" id="node4" href="namespacemd__neighbours.html#ad313293c81b7fa1b52e8376710c84c0f" title="Пересчитывает взаимное расположение соседей. " alt="" coords="211,71,359,112"/>
+<area shape="rect" id="node3" href="namespacemd__general.html#a33570f37733690b0634f039ad1bcf35e" title="md_general::find_distance" alt="" coords="407,46,580,73"/>
+</map>
+</div>
+
+</div>
+</div>
+</div><!-- contents -->
+</div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="namespacemd__neighbours.html">md_neighbours</a></li>
+    <li class="footer">Создано системой
+    <a href="http://www.doxygen.org/index.html">
+    <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.14 </li>
+  </ul>
+</div>
+</body>
+</html>

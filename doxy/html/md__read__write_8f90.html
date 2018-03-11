@@ -1,0 +1,134 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<meta name="generator" content="Doxygen 1.8.14"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>PFMDS: Файл MOLECULAR_DYNAMICS/md_read_write.f90</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
+  $(document).ready(initResizable);
+/* @license-end */</script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr style="height: 56px;">
+  <td id="projectalign" style="padding-left: 0.5em;">
+   <div id="projectname">PFMDS
+   </div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Создано системой Doxygen 1.8.14 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
+var searchBox = new SearchBox("searchBox", "search",false,'Поиск');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
+$(function() {
+  initMenu('',true,false,'search.php','Поиск');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */</script>
+<div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
+$(document).ready(function(){initNavTree('md__read__write_8f90.html','');});
+/* @license-end */
+</script>
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<iframe src="javascript:void(0)" frameborder="0" 
+        name="MSearchResults" id="MSearchResults">
+</iframe>
+</div>
+
+<div class="header">
+  <div class="summary">
+<a href="#namespaces">Группы</a> &#124;
+<a href="#func-members">Функции/подпрограммы</a>  </div>
+  <div class="headertitle">
+<div class="title">Файл md_read_write.f90</div>  </div>
+</div><!--header-->
+<div class="contents">
+
+<p><a href="md__read__write_8f90_source.html">См. исходные тексты.</a></p>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="namespaces"></a>
+Группы</h2></td></tr>
+<tr class="memitem:namespacemd__read__write"><td class="memItemLeft" align="right" valign="top">module &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacemd__read__write.html">md_read_write</a></td></tr>
+<tr class="memdesc:namespacemd__read__write"><td class="mdescLeft">&#160;</td><td class="mdescRight">Модуль ввода вывода .xyz файлов и настроек моделирования. <br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
+Функции/подпрограммы</h2></td></tr>
+<tr class="memitem:a13e739c9b44b3100ee36e864eac3d5e0"><td class="memItemLeft" align="right" valign="top">subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacemd__read__write.html#a13e739c9b44b3100ee36e864eac3d5e0">md_read_write::read_integrator_params</a> (integr, file_id)</td></tr>
+<tr class="memdesc:a13e739c9b44b3100ee36e864eac3d5e0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Читает параметры интегратора.  <a href="namespacemd__read__write.html#a13e739c9b44b3100ee36e864eac3d5e0">Подробнее...</a><br /></td></tr>
+<tr class="separator:a13e739c9b44b3100ee36e864eac3d5e0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ace09a29b4fd526f8ed784c90098279c4"><td class="memItemLeft" align="right" valign="top">subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacemd__read__write.html#ace09a29b4fd526f8ed784c90098279c4">md_read_write::read_box_size</a> (box, filename)</td></tr>
+<tr class="memdesc:ace09a29b4fd526f8ed784c90098279c4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Читает параметры моделируемой ячейки в файле .xyz.  Читает второю строку в xyz файле. В размер ячейки задается тремя векторами. В общем случае ячейка триклинная.  <a href="namespacemd__read__write.html#ace09a29b4fd526f8ed784c90098279c4">Подробнее...</a><br /></td></tr>
+<tr class="separator:ace09a29b4fd526f8ed784c90098279c4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1a0fd7df876318fd4247d110936384d8"><td class="memItemLeft" align="right" valign="top">subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacemd__read__write.html#a1a0fd7df876318fd4247d110936384d8">md_read_write::read_particles</a> (atoms, filename)</td></tr>
+<tr class="memdesc:a1a0fd7df876318fd4247d110936384d8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Читает информацию о частицах из .xyz файла.  Первая строка файла содержит количество частиц. Третья и последующие - координаты по X, Y, Z, скорости по X, Y, Z, массу и название частицы. Всего 8 столбцов для каждой частицы.  <a href="namespacemd__read__write.html#a1a0fd7df876318fd4247d110936384d8">Подробнее...</a><br /></td></tr>
+<tr class="separator:a1a0fd7df876318fd4247d110936384d8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a20f73c896cf124f2e1da6ccbf23cc12d"><td class="memItemLeft" align="right" valign="top">subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacemd__read__write.html#a20f73c896cf124f2e1da6ccbf23cc12d">md_read_write::write_particle_group</a> (filename, atoms, group, box)</td></tr>
+<tr class="memdesc:a20f73c896cf124f2e1da6ccbf23cc12d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Выводит информацию о группе частиц в новый файл.  <a href="namespacemd__read__write.html#a20f73c896cf124f2e1da6ccbf23cc12d">Подробнее...</a><br /></td></tr>
+<tr class="separator:a20f73c896cf124f2e1da6ccbf23cc12d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a24453b47bb1935e66563cd522e09e3af"><td class="memItemLeft" align="right" valign="top">subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacemd__read__write.html#a24453b47bb1935e66563cd522e09e3af">md_read_write::write_particle_group_append</a> (filename, atoms, group, box, md_step)</td></tr>
+<tr class="memdesc:a24453b47bb1935e66563cd522e09e3af"><td class="mdescLeft">&#160;</td><td class="mdescRight">Выводит информацию о группе частиц в конец уже имеющегося файла.  <a href="namespacemd__read__write.html#a24453b47bb1935e66563cd522e09e3af">Подробнее...</a><br /></td></tr>
+<tr class="separator:a24453b47bb1935e66563cd522e09e3af"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+</div><!-- contents -->
+</div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="dir_aaf8acdc108691ba86bb6da7ef158b97.html">MOLECULAR_DYNAMICS</a></li><li class="navelem"><a class="el" href="md__read__write_8f90.html">md_read_write.f90</a></li>
+    <li class="footer">Создано системой
+    <a href="http://www.doxygen.org/index.html">
+    <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.14 </li>
+  </ul>
+</div>
+</body>
+</html>

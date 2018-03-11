@@ -1,0 +1,515 @@
+\hypertarget{namespacefit__gr__moire}{}\section{Модуль fit\+\_\+gr\+\_\+moire}
+\label{namespacefit__gr__moire}\index{fit\+\_\+gr\+\_\+moire@{fit\+\_\+gr\+\_\+moire}}
+\subsection*{Функции/подпрограммы}
+\begin{DoxyCompactItemize}
+\item 
+subroutine \mbox{\hyperlink{namespacefit__gr__moire_aafdddfaa3c2b90a3ab2c09735bc5068b}{calc\+\_\+error}} (error, from\+\_\+init\+\_\+xyz, params)
+\item 
+subroutine \mbox{\hyperlink{namespacefit__gr__moire_a68bd3fd9fb813f29fb1ba6ad58c05a9d}{set\+\_\+fitting\+\_\+parameters}} (fitting\+\_\+parameters\+\_\+file\+\_\+name, init\+\_\+min\+\_\+params, init\+\_\+max\+\_\+params)
+\end{DoxyCompactItemize}
+\subsection*{Переменные}
+\begin{DoxyCompactItemize}
+\item 
+integer \mbox{\hyperlink{namespacefit__gr__moire_aace6796e23a47584768373466a2a7522}{sim\+\_\+num}}
+\item 
+integer \mbox{\hyperlink{namespacefit__gr__moire_a4a36513ac075c468e3f2c09114102f9b}{out\+\_\+period}}
+\item 
+integer \mbox{\hyperlink{namespacefit__gr__moire_a6b6dcf709ac2f8f7908b7d38fe795dcc}{num\+\_\+of\+\_\+omp\+\_\+treads}}
+\item 
+integer \mbox{\hyperlink{namespacefit__gr__moire_a877e34e1da1ed0d899e33ed675b1f0e5}{out\+\_\+id}}
+\item 
+integer \mbox{\hyperlink{namespacefit__gr__moire_a29fb26687189e2457138123a8a823147}{final\+\_\+out\+\_\+id}}
+\item 
+integer \mbox{\hyperlink{namespacefit__gr__moire_a813dce231711455b1086fcd6fd95c2a4}{oid}}
+\item 
+integer, dimension(2) \mbox{\hyperlink{namespacefit__gr__moire_abc1d82be5a435c0c119ec1d686f6771c}{ar\+\_\+c\+\_\+num}}
+\item 
+character(len=256) \mbox{\hyperlink{namespacefit__gr__moire_a7a35c12a582842134a9dac4018eddf7b}{interaction\+\_\+name}}
+\item 
+character(len=256), dimension(2) \mbox{\hyperlink{namespacefit__gr__moire_abe61efd3e06474bc596014a35475150c}{ar\+\_\+settings\+\_\+filename}}
+\item 
+character(len=256) \mbox{\hyperlink{namespacefit__gr__moire_ac107a23a93efd6c7247949001b635744}{output\+\_\+prefix}}
+\item 
+character(len=256) \mbox{\hyperlink{namespacefit__gr__moire_a5f4eb40eb6a559f446c1097c651da540}{input\+\_\+path}}
+\item 
+character(len=256) \mbox{\hyperlink{namespacefit__gr__moire_a77444985e23a0fc091f7623c2c4469b3}{out\+\_\+path}}
+\item 
+character(len=256), dimension(2) \mbox{\hyperlink{namespacefit__gr__moire_a1e26c6ce1c81e9f34f2f2edd4fd40ae4}{ar\+\_\+final\+\_\+file}}
+\item 
+character(len=256) \mbox{\hyperlink{namespacefit__gr__moire_a61b86e6a8a674b819bc9c8b166436c18}{param\+\_\+file}}
+\item 
+character(len=256), dimension(2) \mbox{\hyperlink{namespacefit__gr__moire_aa54f0200433f85f1399791f7128e94c5}{ar\+\_\+start\+\_\+xyz\+\_\+file}}
+\item 
+character(len=256), dimension(2) \mbox{\hyperlink{namespacefit__gr__moire_adcea9b8af6d606b09d4cf11353d6e76a}{ar\+\_\+xyz\+\_\+file}}
+\item 
+real \mbox{\hyperlink{namespacefit__gr__moire_ad1616f835d2564c00ebea11a9c88cbaf}{z}}
+\item 
+real, dimension(2) \mbox{\hyperlink{namespacefit__gr__moire_a7b9059147432f1a2fab23cc7a14bda96}{ar\+\_\+zero\+\_\+energy\+\_\+level}}
+\item 
+real \mbox{\hyperlink{namespacefit__gr__moire_a9f35bc32182cc551fabbd2a3a172d812}{be0}}
+\item 
+real, dimension(2) \mbox{\hyperlink{namespacefit__gr__moire_a133d6649efb184d364f20a02e2afd05f}{ar\+\_\+grd0}}
+\item 
+real, dimension(2) \mbox{\hyperlink{namespacefit__gr__moire_aa4a0f3a112959e7b4ce4105b57b1ac8b}{rcut}}
+\item 
+logical \mbox{\hyperlink{namespacefit__gr__moire_a9092ed380be5233a800406322be81218}{simplified}}
+\item 
+character(len=80) \mbox{\hyperlink{namespacefit__gr__moire_a8fbbcfd1d9c1149a9182a782550ea455}{line}}
+\end{DoxyCompactItemize}
+
+
+\subsection{Функции/подпрограммы}
+\mbox{\Hypertarget{namespacefit__gr__moire_aafdddfaa3c2b90a3ab2c09735bc5068b}\label{namespacefit__gr__moire_aafdddfaa3c2b90a3ab2c09735bc5068b}} 
+\index{fit\+\_\+gr\+\_\+moire@{fit\+\_\+gr\+\_\+moire}!calc\+\_\+error@{calc\+\_\+error}}
+\index{calc\+\_\+error@{calc\+\_\+error}!fit\+\_\+gr\+\_\+moire@{fit\+\_\+gr\+\_\+moire}}
+\subsubsection{\texorpdfstring{calc\+\_\+error()}{calc\_error()}}
+{\footnotesize\ttfamily subroutine fit\+\_\+gr\+\_\+moire\+::calc\+\_\+error (\begin{DoxyParamCaption}\item[{real}]{error,  }\item[{logical}]{from\+\_\+init\+\_\+xyz,  }\item[{real, dimension(4)}]{params }\end{DoxyParamCaption})}
+
+
+
+См. определение в файле fit\+\_\+gr\+\_\+moire.\+f90 строка 17
+
+
+\begin{DoxyCode}
+17 \textcolor{comment}{character(len=256)      ::  settings\_filename,start\_xyz\_file,xyz\_file,final\_file,str,tempstring,op,prevop}
+18 \textcolor{keywordtype}{real}                    ::  params(4),error,arr1(3),arr2(3),be,bd,grd
+19 logical                 ::  from\_init\_xyz
+20 integer                 ::  i,rnm\_err
+21 
+22     error = 0
+23     sim\_num = sim\_num+1
+24     \textcolor{keyword}{write}(out\_id,*)
+25     \textcolor{keyword}{write}(out\_id,*) trim(input\_path)//trim(param\_file)
+26 
+27     \textcolor{keywordflow}{if}(interaction\_name==\textcolor{stringliteral}{'ljc'}) \textcolor{keywordflow}{then}
+28         \textcolor{keyword}{write}(out\_id,*) sim\_num,params(3),params(1),params(2)
+29         \textcolor{keyword}{write}(oid,\textcolor{stringliteral}{'(i6,3f21.6)'},advance=\textcolor{stringliteral}{'no'}) sim\_num,params(3),params(1),params\textcolor{comment}{(2)}
+30 \textcolor{comment}{        }\textcolor{keyword}{open}(1234,file=trim(input\_path)//trim(param\_file))
+31         \textcolor{keyword}{write}(1234,*) params(3),params(1),params(2)
+32         \textcolor{keyword}{write}(1234,*) rcut(1),rcut(2)
+33         \textcolor{keyword}{write}(1234,*) simplified
+34         \textcolor{keyword}{close}(1234)
+35 \textcolor{keywordflow}{    endif}
+36 
+37     \textcolor{keywordflow}{if}(interaction\_name==\textcolor{stringliteral}{'morsec'}) \textcolor{keywordflow}{then}
+38         \textcolor{keyword}{write}(out\_id,*) sim\_num,params(3),params(1),params(4),params(2)
+39         \textcolor{keyword}{write}(oid,\textcolor{stringliteral}{'(i6,4f21.6)'},advance=\textcolor{stringliteral}{'no'}) sim\_num,params(3),params(1),params\textcolor{comment}{(4),params(2)}
+40 \textcolor{comment}{        }\textcolor{keyword}{open}(1234,file=trim(input\_path)//trim(param\_file))
+41         \textcolor{keyword}{write}(1234,*) params(3),params(1),params(4),params(2)
+42         \textcolor{keyword}{write}(1234,*) rcut(1),rcut(2)
+43         \textcolor{keyword}{write}(1234,*) simplified
+44         \textcolor{keyword}{close}(1234)
+45 \textcolor{keywordflow}{    endif}
+46 
+47     \textcolor{keywordflow}{do} i=1,2
+48 
+49         settings\_filename = trim(ar\_settings\_filename(i))\textcolor{comment}{!; write(out\_id,*) settings\_filename}
+50         start\_xyz\_file = trim(ar\_start\_xyz\_file(i))\textcolor{comment}{!;       write(out\_id,*) start\_xyz\_file}
+51         xyz\_file = trim(ar\_xyz\_file(i))\textcolor{comment}{!;                   write(out\_id,*) xyz\_file}
+52         final\_file = trim(ar\_final\_file(i))\textcolor{comment}{!;               write(out\_id,*) final\_file}
+53 
+54         \textcolor{keywordflow}{if}(from\_init\_xyz) \textcolor{keywordflow}{then}
+55             rnm\_err = rename(trim(input\_path)//trim(start\_xyz\_file),trim(input\_path\textcolor{comment}{)//trim(xyz\_file))}
+56 \textcolor{comment}{        }\textcolor{keywordflow}{else}
+57             \textcolor{keyword}{write}(str,\textcolor{stringliteral}{'(i6.6)'}) sim\_num-1
+58             \textcolor{keyword}{write}(prevop,\textcolor{stringliteral}{'(A)'}) trim(out\_path)//trim(output\_prefix)//trim(str)//\textcolor{stringliteral}{'\_'}
+59             rnm\_err = rename(trim(prevop)//\textcolor{stringliteral}{'final\_'}//trim(xyz\_file),trim(input\_path\textcolor{comment}{)//trim(xyz\_file))}
+60 \textcolor{comment}{}\textcolor{keywordflow}{        endif}
+61 
+62         \textcolor{keyword}{write}(str,\textcolor{stringliteral}{'(i6.6)'}) sim\_num
+63         \textcolor{keyword}{write}(op,\textcolor{stringliteral}{'(A)'}) trim(out\_path)//trim(output\_prefix)//trim(str)//\textcolor{stringliteral}{'\_'}
+64         \textcolor{keyword}{open}(final\_out\_id,file=trim(op)//trim(final\_file))
+65         \textcolor{keyword}{write}(out\_id,\textcolor{stringliteral}{'(A)'}) line
+66         \textcolor{keyword}{call }md(out\_id,final\_out\_id,input\_path,settings\_filename,op,out\_period\textcolor{comment}{,num\_of\_omp\_treads)}
+67 \textcolor{comment}{        }\textcolor{keyword}{write}(out\_id,\textcolor{stringliteral}{'(A)'}) line
+68         \textcolor{keyword}{write}(tempstring,\textcolor{stringliteral}{'(A)'}) trim(op)//\textcolor{stringliteral}{'final\_'}//trim(xyz\_file)
+69         \textcolor{keyword}{call }gr\_on\_cu\_analysis(arr1,arr2,tempstring,z)
+70         \textcolor{keyword}{write}(out\_id,*) \textcolor{stringliteral}{'gr\_on\_cu\_analysis:'},arr1,arr2
+71         \textcolor{keyword}{write}(final\_out\_id,\textcolor{stringliteral}{'(3f16.6)'}) arr1-arr2(1)
+72         \textcolor{keyword}{close}(final\_out\_id)
+73 
+74         \textcolor{keyword}{open}(final\_out\_id,file=trim(op)//trim(final\_file))
+75         \textcolor{keyword}{read}(final\_out\_id,\textcolor{stringliteral}{'(A61,f20.9,A)'}) tempstring,be,tempstring
+76         \textcolor{keyword}{close}(final\_out\_id)
+77 
+78         \textcolor{keywordflow}{if}(from\_init\_xyz) \textcolor{keywordflow}{then}
+79             rnm\_err = rename(trim(input\_path)//trim(xyz\_file),trim(input\_path)//trim\textcolor{comment}{(start\_xyz\_file))}
+80 \textcolor{comment}{        }\textcolor{keywordflow}{else}
+81             rnm\_err = rename(trim(input\_path)//trim(xyz\_file),trim(prevop)//\textcolor{stringliteral}{'final\_'}\textcolor{comment}{//trim(xyz\_file))}
+82 \textcolor{comment}{}\textcolor{keywordflow}{        endif}
+83 
+84         bd = arr1(1)-arr2(1)
+85         grd = arr1(3)-arr1(2)
+86         be = (be-ar\_zero\_energy\_level(i))/ar\_c\_num(i)
+87 
+88         \textcolor{keyword}{write}(oid,\textcolor{stringliteral}{'(3f21.6)'},advance=\textcolor{stringliteral}{'no'}) be,bd,grd
+89 
+90         \textcolor{keywordflow}{if}(i==1) \textcolor{keywordflow}{then}
+91             error = (be/be0-1.)**2+(grd/ar\_grd0(i)-1.)**2
+92             \textcolor{keyword}{write}(oid,\textcolor{stringliteral}{'(2f21.6)'},advance=\textcolor{stringliteral}{'no'}) (be/be0-1.)**2,(grd/ar\_grd0(i)-1.)\textcolor{comment}{**2}
+93 \textcolor{comment}{}\textcolor{keywordflow}{        endif}
+94         \textcolor{keywordflow}{if}(i==2) \textcolor{keywordflow}{then}
+95             error = error+(grd/ar\_grd0(i)-1.)**2
+96             \textcolor{keyword}{write}(oid,\textcolor{stringliteral}{'(f21.6)'},advance=\textcolor{stringliteral}{'no'}) (grd/ar\_grd0(i)-1.)**2
+97 \textcolor{keywordflow}{        endif}
+98 
+99 \textcolor{keywordflow}{    enddo}
+100 
+101     \textcolor{keyword}{write}(oid,\textcolor{stringliteral}{'(3f21.6)'}) error
+102     rnm\_err = rename(trim(input\_path)//trim(param\_file),trim(input\_path)//trim\textcolor{comment}{(str)//trim(param\_file))}
+103 \textcolor{comment}{}
+\end{DoxyCode}
+Граф вызовов\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=550pt]{namespacefit__gr__moire_aafdddfaa3c2b90a3ab2c09735bc5068b_cgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{namespacefit__gr__moire_a68bd3fd9fb813f29fb1ba6ad58c05a9d}\label{namespacefit__gr__moire_a68bd3fd9fb813f29fb1ba6ad58c05a9d}} 
+\index{fit\+\_\+gr\+\_\+moire@{fit\+\_\+gr\+\_\+moire}!set\+\_\+fitting\+\_\+parameters@{set\+\_\+fitting\+\_\+parameters}}
+\index{set\+\_\+fitting\+\_\+parameters@{set\+\_\+fitting\+\_\+parameters}!fit\+\_\+gr\+\_\+moire@{fit\+\_\+gr\+\_\+moire}}
+\subsubsection{\texorpdfstring{set\+\_\+fitting\+\_\+parameters()}{set\_fitting\_parameters()}}
+{\footnotesize\ttfamily subroutine fit\+\_\+gr\+\_\+moire\+::set\+\_\+fitting\+\_\+parameters (\begin{DoxyParamCaption}\item[{character(len=256)}]{fitting\+\_\+parameters\+\_\+file\+\_\+name,  }\item[{real, dimension(4)}]{init\+\_\+min\+\_\+params,  }\item[{real, dimension(4)}]{init\+\_\+max\+\_\+params }\end{DoxyParamCaption})}
+
+
+
+См. определение в файле fit\+\_\+gr\+\_\+moire.\+f90 строка 107
+
+
+\begin{DoxyCode}
+107 \textcolor{keywordtype}{real}                    :: init\_min\_params(4),init\_max\_params(4)
+108 \textcolor{keywordtype}{character}(len=256)      :: fitting\_parameters\_file\_name,min\_param\_file,max\_param\_file,str
+109 integer                 :: i
+110 
+111     final\_out\_id = 1211
+112     oid = 111
+113     \textcolor{keywordflow}{do} i=1,80
+114         line(i:i) = \textcolor{stringliteral}{'\_'}
+115 \textcolor{keywordflow}{    enddo}
+116 
+117     \textcolor{keyword}{open}(9,file=fitting\_parameters\_file\_name)
+118     \textcolor{keyword}{read}(9,\textcolor{stringliteral}{'(A16,A)'}) str,input\_path;       \textcolor{keyword}{write}(out\_id,*) trim(str),\textcolor{stringliteral}{'  '},trim(input\_path)
+119     \textcolor{keyword}{read}(9,\textcolor{stringliteral}{'(A16,A)'}) str,out\_path;         \textcolor{keyword}{write}(out\_id,*) trim(str),\textcolor{stringliteral}{'  '},trim(out\_path)
+120     \textcolor{keyword}{read}(9,*) str,interaction\_name;         \textcolor{keyword}{write}(out\_id,*) trim(str),\textcolor{stringliteral}{'  '},trim(interaction\_name)
+121     \textcolor{keyword}{read}(9,*) str,output\_prefix;            \textcolor{keyword}{write}(out\_id,*) trim(str),\textcolor{stringliteral}{'  '},trim(output\_prefix)
+122     \textcolor{keyword}{read}(9,*) str,ar\_settings\_filename(1);  \textcolor{keyword}{write}(out\_id,*) trim(str),\textcolor{stringliteral}{'  '},trim(ar\_settings\_filename(1))
+123     \textcolor{keyword}{read}(9,*) str,ar\_start\_xyz\_file(1);     \textcolor{keyword}{write}(out\_id,*) trim(str),\textcolor{stringliteral}{'  '},trim(ar\_start\_xyz\_file(1))
+124     \textcolor{keyword}{read}(9,*) str,ar\_c\_num(1);              \textcolor{keyword}{write}(out\_id,*) trim(str),\textcolor{stringliteral}{'  '},ar\_c\_num(1)
+125     \textcolor{keyword}{read}(9,*) str,ar\_zero\_energy\_level(1);  \textcolor{keyword}{write}(out\_id,*) trim(str),\textcolor{stringliteral}{'  '},ar\_zero\_energy\_level(1)
+126     \textcolor{keyword}{read}(9,*) str,ar\_final\_file(1);         \textcolor{keyword}{write}(out\_id,*) trim(str),\textcolor{stringliteral}{'  '},trim(ar\_final\_file(1))
+127     \textcolor{keyword}{read}(9,*) str,ar\_settings\_filename(2);  \textcolor{keyword}{write}(out\_id,*) trim(str),\textcolor{stringliteral}{'  '},trim(ar\_settings\_filename(2))
+128     \textcolor{keyword}{read}(9,*) str,ar\_start\_xyz\_file(2);     \textcolor{keyword}{write}(out\_id,*) trim(str),\textcolor{stringliteral}{'  '},trim(ar\_start\_xyz\_file(2))
+129     \textcolor{keyword}{read}(9,*) str,ar\_c\_num(2);              \textcolor{keyword}{write}(out\_id,*) trim(str),\textcolor{stringliteral}{'  '},ar\_c\_num(2)
+130     \textcolor{keyword}{read}(9,*) str,ar\_zero\_energy\_level(2);  \textcolor{keyword}{write}(out\_id,*) trim(str),\textcolor{stringliteral}{'  '},ar\_zero\_energy\_level(2)
+131     \textcolor{keyword}{read}(9,*) str,ar\_final\_file(2);         \textcolor{keyword}{write}(out\_id,*) trim(str),\textcolor{stringliteral}{'  '},trim(ar\_final\_file(2))
+132     \textcolor{keyword}{read}(9,*) str,min\_param\_file;           \textcolor{keyword}{write}(out\_id,*) trim(str),\textcolor{stringliteral}{'  '},trim(min\_param\_file)
+133     \textcolor{keyword}{read}(9,*) str,max\_param\_file;           \textcolor{keyword}{write}(out\_id,*) trim(str),\textcolor{stringliteral}{'  '},trim(max\_param\_file)
+134     \textcolor{keyword}{read}(9,*) str,z;                        \textcolor{keyword}{write}(out\_id,*) trim(str),\textcolor{stringliteral}{'  '},z
+135     \textcolor{keyword}{read}(9,*) str,be0;                      \textcolor{keyword}{write}(out\_id,*) trim(str),\textcolor{stringliteral}{'  '},be0
+136     \textcolor{keyword}{read}(9,*) str,ar\_grd0(1);               \textcolor{keyword}{write}(out\_id,*) trim(str),\textcolor{stringliteral}{'  '},ar\_grd0(1)
+137     \textcolor{keyword}{read}(9,*) str,ar\_grd0(2);               \textcolor{keyword}{write}(out\_id,*) trim(str),\textcolor{stringliteral}{'  '},ar\_grd0(2)
+138     \textcolor{keyword}{close}(9)
+139 
+140 
+141     simplified = .false.
+142     \textcolor{keywordflow}{if}(interaction\_name==\textcolor{stringliteral}{'ljc'}) \textcolor{keywordflow}{then}
+143         \textcolor{keyword}{open}(1234,file=trim(input\_path)//trim(min\_param\_file))
+144         \textcolor{keyword}{read}(1234,*) init\_min\_params(3),init\_min\_params(1),init\_min\_params(2)
+145         \textcolor{keyword}{read}(1234,*) rcut(1),rcut(2)
+146         \textcolor{keyword}{close}(1234)
+147         \textcolor{keyword}{open}(1234,file=trim(input\_path)//trim(max\_param\_file))
+148         \textcolor{keyword}{read}(1234,*) init\_max\_params(3),init\_max\_params(1),init\_max\_params(2)
+149         \textcolor{keyword}{close}(1234)
+150         init\_min\_params(4) = 0.
+151         init\_max\_params(4) = 0.
+152 \textcolor{keywordflow}{    endif}
+153     \textcolor{keywordflow}{if}(interaction\_name==\textcolor{stringliteral}{'morsec'}) \textcolor{keywordflow}{then}
+154         \textcolor{keyword}{open}(1234,file=trim(input\_path)//trim(min\_param\_file))
+155         \textcolor{keyword}{read}(1234,*) init\_min\_params(3),init\_min\_params(1),init\_min\_params(4),init\_min\_params(2)
+156         \textcolor{keyword}{read}(1234,*) rcut(1),rcut(2)
+157         \textcolor{keyword}{close}(1234)
+158         \textcolor{keyword}{open}(1234,file=trim(input\_path)//trim(max\_param\_file))
+159         \textcolor{keyword}{read}(1234,*) init\_max\_params(3),init\_max\_params(1),init\_max\_params(4),init\_max\_params(2)
+160         \textcolor{keyword}{close}(1234)
+161 \textcolor{keywordflow}{    endif}
+162 
+163     sim\_num = 0
+164 
+165     \textcolor{keyword}{open}(1234,file=trim(input\_path)//trim(ar\_settings\_filename(1)))
+166     \textcolor{keyword}{read}(1234,*);\textcolor{keyword}{read}(1234,*);\textcolor{keyword}{read}(1234,*) str,ar\_xyz\_file(1)
+167     \textcolor{keywordflow}{do} \textcolor{keywordflow}{while}(.true.)
+168         \textcolor{keyword}{read}(1234,\textcolor{stringliteral}{'(A128)'}) str
+169         \textcolor{keywordflow}{if}(str(1:3)==trim(interaction\_name)) \textcolor{keywordflow}{then}
+170             \textcolor{keyword}{read}(str(4:),*) param\_file
+171             \textcolor{keywordflow}{exit}
+172 \textcolor{keywordflow}{        endif}
+173         \textcolor{keywordflow}{if}(str(1:6)==trim(interaction\_name)) \textcolor{keywordflow}{then}
+174             \textcolor{keyword}{read}(str(7:),*) param\_file
+175             \textcolor{keywordflow}{exit}
+176 \textcolor{keywordflow}{        endif}
+177 \textcolor{keywordflow}{    enddo}
+178     \textcolor{keyword}{close}(1234)
+179     \textcolor{keyword}{open}(1234,file=trim(input\_path)//trim(ar\_settings\_filename(2)))
+180     \textcolor{keyword}{read}(1234,*);\textcolor{keyword}{read}(1234,*);\textcolor{keyword}{read}(1234,*) str,ar\_xyz\_file(2)
+181     \textcolor{keyword}{close}(1234)
+182 
+\end{DoxyCode}
+
+
+\subsection{Переменные}
+\mbox{\Hypertarget{namespacefit__gr__moire_abc1d82be5a435c0c119ec1d686f6771c}\label{namespacefit__gr__moire_abc1d82be5a435c0c119ec1d686f6771c}} 
+\index{fit\+\_\+gr\+\_\+moire@{fit\+\_\+gr\+\_\+moire}!ar\+\_\+c\+\_\+num@{ar\+\_\+c\+\_\+num}}
+\index{ar\+\_\+c\+\_\+num@{ar\+\_\+c\+\_\+num}!fit\+\_\+gr\+\_\+moire@{fit\+\_\+gr\+\_\+moire}}
+\subsubsection{\texorpdfstring{ar\+\_\+c\+\_\+num}{ar\_c\_num}}
+{\footnotesize\ttfamily integer, dimension(2) fit\+\_\+gr\+\_\+moire\+::ar\+\_\+c\+\_\+num}
+
+
+
+См. определение в файле fit\+\_\+gr\+\_\+moire.\+f90 строка 7
+
+
+\begin{DoxyCode}
+7 integer                 :: ar\_c\_num(2)
+\end{DoxyCode}
+\mbox{\Hypertarget{namespacefit__gr__moire_a1e26c6ce1c81e9f34f2f2edd4fd40ae4}\label{namespacefit__gr__moire_a1e26c6ce1c81e9f34f2f2edd4fd40ae4}} 
+\index{fit\+\_\+gr\+\_\+moire@{fit\+\_\+gr\+\_\+moire}!ar\+\_\+final\+\_\+file@{ar\+\_\+final\+\_\+file}}
+\index{ar\+\_\+final\+\_\+file@{ar\+\_\+final\+\_\+file}!fit\+\_\+gr\+\_\+moire@{fit\+\_\+gr\+\_\+moire}}
+\subsubsection{\texorpdfstring{ar\+\_\+final\+\_\+file}{ar\_final\_file}}
+{\footnotesize\ttfamily character(len=256), dimension(2) fit\+\_\+gr\+\_\+moire\+::ar\+\_\+final\+\_\+file}
+
+
+
+См. определение в файле fit\+\_\+gr\+\_\+moire.\+f90 строка 8
+
+\mbox{\Hypertarget{namespacefit__gr__moire_a133d6649efb184d364f20a02e2afd05f}\label{namespacefit__gr__moire_a133d6649efb184d364f20a02e2afd05f}} 
+\index{fit\+\_\+gr\+\_\+moire@{fit\+\_\+gr\+\_\+moire}!ar\+\_\+grd0@{ar\+\_\+grd0}}
+\index{ar\+\_\+grd0@{ar\+\_\+grd0}!fit\+\_\+gr\+\_\+moire@{fit\+\_\+gr\+\_\+moire}}
+\subsubsection{\texorpdfstring{ar\+\_\+grd0}{ar\_grd0}}
+{\footnotesize\ttfamily real, dimension(2) fit\+\_\+gr\+\_\+moire\+::ar\+\_\+grd0}
+
+
+
+См. определение в файле fit\+\_\+gr\+\_\+moire.\+f90 строка 10
+
+\mbox{\Hypertarget{namespacefit__gr__moire_abe61efd3e06474bc596014a35475150c}\label{namespacefit__gr__moire_abe61efd3e06474bc596014a35475150c}} 
+\index{fit\+\_\+gr\+\_\+moire@{fit\+\_\+gr\+\_\+moire}!ar\+\_\+settings\+\_\+filename@{ar\+\_\+settings\+\_\+filename}}
+\index{ar\+\_\+settings\+\_\+filename@{ar\+\_\+settings\+\_\+filename}!fit\+\_\+gr\+\_\+moire@{fit\+\_\+gr\+\_\+moire}}
+\subsubsection{\texorpdfstring{ar\+\_\+settings\+\_\+filename}{ar\_settings\_filename}}
+{\footnotesize\ttfamily character(len=256), dimension(2) fit\+\_\+gr\+\_\+moire\+::ar\+\_\+settings\+\_\+filename}
+
+
+
+См. определение в файле fit\+\_\+gr\+\_\+moire.\+f90 строка 8
+
+\mbox{\Hypertarget{namespacefit__gr__moire_aa54f0200433f85f1399791f7128e94c5}\label{namespacefit__gr__moire_aa54f0200433f85f1399791f7128e94c5}} 
+\index{fit\+\_\+gr\+\_\+moire@{fit\+\_\+gr\+\_\+moire}!ar\+\_\+start\+\_\+xyz\+\_\+file@{ar\+\_\+start\+\_\+xyz\+\_\+file}}
+\index{ar\+\_\+start\+\_\+xyz\+\_\+file@{ar\+\_\+start\+\_\+xyz\+\_\+file}!fit\+\_\+gr\+\_\+moire@{fit\+\_\+gr\+\_\+moire}}
+\subsubsection{\texorpdfstring{ar\+\_\+start\+\_\+xyz\+\_\+file}{ar\_start\_xyz\_file}}
+{\footnotesize\ttfamily character(len=256), dimension(2) fit\+\_\+gr\+\_\+moire\+::ar\+\_\+start\+\_\+xyz\+\_\+file}
+
+
+
+См. определение в файле fit\+\_\+gr\+\_\+moire.\+f90 строка 8
+
+\mbox{\Hypertarget{namespacefit__gr__moire_adcea9b8af6d606b09d4cf11353d6e76a}\label{namespacefit__gr__moire_adcea9b8af6d606b09d4cf11353d6e76a}} 
+\index{fit\+\_\+gr\+\_\+moire@{fit\+\_\+gr\+\_\+moire}!ar\+\_\+xyz\+\_\+file@{ar\+\_\+xyz\+\_\+file}}
+\index{ar\+\_\+xyz\+\_\+file@{ar\+\_\+xyz\+\_\+file}!fit\+\_\+gr\+\_\+moire@{fit\+\_\+gr\+\_\+moire}}
+\subsubsection{\texorpdfstring{ar\+\_\+xyz\+\_\+file}{ar\_xyz\_file}}
+{\footnotesize\ttfamily character(len=256), dimension(2) fit\+\_\+gr\+\_\+moire\+::ar\+\_\+xyz\+\_\+file}
+
+
+
+См. определение в файле fit\+\_\+gr\+\_\+moire.\+f90 строка 8
+
+\mbox{\Hypertarget{namespacefit__gr__moire_a7b9059147432f1a2fab23cc7a14bda96}\label{namespacefit__gr__moire_a7b9059147432f1a2fab23cc7a14bda96}} 
+\index{fit\+\_\+gr\+\_\+moire@{fit\+\_\+gr\+\_\+moire}!ar\+\_\+zero\+\_\+energy\+\_\+level@{ar\+\_\+zero\+\_\+energy\+\_\+level}}
+\index{ar\+\_\+zero\+\_\+energy\+\_\+level@{ar\+\_\+zero\+\_\+energy\+\_\+level}!fit\+\_\+gr\+\_\+moire@{fit\+\_\+gr\+\_\+moire}}
+\subsubsection{\texorpdfstring{ar\+\_\+zero\+\_\+energy\+\_\+level}{ar\_zero\_energy\_level}}
+{\footnotesize\ttfamily real, dimension(2) fit\+\_\+gr\+\_\+moire\+::ar\+\_\+zero\+\_\+energy\+\_\+level}
+
+
+
+См. определение в файле fit\+\_\+gr\+\_\+moire.\+f90 строка 10
+
+\mbox{\Hypertarget{namespacefit__gr__moire_a9f35bc32182cc551fabbd2a3a172d812}\label{namespacefit__gr__moire_a9f35bc32182cc551fabbd2a3a172d812}} 
+\index{fit\+\_\+gr\+\_\+moire@{fit\+\_\+gr\+\_\+moire}!be0@{be0}}
+\index{be0@{be0}!fit\+\_\+gr\+\_\+moire@{fit\+\_\+gr\+\_\+moire}}
+\subsubsection{\texorpdfstring{be0}{be0}}
+{\footnotesize\ttfamily real fit\+\_\+gr\+\_\+moire\+::be0}
+
+
+
+См. определение в файле fit\+\_\+gr\+\_\+moire.\+f90 строка 10
+
+\mbox{\Hypertarget{namespacefit__gr__moire_a29fb26687189e2457138123a8a823147}\label{namespacefit__gr__moire_a29fb26687189e2457138123a8a823147}} 
+\index{fit\+\_\+gr\+\_\+moire@{fit\+\_\+gr\+\_\+moire}!final\+\_\+out\+\_\+id@{final\+\_\+out\+\_\+id}}
+\index{final\+\_\+out\+\_\+id@{final\+\_\+out\+\_\+id}!fit\+\_\+gr\+\_\+moire@{fit\+\_\+gr\+\_\+moire}}
+\subsubsection{\texorpdfstring{final\+\_\+out\+\_\+id}{final\_out\_id}}
+{\footnotesize\ttfamily integer fit\+\_\+gr\+\_\+moire\+::final\+\_\+out\+\_\+id}
+
+
+
+См. определение в файле fit\+\_\+gr\+\_\+moire.\+f90 строка 6
+
+\mbox{\Hypertarget{namespacefit__gr__moire_a5f4eb40eb6a559f446c1097c651da540}\label{namespacefit__gr__moire_a5f4eb40eb6a559f446c1097c651da540}} 
+\index{fit\+\_\+gr\+\_\+moire@{fit\+\_\+gr\+\_\+moire}!input\+\_\+path@{input\+\_\+path}}
+\index{input\+\_\+path@{input\+\_\+path}!fit\+\_\+gr\+\_\+moire@{fit\+\_\+gr\+\_\+moire}}
+\subsubsection{\texorpdfstring{input\+\_\+path}{input\_path}}
+{\footnotesize\ttfamily character(len=256) fit\+\_\+gr\+\_\+moire\+::input\+\_\+path}
+
+
+
+См. определение в файле fit\+\_\+gr\+\_\+moire.\+f90 строка 8
+
+\mbox{\Hypertarget{namespacefit__gr__moire_a7a35c12a582842134a9dac4018eddf7b}\label{namespacefit__gr__moire_a7a35c12a582842134a9dac4018eddf7b}} 
+\index{fit\+\_\+gr\+\_\+moire@{fit\+\_\+gr\+\_\+moire}!interaction\+\_\+name@{interaction\+\_\+name}}
+\index{interaction\+\_\+name@{interaction\+\_\+name}!fit\+\_\+gr\+\_\+moire@{fit\+\_\+gr\+\_\+moire}}
+\subsubsection{\texorpdfstring{interaction\+\_\+name}{interaction\_name}}
+{\footnotesize\ttfamily character(len=256) fit\+\_\+gr\+\_\+moire\+::interaction\+\_\+name}
+
+
+
+См. определение в файле fit\+\_\+gr\+\_\+moire.\+f90 строка 8
+
+
+\begin{DoxyCode}
+8 \textcolor{comment}{character(len=256)      :: interaction\_name,ar\_settings\_filename(2),output\_prefix,input\_path,out\_path,&}
+9                            ar\_final\_file(2),param\_file,ar\_start\_xyz\_file(2),ar\_xyz\_file(2)
+\end{DoxyCode}
+\mbox{\Hypertarget{namespacefit__gr__moire_a8fbbcfd1d9c1149a9182a782550ea455}\label{namespacefit__gr__moire_a8fbbcfd1d9c1149a9182a782550ea455}} 
+\index{fit\+\_\+gr\+\_\+moire@{fit\+\_\+gr\+\_\+moire}!line@{line}}
+\index{line@{line}!fit\+\_\+gr\+\_\+moire@{fit\+\_\+gr\+\_\+moire}}
+\subsubsection{\texorpdfstring{line}{line}}
+{\footnotesize\ttfamily character(len=80) fit\+\_\+gr\+\_\+moire\+::line}
+
+
+
+См. определение в файле fit\+\_\+gr\+\_\+moire.\+f90 строка 12
+
+
+\begin{DoxyCode}
+12 \textcolor{comment}{character(len=80)       :: line}
+\end{DoxyCode}
+\mbox{\Hypertarget{namespacefit__gr__moire_a6b6dcf709ac2f8f7908b7d38fe795dcc}\label{namespacefit__gr__moire_a6b6dcf709ac2f8f7908b7d38fe795dcc}} 
+\index{fit\+\_\+gr\+\_\+moire@{fit\+\_\+gr\+\_\+moire}!num\+\_\+of\+\_\+omp\+\_\+treads@{num\+\_\+of\+\_\+omp\+\_\+treads}}
+\index{num\+\_\+of\+\_\+omp\+\_\+treads@{num\+\_\+of\+\_\+omp\+\_\+treads}!fit\+\_\+gr\+\_\+moire@{fit\+\_\+gr\+\_\+moire}}
+\subsubsection{\texorpdfstring{num\+\_\+of\+\_\+omp\+\_\+treads}{num\_of\_omp\_treads}}
+{\footnotesize\ttfamily integer fit\+\_\+gr\+\_\+moire\+::num\+\_\+of\+\_\+omp\+\_\+treads}
+
+
+
+См. определение в файле fit\+\_\+gr\+\_\+moire.\+f90 строка 6
+
+\mbox{\Hypertarget{namespacefit__gr__moire_a813dce231711455b1086fcd6fd95c2a4}\label{namespacefit__gr__moire_a813dce231711455b1086fcd6fd95c2a4}} 
+\index{fit\+\_\+gr\+\_\+moire@{fit\+\_\+gr\+\_\+moire}!oid@{oid}}
+\index{oid@{oid}!fit\+\_\+gr\+\_\+moire@{fit\+\_\+gr\+\_\+moire}}
+\subsubsection{\texorpdfstring{oid}{oid}}
+{\footnotesize\ttfamily integer fit\+\_\+gr\+\_\+moire\+::oid}
+
+
+
+См. определение в файле fit\+\_\+gr\+\_\+moire.\+f90 строка 6
+
+\mbox{\Hypertarget{namespacefit__gr__moire_a877e34e1da1ed0d899e33ed675b1f0e5}\label{namespacefit__gr__moire_a877e34e1da1ed0d899e33ed675b1f0e5}} 
+\index{fit\+\_\+gr\+\_\+moire@{fit\+\_\+gr\+\_\+moire}!out\+\_\+id@{out\+\_\+id}}
+\index{out\+\_\+id@{out\+\_\+id}!fit\+\_\+gr\+\_\+moire@{fit\+\_\+gr\+\_\+moire}}
+\subsubsection{\texorpdfstring{out\+\_\+id}{out\_id}}
+{\footnotesize\ttfamily integer fit\+\_\+gr\+\_\+moire\+::out\+\_\+id}
+
+
+
+См. определение в файле fit\+\_\+gr\+\_\+moire.\+f90 строка 6
+
+\mbox{\Hypertarget{namespacefit__gr__moire_a77444985e23a0fc091f7623c2c4469b3}\label{namespacefit__gr__moire_a77444985e23a0fc091f7623c2c4469b3}} 
+\index{fit\+\_\+gr\+\_\+moire@{fit\+\_\+gr\+\_\+moire}!out\+\_\+path@{out\+\_\+path}}
+\index{out\+\_\+path@{out\+\_\+path}!fit\+\_\+gr\+\_\+moire@{fit\+\_\+gr\+\_\+moire}}
+\subsubsection{\texorpdfstring{out\+\_\+path}{out\_path}}
+{\footnotesize\ttfamily character(len=256) fit\+\_\+gr\+\_\+moire\+::out\+\_\+path}
+
+
+
+См. определение в файле fit\+\_\+gr\+\_\+moire.\+f90 строка 8
+
+\mbox{\Hypertarget{namespacefit__gr__moire_a4a36513ac075c468e3f2c09114102f9b}\label{namespacefit__gr__moire_a4a36513ac075c468e3f2c09114102f9b}} 
+\index{fit\+\_\+gr\+\_\+moire@{fit\+\_\+gr\+\_\+moire}!out\+\_\+period@{out\+\_\+period}}
+\index{out\+\_\+period@{out\+\_\+period}!fit\+\_\+gr\+\_\+moire@{fit\+\_\+gr\+\_\+moire}}
+\subsubsection{\texorpdfstring{out\+\_\+period}{out\_period}}
+{\footnotesize\ttfamily integer fit\+\_\+gr\+\_\+moire\+::out\+\_\+period}
+
+
+
+См. определение в файле fit\+\_\+gr\+\_\+moire.\+f90 строка 6
+
+\mbox{\Hypertarget{namespacefit__gr__moire_ac107a23a93efd6c7247949001b635744}\label{namespacefit__gr__moire_ac107a23a93efd6c7247949001b635744}} 
+\index{fit\+\_\+gr\+\_\+moire@{fit\+\_\+gr\+\_\+moire}!output\+\_\+prefix@{output\+\_\+prefix}}
+\index{output\+\_\+prefix@{output\+\_\+prefix}!fit\+\_\+gr\+\_\+moire@{fit\+\_\+gr\+\_\+moire}}
+\subsubsection{\texorpdfstring{output\+\_\+prefix}{output\_prefix}}
+{\footnotesize\ttfamily character(len=256) fit\+\_\+gr\+\_\+moire\+::output\+\_\+prefix}
+
+
+
+См. определение в файле fit\+\_\+gr\+\_\+moire.\+f90 строка 8
+
+\mbox{\Hypertarget{namespacefit__gr__moire_a61b86e6a8a674b819bc9c8b166436c18}\label{namespacefit__gr__moire_a61b86e6a8a674b819bc9c8b166436c18}} 
+\index{fit\+\_\+gr\+\_\+moire@{fit\+\_\+gr\+\_\+moire}!param\+\_\+file@{param\+\_\+file}}
+\index{param\+\_\+file@{param\+\_\+file}!fit\+\_\+gr\+\_\+moire@{fit\+\_\+gr\+\_\+moire}}
+\subsubsection{\texorpdfstring{param\+\_\+file}{param\_file}}
+{\footnotesize\ttfamily character(len=256) fit\+\_\+gr\+\_\+moire\+::param\+\_\+file}
+
+
+
+См. определение в файле fit\+\_\+gr\+\_\+moire.\+f90 строка 8
+
+\mbox{\Hypertarget{namespacefit__gr__moire_aa4a0f3a112959e7b4ce4105b57b1ac8b}\label{namespacefit__gr__moire_aa4a0f3a112959e7b4ce4105b57b1ac8b}} 
+\index{fit\+\_\+gr\+\_\+moire@{fit\+\_\+gr\+\_\+moire}!rcut@{rcut}}
+\index{rcut@{rcut}!fit\+\_\+gr\+\_\+moire@{fit\+\_\+gr\+\_\+moire}}
+\subsubsection{\texorpdfstring{rcut}{rcut}}
+{\footnotesize\ttfamily real, dimension(2) fit\+\_\+gr\+\_\+moire\+::rcut}
+
+
+
+См. определение в файле fit\+\_\+gr\+\_\+moire.\+f90 строка 10
+
+\mbox{\Hypertarget{namespacefit__gr__moire_aace6796e23a47584768373466a2a7522}\label{namespacefit__gr__moire_aace6796e23a47584768373466a2a7522}} 
+\index{fit\+\_\+gr\+\_\+moire@{fit\+\_\+gr\+\_\+moire}!sim\+\_\+num@{sim\+\_\+num}}
+\index{sim\+\_\+num@{sim\+\_\+num}!fit\+\_\+gr\+\_\+moire@{fit\+\_\+gr\+\_\+moire}}
+\subsubsection{\texorpdfstring{sim\+\_\+num}{sim\_num}}
+{\footnotesize\ttfamily integer fit\+\_\+gr\+\_\+moire\+::sim\+\_\+num}
+
+
+
+См. определение в файле fit\+\_\+gr\+\_\+moire.\+f90 строка 6
+
+
+\begin{DoxyCode}
+6 integer                 :: sim\_num,out\_period,num\_of\_omp\_treads,out\_id,final\_out\_id,oid
+\end{DoxyCode}
+\mbox{\Hypertarget{namespacefit__gr__moire_a9092ed380be5233a800406322be81218}\label{namespacefit__gr__moire_a9092ed380be5233a800406322be81218}} 
+\index{fit\+\_\+gr\+\_\+moire@{fit\+\_\+gr\+\_\+moire}!simplified@{simplified}}
+\index{simplified@{simplified}!fit\+\_\+gr\+\_\+moire@{fit\+\_\+gr\+\_\+moire}}
+\subsubsection{\texorpdfstring{simplified}{simplified}}
+{\footnotesize\ttfamily logical fit\+\_\+gr\+\_\+moire\+::simplified}
+
+
+
+См. определение в файле fit\+\_\+gr\+\_\+moire.\+f90 строка 11
+
+
+\begin{DoxyCode}
+11 logical                 :: simplified
+\end{DoxyCode}
+\mbox{\Hypertarget{namespacefit__gr__moire_ad1616f835d2564c00ebea11a9c88cbaf}\label{namespacefit__gr__moire_ad1616f835d2564c00ebea11a9c88cbaf}} 
+\index{fit\+\_\+gr\+\_\+moire@{fit\+\_\+gr\+\_\+moire}!z@{z}}
+\index{z@{z}!fit\+\_\+gr\+\_\+moire@{fit\+\_\+gr\+\_\+moire}}
+\subsubsection{\texorpdfstring{z}{z}}
+{\footnotesize\ttfamily real fit\+\_\+gr\+\_\+moire\+::z}
+
+
+
+См. определение в файле fit\+\_\+gr\+\_\+moire.\+f90 строка 10
+
+
+\begin{DoxyCode}
+10 \textcolor{keywordtype}{real}                    :: z,ar\_zero\_energy\_level(2),be0,ar\_grd0(2),Rcut(2)
+\end{DoxyCode}

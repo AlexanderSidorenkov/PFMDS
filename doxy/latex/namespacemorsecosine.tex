@@ -1,0 +1,214 @@
+\hypertarget{namespacemorsecosine}{}\section{Модуль morsecosine}
+\label{namespacemorsecosine}\index{morsecosine@{morsecosine}}
+\subsection*{Типы данных}
+\begin{DoxyCompactItemize}
+\item 
+type \mbox{\hyperlink{structmorsecosine_1_1morsecosine__parameters}{morsecosine\+\_\+parameters}}
+\end{DoxyCompactItemize}
+\subsection*{Функции/подпрограммы}
+\begin{DoxyCompactItemize}
+\item 
+subroutine \mbox{\hyperlink{namespacemorsecosine_a2d4790950d9c660d18edf6f5dace6031}{read\+\_\+morsec\+\_\+parameters}} (Morse\+Cp, filename)
+\item 
+subroutine \mbox{\hyperlink{namespacemorsecosine_ab16ff8dd21fbf36d2c97a3905d47702b}{morsec\+\_\+energy}} (energy, nl, Morse\+Cp)
+\item 
+subroutine \mbox{\hyperlink{namespacemorsecosine_ab762564d1cafd5251e7aac73fbd757db}{morsec\+\_\+forces\+\_\+for\+\_\+graphene}} (atoms, nl, nl\+\_\+nn, Morse\+Cp)
+\item 
+subroutine \mbox{\hyperlink{namespacemorsecosine_afcca4f80b6e7596c0d7ed68b7346da99}{morsec\+\_\+forces\+\_\+for\+\_\+other\+\_\+atoms}} (atoms, nl, Morse\+Cp)
+\end{DoxyCompactItemize}
+
+
+\subsection{Функции/подпрограммы}
+\mbox{\Hypertarget{namespacemorsecosine_ab16ff8dd21fbf36d2c97a3905d47702b}\label{namespacemorsecosine_ab16ff8dd21fbf36d2c97a3905d47702b}} 
+\index{morsecosine@{morsecosine}!morsec\+\_\+energy@{morsec\+\_\+energy}}
+\index{morsec\+\_\+energy@{morsec\+\_\+energy}!morsecosine@{morsecosine}}
+\subsubsection{\texorpdfstring{morsec\+\_\+energy()}{morsec\_energy()}}
+{\footnotesize\ttfamily subroutine morsecosine\+::morsec\+\_\+energy (\begin{DoxyParamCaption}\item[{real}]{energy,  }\item[{type(\mbox{\hyperlink{structmd__general_1_1neighbour__list}{neighbour\+\_\+list}})}]{nl,  }\item[{type(\mbox{\hyperlink{structmorsecosine_1_1morsecosine__parameters}{morsecosine\+\_\+parameters}})}]{Morse\+Cp }\end{DoxyParamCaption})}
+
+
+
+См. определение в файле Morse\+Cosine.\+f90 строка 27
+
+
+\begin{DoxyCode}
+27     \textcolor{keywordtype}{type}(neighbour\_list):: nl
+28     \textcolor{keywordtype}{type}(MorseCosine\_parameters):: MorseCp
+29     \textcolor{keywordtype}{integer}:: i,p
+30     \textcolor{keywordtype}{real}:: energy,energy\_priv,V1,V2,V3
+31     
+32     energy = 0.
+33     energy\_priv = 0.
+34     \textcolor{comment}{!$OMP PARALLEL firstprivate(energy\_priv,i,p,V1,V2,V3)}
+35     \textcolor{comment}{!$OMP DO}
+36     \textcolor{keywordflow}{do} i=1,nl%N
+37         \textcolor{keywordflow}{do} p=1,nl%nnum(i)
+38             \textcolor{keywordflow}{if} (nl%moddr(p,i)<morsecp%R2) \textcolor{keywordflow}{then}
+39                 v2 = exp(-morsecp%a*(nl%moddr(p,i)-morsecp%r))
+40                 v1 = v2**2
+41                 v3 = (abs(sum(morsecp%gr\_norm(:,i)*nl%dr(:,p,i)))/nl%moddr(p,i))**morsecp%delt
+42                 energy\_priv = energy\_priv+morsecp%d*(v1-2.*v2*v3)*f\_cut(nl%moddr(p,i),morsecp%R1,morsecp%R2
+      )
+43 \textcolor{keywordflow}{            endif}   
+44 \textcolor{keywordflow}{        enddo}
+45 \textcolor{keywordflow}{    enddo}
+46     \textcolor{comment}{!$OMP END DO}
+47     \textcolor{comment}{!$OMP ATOMIC}
+48         energy = energy+energy\_priv
+49     \textcolor{comment}{!$OMP END PARALLEL}
+50     
+\end{DoxyCode}
+Граф вызовов\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=337pt]{namespacemorsecosine_ab16ff8dd21fbf36d2c97a3905d47702b_cgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{namespacemorsecosine_ab762564d1cafd5251e7aac73fbd757db}\label{namespacemorsecosine_ab762564d1cafd5251e7aac73fbd757db}} 
+\index{morsecosine@{morsecosine}!morsec\+\_\+forces\+\_\+for\+\_\+graphene@{morsec\+\_\+forces\+\_\+for\+\_\+graphene}}
+\index{morsec\+\_\+forces\+\_\+for\+\_\+graphene@{morsec\+\_\+forces\+\_\+for\+\_\+graphene}!morsecosine@{morsecosine}}
+\subsubsection{\texorpdfstring{morsec\+\_\+forces\+\_\+for\+\_\+graphene()}{morsec\_forces\_for\_graphene()}}
+{\footnotesize\ttfamily subroutine morsecosine\+::morsec\+\_\+forces\+\_\+for\+\_\+graphene (\begin{DoxyParamCaption}\item[{type(\mbox{\hyperlink{structmd__general_1_1particles}{particles}})}]{atoms,  }\item[{type(\mbox{\hyperlink{structmd__general_1_1neighbour__list}{neighbour\+\_\+list}})}]{nl,  }\item[{type(\mbox{\hyperlink{structmd__general_1_1neighbour__list}{neighbour\+\_\+list}})}]{nl\+\_\+nn,  }\item[{type(\mbox{\hyperlink{structmorsecosine_1_1morsecosine__parameters}{morsecosine\+\_\+parameters}})}]{Morse\+Cp }\end{DoxyParamCaption})}
+
+
+
+См. определение в файле Morse\+Cosine.\+f90 строка 54
+
+
+\begin{DoxyCode}
+54     \textcolor{keywordtype}{type}(particles)::   atoms
+55     \textcolor{keywordtype}{type}(neighbour\_list):: nl,nl\_nn
+56     \textcolor{keywordtype}{type}(MorseCosine\_parameters):: MorseCp
+57     \textcolor{keywordtype}{integer}:: i,p,q,l1,l2,l3,j,k,nnum\_nn
+58     \textcolor{keywordtype}{real}:: drj12(3),drj31(3),drj23(3),V1,V2,V3,f\_c,df\_c
+59     
+60     \textcolor{keywordflow}{if} (nl%N/=nl\_nn%N .and. nl%N/=0) then; \textcolor{keyword}{write}(*,*) \textcolor{stringliteral}{'error: nl%N/=nl\_nn%N'},nl%N,nl\_nn%N; stop;\textcolor{keywordflow}{ endif}
+61     nnum\_nn = 3
+62     \textcolor{keywordflow}{if} (morsecp%simplified) then; nnum\_nn = 0; morsecp%gr\_norm = 0.; morsecp%gr\_norm(3,:) = 1.; endif\textcolor{comment}{
+      !optimize}
+63     
+64     \textcolor{comment}{!$OMP PARALLEL firstprivate(i,p,q,l1,l2,l3,j,k,drj12,drj31,drj23,V1,V2,V3,f\_c,df\_c)}
+65     \textcolor{comment}{!$OMP DO}
+66     \textcolor{keywordflow}{do} i=1,nl%N
+67         \textcolor{keywordflow}{do} p=1,nl%nnum(i)
+68             \textcolor{keywordflow}{if} (nl%moddr(p,i)<morsecp%R2) \textcolor{keywordflow}{then}
+69                 v2 = exp(-morsecp%a*(nl%moddr(p,i)-morsecp%r))
+70                 v1 = v2**2
+71                 v3 = (abs(sum(morsecp%gr\_norm(:,i)*nl%dr(:,p,i)))/nl%moddr(p,i))**morsecp%delt
+72                 f\_c = f\_cut(nl%moddr(p,i),morsecp%R1,morsecp%R2)
+73                 df\_c = df\_cut(nl%moddr(p,i),morsecp%R1,morsecp%R2)
+74                 atoms%forces(:,nl%particle\_index(i)) = atoms%forces(:,nl%particle\_index(i))-morsecp%d*&
+75                 ((2.*(morsecp%a*v1-(morsecp%a+morsecp%delt/nl%moddr(p,i))*v2*v3)/nl%moddr(p,i)*f\_c-(v1-2.*
+      v2*v3)*df\_c)*nl%dr(:,p,i)+&
+76                 (2.*morsecp%delt*v2*v3/sum(morsecp%gr\_norm(:,i)*nl%dr(:,p,i))*f\_c)*morsecp%gr\_norm(:,i))
+77 \textcolor{keywordflow}{            endif}
+78 \textcolor{keywordflow}{        enddo}
+79 \textcolor{keywordflow}{    enddo}
+80     \textcolor{comment}{!$OMP END DO}
+81     \textcolor{comment}{!$OMP DO}
+82     \textcolor{keywordflow}{do} i=1,nl%N
+83         \textcolor{keywordflow}{do} q=1,nnum\_nn
+84             j = nl\_nn%nlist(q,i)
+85             \textcolor{keywordflow}{do} l1=1,nnum\_nn
+86                 \textcolor{keywordflow}{if} (nl\_nn%nlist(l1,j)==i) \textcolor{keywordflow}{exit}
+87 \textcolor{keywordflow}{            enddo}
+88             \textcolor{keywordflow}{if}(l1>3) then; \textcolor{keyword}{write}(*,*) \textcolor{stringliteral}{'l1>3'}; stop;\textcolor{keywordflow}{ endif}
+89             l2 = mod(l1,3)+1
+90             l3 = mod(l1+1,3)+1
+91             drj12 = nl\_nn%dr(:,l2,j)-nl\_nn%dr(:,l1,j)
+92             drj31 = nl\_nn%dr(:,l1,j)-nl\_nn%dr(:,l3,j)
+93             drj23 = nl\_nn%dr(:,l3,j)-nl\_nn%dr(:,l2,j)
+94             \textcolor{keywordflow}{do} p=1,nl%nnum(j)
+95                 \textcolor{keywordflow}{if} (nl%moddr(p,j)<morsecp%R2) \textcolor{keywordflow}{then}
+96                     v2 = exp(-morsecp%a*(nl%moddr(p,j)-morsecp%r))
+97                     v1 = v2**2
+98                     v3 = (abs(sum(morsecp%gr\_norm(:,j)*nl%dr(:,p,j)))/nl%moddr(p,j))**morsecp%delt
+99                     f\_c = f\_cut(nl%moddr(p,j),morsecp%R1,morsecp%R2)
+100                     atoms%forces(:,nl%particle\_index(i)) = atoms%forces(:,nl%particle\_index(i))&
+101                     -2.*morsecp%d*morsecp%delt*v2*v3*f\_c/(sum(drj12**2)*sum(drj31**2)-sum(drj12*drj31)**2)/
+      sum(morsecp%gr\_norm(:,j)*nl%dr(:,p,j))*&
+102                     morsecp%gr\_norm(:,j)*sum(nl%dr(:,p,j)*(drj12*sum(drj23*drj31)-drj31*sum(drj23*drj12)))
+103 \textcolor{keywordflow}{                endif}
+104 \textcolor{keywordflow}{            enddo}
+105 \textcolor{keywordflow}{        enddo}
+106 \textcolor{keywordflow}{    enddo}
+107     \textcolor{comment}{!$OMP END DO}
+108     \textcolor{comment}{!$OMP END PARALLEL}
+109     
+\end{DoxyCode}
+Граф вызовов\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=342pt]{namespacemorsecosine_ab762564d1cafd5251e7aac73fbd757db_cgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{namespacemorsecosine_afcca4f80b6e7596c0d7ed68b7346da99}\label{namespacemorsecosine_afcca4f80b6e7596c0d7ed68b7346da99}} 
+\index{morsecosine@{morsecosine}!morsec\+\_\+forces\+\_\+for\+\_\+other\+\_\+atoms@{morsec\+\_\+forces\+\_\+for\+\_\+other\+\_\+atoms}}
+\index{morsec\+\_\+forces\+\_\+for\+\_\+other\+\_\+atoms@{morsec\+\_\+forces\+\_\+for\+\_\+other\+\_\+atoms}!morsecosine@{morsecosine}}
+\subsubsection{\texorpdfstring{morsec\+\_\+forces\+\_\+for\+\_\+other\+\_\+atoms()}{morsec\_forces\_for\_other\_atoms()}}
+{\footnotesize\ttfamily subroutine morsecosine\+::morsec\+\_\+forces\+\_\+for\+\_\+other\+\_\+atoms (\begin{DoxyParamCaption}\item[{type(\mbox{\hyperlink{structmd__general_1_1particles}{particles}})}]{atoms,  }\item[{type(\mbox{\hyperlink{structmd__general_1_1neighbour__list}{neighbour\+\_\+list}})}]{nl,  }\item[{type(\mbox{\hyperlink{structmorsecosine_1_1morsecosine__parameters}{morsecosine\+\_\+parameters}})}]{Morse\+Cp }\end{DoxyParamCaption})}
+
+
+
+См. определение в файле Morse\+Cosine.\+f90 строка 113
+
+
+\begin{DoxyCode}
+113     \textcolor{keywordtype}{type}(particles)::   atoms
+114     \textcolor{keywordtype}{type}(neighbour\_list):: nl
+115     \textcolor{keywordtype}{type}(MorseCosine\_parameters):: MorseCp
+116     \textcolor{keywordtype}{integer}:: i,p
+117     \textcolor{keywordtype}{real}:: gr\_n(3),V1,V2,V3,f\_c,df\_c
+118     
+119     \textcolor{comment}{!$OMP PARALLEL firstprivate(i,p,gr\_n,V1,V2,V3,f\_c,df\_c)}
+120     \textcolor{comment}{!$OMP DO}
+121     \textcolor{keywordflow}{do} i=1,nl%N
+122         \textcolor{keywordflow}{do} p=1,nl%nnum(i)
+123             \textcolor{keywordflow}{if} (nl%moddr(p,i)<morsecp%R2) \textcolor{keywordflow}{then}
+124                 gr\_n = morsecp%gr\_norm(:,nl%nlist(p,i))
+125                 v2 = exp(-morsecp%a*(nl%moddr(p,i)-morsecp%r))
+126                 v1 = v2**2
+127                 v3 = (abs(sum(gr\_n*nl%dr(:,p,i)))/(sqrt(sum(gr\_n**2))*nl%moddr(p,i)))**morsecp%delt
+128                 f\_c = f\_cut(nl%moddr(p,i),morsecp%R1,morsecp%R2)
+129                 df\_c = df\_cut(nl%moddr(p,i),morsecp%R1,morsecp%R2)
+130                 atoms%forces(:,nl%particle\_index(i)) = atoms%forces(:,nl%particle\_index(i))-morsecp%d*&
+131                 ((2.*(morsecp%a*v1-(morsecp%a+morsecp%delt/nl%moddr(p,i))*v2*v3)/nl%moddr(p,i)*f\_c-(v1-2.*
+      v2*v3)*df\_c)*nl%dr(:,p,i)+&
+132                 (2.*morsecp%delt*v2*v3/sum(gr\_n*nl%dr(:,p,i))*f\_c)*gr\_n)
+133 \textcolor{keywordflow}{            endif}
+134 \textcolor{keywordflow}{        enddo}
+135 \textcolor{keywordflow}{    enddo}
+136     \textcolor{comment}{!$OMP END DO }
+137     \textcolor{comment}{!$OMP END PARALLEL}
+138     
+\end{DoxyCode}
+Граф вызовов\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{namespacemorsecosine_afcca4f80b6e7596c0d7ed68b7346da99_cgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{namespacemorsecosine_a2d4790950d9c660d18edf6f5dace6031}\label{namespacemorsecosine_a2d4790950d9c660d18edf6f5dace6031}} 
+\index{morsecosine@{morsecosine}!read\+\_\+morsec\+\_\+parameters@{read\+\_\+morsec\+\_\+parameters}}
+\index{read\+\_\+morsec\+\_\+parameters@{read\+\_\+morsec\+\_\+parameters}!morsecosine@{morsecosine}}
+\subsubsection{\texorpdfstring{read\+\_\+morsec\+\_\+parameters()}{read\_morsec\_parameters()}}
+{\footnotesize\ttfamily subroutine morsecosine\+::read\+\_\+morsec\+\_\+parameters (\begin{DoxyParamCaption}\item[{type(\mbox{\hyperlink{structmorsecosine_1_1morsecosine__parameters}{morsecosine\+\_\+parameters}})}]{Morse\+Cp,  }\item[{character($\ast$)}]{filename }\end{DoxyParamCaption})}
+
+
+
+См. определение в файле Morse\+Cosine.\+f90 строка 15
+
+
+\begin{DoxyCode}
+15     \textcolor{keywordtype}{type}(MorseCosine\_parameters):: MorseCp
+16     \textcolor{keywordtype}{character(*)}::  filename
+17     
+18     \textcolor{keyword}{open}(1,file=filename)
+19     \textcolor{keyword}{read}(1,*) morsecp%d,morsecp%r,morsecp%a,morsecp%delt
+20     \textcolor{keyword}{read}(1,*) morsecp%R1,morsecp%R2
+21     \textcolor{keyword}{read}(1,*) morsecp%simplified
+22     \textcolor{keyword}{close}(1)
+23     
+\end{DoxyCode}

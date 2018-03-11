@@ -1,0 +1,210 @@
+\hypertarget{namespacelennardjonescosine}{}\section{Модуль lennardjonescosine}
+\label{namespacelennardjonescosine}\index{lennardjonescosine@{lennardjonescosine}}
+\subsection*{Типы данных}
+\begin{DoxyCompactItemize}
+\item 
+type \mbox{\hyperlink{structlennardjonescosine_1_1lennardjonescosine__parameters}{lennardjonescosine\+\_\+parameters}}
+\end{DoxyCompactItemize}
+\subsection*{Функции/подпрограммы}
+\begin{DoxyCompactItemize}
+\item 
+subroutine \mbox{\hyperlink{namespacelennardjonescosine_abdcce4a33286a32fa7d04e2fd1344934}{read\+\_\+ljc\+\_\+parameters}} (L\+J\+Cp, filename)
+\item 
+subroutine \mbox{\hyperlink{namespacelennardjonescosine_a50bfc170eedcf42dd2252426f2476002}{ljc\+\_\+energy}} (energy, nl, L\+J\+Cp)
+\item 
+subroutine \mbox{\hyperlink{namespacelennardjonescosine_aa355c58f69eacc410be4c84a216f9aeb}{ljc\+\_\+forces\+\_\+for\+\_\+graphene}} (atoms, nl, nl\+\_\+nn, L\+J\+Cp)
+\item 
+subroutine \mbox{\hyperlink{namespacelennardjonescosine_a73608f731b0cb701778f6b125e057ab4}{ljc\+\_\+forces\+\_\+for\+\_\+other\+\_\+atoms}} (atoms, nl, L\+J\+Cp)
+\end{DoxyCompactItemize}
+
+
+\subsection{Функции/подпрограммы}
+\mbox{\Hypertarget{namespacelennardjonescosine_a50bfc170eedcf42dd2252426f2476002}\label{namespacelennardjonescosine_a50bfc170eedcf42dd2252426f2476002}} 
+\index{lennardjonescosine@{lennardjonescosine}!ljc\+\_\+energy@{ljc\+\_\+energy}}
+\index{ljc\+\_\+energy@{ljc\+\_\+energy}!lennardjonescosine@{lennardjonescosine}}
+\subsubsection{\texorpdfstring{ljc\+\_\+energy()}{ljc\_energy()}}
+{\footnotesize\ttfamily subroutine lennardjonescosine\+::ljc\+\_\+energy (\begin{DoxyParamCaption}\item[{real}]{energy,  }\item[{type(\mbox{\hyperlink{structmd__general_1_1neighbour__list}{neighbour\+\_\+list}})}]{nl,  }\item[{type(\mbox{\hyperlink{structlennardjonescosine_1_1lennardjonescosine__parameters}{lennardjonescosine\+\_\+parameters}})}]{L\+J\+Cp }\end{DoxyParamCaption})}
+
+
+
+См. определение в файле Lennard\+Jones\+Cosine.\+f90 строка 27
+
+
+\begin{DoxyCode}
+27     \textcolor{keywordtype}{type}(neighbour\_list):: nl
+28     \textcolor{keywordtype}{type}(LennardJonesCosine\_parameters):: LJCp
+29     \textcolor{keywordtype}{integer}:: i,p
+30     \textcolor{keywordtype}{real}:: energy,energy\_priv,V1,V2,V3
+31     
+32     energy = 0.
+33     energy\_priv = 0.
+34     \textcolor{comment}{!$OMP PARALLEL firstprivate(energy\_priv,i,p,V1,V2,V3)}
+35     \textcolor{comment}{!$OMP DO}
+36     \textcolor{keywordflow}{do} i=1,nl%N
+37         \textcolor{keywordflow}{do} p=1,nl%nnum(i)
+38             \textcolor{keywordflow}{if} (nl%moddr(p,i)<ljcp%R2) \textcolor{keywordflow}{then}
+39                 v2 = (ljcp%sig/nl%moddr(p,i))**6
+40                 v1 = v2**2
+41                 v3 = (abs(sum(ljcp%gr\_norm(:,i)*nl%dr(:,p,i)))/nl%moddr(p,i))**ljcp%delt
+42                 energy\_priv = energy\_priv+4*ljcp%eps*(v1-v2*v3)*f\_cut(nl%moddr(p,i),ljcp%R1,ljcp%R2)
+43 \textcolor{keywordflow}{            endif}   
+44 \textcolor{keywordflow}{        enddo}
+45 \textcolor{keywordflow}{    enddo}
+46     \textcolor{comment}{!$OMP END DO}
+47     \textcolor{comment}{!$OMP ATOMIC}
+48         energy = energy+energy\_priv
+49     \textcolor{comment}{!$OMP END PARALLEL}
+50     
+\end{DoxyCode}
+Граф вызовов\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=327pt]{namespacelennardjonescosine_a50bfc170eedcf42dd2252426f2476002_cgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{namespacelennardjonescosine_aa355c58f69eacc410be4c84a216f9aeb}\label{namespacelennardjonescosine_aa355c58f69eacc410be4c84a216f9aeb}} 
+\index{lennardjonescosine@{lennardjonescosine}!ljc\+\_\+forces\+\_\+for\+\_\+graphene@{ljc\+\_\+forces\+\_\+for\+\_\+graphene}}
+\index{ljc\+\_\+forces\+\_\+for\+\_\+graphene@{ljc\+\_\+forces\+\_\+for\+\_\+graphene}!lennardjonescosine@{lennardjonescosine}}
+\subsubsection{\texorpdfstring{ljc\+\_\+forces\+\_\+for\+\_\+graphene()}{ljc\_forces\_for\_graphene()}}
+{\footnotesize\ttfamily subroutine lennardjonescosine\+::ljc\+\_\+forces\+\_\+for\+\_\+graphene (\begin{DoxyParamCaption}\item[{type(\mbox{\hyperlink{structmd__general_1_1particles}{particles}})}]{atoms,  }\item[{type(\mbox{\hyperlink{structmd__general_1_1neighbour__list}{neighbour\+\_\+list}})}]{nl,  }\item[{type(\mbox{\hyperlink{structmd__general_1_1neighbour__list}{neighbour\+\_\+list}})}]{nl\+\_\+nn,  }\item[{type(\mbox{\hyperlink{structlennardjonescosine_1_1lennardjonescosine__parameters}{lennardjonescosine\+\_\+parameters}})}]{L\+J\+Cp }\end{DoxyParamCaption})}
+
+
+
+См. определение в файле Lennard\+Jones\+Cosine.\+f90 строка 54
+
+
+\begin{DoxyCode}
+54     \textcolor{keywordtype}{type}(particles)::   atoms
+55     \textcolor{keywordtype}{type}(neighbour\_list):: nl,nl\_nn
+56     \textcolor{keywordtype}{type}(LennardJonesCosine\_parameters):: LJCp
+57     \textcolor{keywordtype}{integer}:: i,p,q,l1,l2,l3,j,k,nnum\_nn
+58     \textcolor{keywordtype}{real}:: drj12(3),drj31(3),drj23(3),V1,V2,V3,f\_c,df\_c
+59     
+60     \textcolor{keywordflow}{if} (nl%N/=nl\_nn%N .and. nl%N/=0) then; \textcolor{keyword}{write}(*,*) \textcolor{stringliteral}{'error: nl%N/=nl\_nn%N'},nl%N,nl\_nn%N; stop;\textcolor{keywordflow}{ endif}
+61     nnum\_nn = 3
+62     \textcolor{keywordflow}{if} (ljcp%simplified) then; nnum\_nn = 0; ljcp%gr\_norm = 0.; ljcp%gr\_norm(3,:) = 1.; endif\textcolor{comment}{!optimize}
+63     
+64     \textcolor{comment}{!$OMP PARALLEL firstprivate(i,p,q,l1,l2,l3,j,k,drj12,drj31,drj23,V1,V2,V3,f\_c,df\_c)}
+65     \textcolor{comment}{!$OMP DO}
+66     \textcolor{keywordflow}{do} i=1,nl%N
+67         \textcolor{keywordflow}{do} p=1,nl%nnum(i)
+68             \textcolor{keywordflow}{if} (nl%moddr(p,i)<ljcp%R2) \textcolor{keywordflow}{then}
+69                 v2 = (ljcp%sig/nl%moddr(p,i))**6
+70                 v1 = v2**2
+71                 v3 = (abs(sum(ljcp%gr\_norm(:,i)*nl%dr(:,p,i)))/nl%moddr(p,i))**ljcp%delt
+72                 f\_c = f\_cut(nl%moddr(p,i),ljcp%R1,ljcp%R2)
+73                 df\_c = df\_cut(nl%moddr(p,i),ljcp%R1,ljcp%R2)
+74                 atoms%forces(:,nl%particle\_index(i)) = atoms%forces(:,nl%particle\_index(i))-4.*ljcp%eps*&
+75                 (((12.*v1-(6.+ljcp%delt)*v2*v3)/nl%moddr(p,i)**2*f\_c-(v1-v2*v3)*df\_c)*nl%dr(:,p,i)+&
+76                 (ljcp%delt*v2*v3/sum(ljcp%gr\_norm(:,i)*nl%dr(:,p,i))*f\_c)*ljcp%gr\_norm(:,i))
+77 \textcolor{keywordflow}{            endif}
+78 \textcolor{keywordflow}{        enddo}
+79 \textcolor{keywordflow}{    enddo}
+80     \textcolor{comment}{!$OMP END DO}
+81     \textcolor{comment}{!$OMP DO}
+82     \textcolor{keywordflow}{do} i=1,nl%N
+83         \textcolor{keywordflow}{do} q=1,nnum\_nn
+84             j = nl\_nn%nlist(q,i)
+85             \textcolor{keywordflow}{do} l1=1,nnum\_nn
+86                 \textcolor{keywordflow}{if} (nl\_nn%nlist(l1,j)==i) \textcolor{keywordflow}{exit}
+87 \textcolor{keywordflow}{            enddo}
+88             \textcolor{keywordflow}{if}(l1>3) then; \textcolor{keyword}{write}(*,*) \textcolor{stringliteral}{'l1>3'}; stop;\textcolor{keywordflow}{ endif}
+89             l2 = mod(l1,3)+1
+90             l3 = mod(l1+1,3)+1
+91             drj12 = nl\_nn%dr(:,l2,j)-nl\_nn%dr(:,l1,j)
+92             drj31 = nl\_nn%dr(:,l1,j)-nl\_nn%dr(:,l3,j)
+93             drj23 = nl\_nn%dr(:,l3,j)-nl\_nn%dr(:,l2,j)
+94             \textcolor{keywordflow}{do} p=1,nl%nnum(j)
+95                 \textcolor{keywordflow}{if} (nl%moddr(p,j)<ljcp%R2) \textcolor{keywordflow}{then}
+96                     v2 = (ljcp%sig/nl%moddr(p,j))**6
+97                     v1 = v2**2
+98                     v3 = (abs(sum(ljcp%gr\_norm(:,j)*nl%dr(:,p,j)))/nl%moddr(p,j))**ljcp%delt
+99                     f\_c = f\_cut(nl%moddr(p,j),ljcp%R1,ljcp%R2)
+100                     atoms%forces(:,nl%particle\_index(i)) = atoms%forces(:,nl%particle\_index(i))&
+101                     -4.*ljcp%eps*ljcp%delt*v2*v3*f\_c/(sum(drj12**2)*sum(drj31**2)-sum(drj12*drj31)**2)/sum(
+      ljcp%gr\_norm(:,j)*nl%dr(:,p,j))*&
+102                     ljcp%gr\_norm(:,j)*sum(nl%dr(:,p,j)*(drj12*sum(drj23*drj31)-drj31*sum(drj23*drj12)))
+103 \textcolor{keywordflow}{                endif}
+104 \textcolor{keywordflow}{            enddo}
+105 \textcolor{keywordflow}{        enddo}
+106 \textcolor{keywordflow}{    enddo}
+107     \textcolor{comment}{!$OMP END DO}
+108     \textcolor{comment}{!$OMP END PARALLEL}
+109     
+\end{DoxyCode}
+Граф вызовов\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{namespacelennardjonescosine_aa355c58f69eacc410be4c84a216f9aeb_cgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{namespacelennardjonescosine_a73608f731b0cb701778f6b125e057ab4}\label{namespacelennardjonescosine_a73608f731b0cb701778f6b125e057ab4}} 
+\index{lennardjonescosine@{lennardjonescosine}!ljc\+\_\+forces\+\_\+for\+\_\+other\+\_\+atoms@{ljc\+\_\+forces\+\_\+for\+\_\+other\+\_\+atoms}}
+\index{ljc\+\_\+forces\+\_\+for\+\_\+other\+\_\+atoms@{ljc\+\_\+forces\+\_\+for\+\_\+other\+\_\+atoms}!lennardjonescosine@{lennardjonescosine}}
+\subsubsection{\texorpdfstring{ljc\+\_\+forces\+\_\+for\+\_\+other\+\_\+atoms()}{ljc\_forces\_for\_other\_atoms()}}
+{\footnotesize\ttfamily subroutine lennardjonescosine\+::ljc\+\_\+forces\+\_\+for\+\_\+other\+\_\+atoms (\begin{DoxyParamCaption}\item[{type(\mbox{\hyperlink{structmd__general_1_1particles}{particles}})}]{atoms,  }\item[{type(\mbox{\hyperlink{structmd__general_1_1neighbour__list}{neighbour\+\_\+list}})}]{nl,  }\item[{type(\mbox{\hyperlink{structlennardjonescosine_1_1lennardjonescosine__parameters}{lennardjonescosine\+\_\+parameters}})}]{L\+J\+Cp }\end{DoxyParamCaption})}
+
+
+
+См. определение в файле Lennard\+Jones\+Cosine.\+f90 строка 113
+
+
+\begin{DoxyCode}
+113     \textcolor{keywordtype}{type}(particles)::   atoms
+114     \textcolor{keywordtype}{type}(neighbour\_list):: nl
+115     \textcolor{keywordtype}{type}(LennardJonesCosine\_parameters):: LJCp
+116     \textcolor{keywordtype}{integer}:: i,p
+117     \textcolor{keywordtype}{real}:: gr\_n(3),V1,V2,V3,f\_c,df\_c
+118     
+119     \textcolor{comment}{!$OMP PARALLEL firstprivate(i,p,gr\_n,V1,V2,V3,f\_c,df\_c)}
+120     \textcolor{comment}{!$OMP DO}
+121     \textcolor{keywordflow}{do} i=1,nl%N
+122         \textcolor{keywordflow}{do} p=1,nl%nnum(i)
+123             \textcolor{keywordflow}{if} (nl%moddr(p,i)<ljcp%R2) \textcolor{keywordflow}{then}
+124                 gr\_n = ljcp%gr\_norm(:,nl%nlist(p,i))
+125                 v2 = (ljcp%sig/nl%moddr(p,i))**6
+126                 v1 = v2**2
+127                 v3 = (abs(sum(gr\_n*nl%dr(:,p,i)))/nl%moddr(p,i))**ljcp%delt
+128                 f\_c = f\_cut(nl%moddr(p,i),ljcp%R1,ljcp%R2)
+129                 df\_c = df\_cut(nl%moddr(p,i),ljcp%R1,ljcp%R2)
+130                 atoms%forces(:,nl%particle\_index(i)) = atoms%forces(:,nl%particle\_index(i))-4.*ljcp%eps*&
+131                 (((12.*v1-(6.+ljcp%delt)*v2*v3)/nl%moddr(p,i)**2*f\_c-(v1-v2*v3)*df\_c)*nl%dr(:,p,i)+&
+132                 (ljcp%delt*v2*v3/sum(gr\_n*nl%dr(:,p,i))*f\_c)*gr\_n)
+133 \textcolor{keywordflow}{            endif}
+134 \textcolor{keywordflow}{        enddo}
+135 \textcolor{keywordflow}{    enddo}
+136     \textcolor{comment}{!$OMP END DO }
+137     \textcolor{comment}{!$OMP END PARALLEL}
+138     
+\end{DoxyCode}
+Граф вызовов\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{namespacelennardjonescosine_a73608f731b0cb701778f6b125e057ab4_cgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{namespacelennardjonescosine_abdcce4a33286a32fa7d04e2fd1344934}\label{namespacelennardjonescosine_abdcce4a33286a32fa7d04e2fd1344934}} 
+\index{lennardjonescosine@{lennardjonescosine}!read\+\_\+ljc\+\_\+parameters@{read\+\_\+ljc\+\_\+parameters}}
+\index{read\+\_\+ljc\+\_\+parameters@{read\+\_\+ljc\+\_\+parameters}!lennardjonescosine@{lennardjonescosine}}
+\subsubsection{\texorpdfstring{read\+\_\+ljc\+\_\+parameters()}{read\_ljc\_parameters()}}
+{\footnotesize\ttfamily subroutine lennardjonescosine\+::read\+\_\+ljc\+\_\+parameters (\begin{DoxyParamCaption}\item[{type(\mbox{\hyperlink{structlennardjonescosine_1_1lennardjonescosine__parameters}{lennardjonescosine\+\_\+parameters}})}]{L\+J\+Cp,  }\item[{character($\ast$)}]{filename }\end{DoxyParamCaption})}
+
+
+
+См. определение в файле Lennard\+Jones\+Cosine.\+f90 строка 15
+
+
+\begin{DoxyCode}
+15     \textcolor{keywordtype}{type}(LennardJonesCosine\_parameters):: LJCp
+16     \textcolor{keywordtype}{character(*)}::  filename
+17     
+18     \textcolor{keyword}{open}(1,file=filename)
+19     \textcolor{keyword}{read}(1,*) ljcp%eps,ljcp%sig,ljcp%delt
+20     \textcolor{keyword}{read}(1,*) ljcp%R1,ljcp%R2
+21     \textcolor{keyword}{read}(1,*) ljcp%simplified
+22     \textcolor{keyword}{close}(1)
+23     
+\end{DoxyCode}

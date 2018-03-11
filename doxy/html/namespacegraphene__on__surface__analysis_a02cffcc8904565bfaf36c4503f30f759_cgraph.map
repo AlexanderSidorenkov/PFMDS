@@ -1,0 +1,5 @@
+<map id="graphene_on_surface_analysis::gr_on_cu_analysis" name="graphene_on_surface_analysis::gr_on_cu_analysis">
+<area shape="rect" id="node2" href="$namespacemd__read__write.html#a1a0fd7df876318fd4247d110936384d8" title="Читает информацию о частицах из .xyz файла. &#160;Первая строка файла содержит количество частиц..." alt="" coords="201,5,339,47"/>
+<area shape="rect" id="node3" href="$namespacemd__general.html#a6e847bdd3b7115bf5ff69e8cd8e68d7f" title="md_general::create\l_particle_group" alt="" coords="203,71,337,112"/>
+<area shape="rect" id="node4" href="$namespacemd__general.html#a5dc45690a2125a86ce58d01601ebdf45" title="md_general::position\l_analysis" alt="" coords="199,136,341,177"/>
+</map>

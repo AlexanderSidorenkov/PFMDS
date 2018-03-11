@@ -1,0 +1,677 @@
+\hypertarget{namespacemd__general}{}\section{Модуль md\+\_\+general}
+\label{namespacemd__general}\index{md\+\_\+general@{md\+\_\+general}}
+\subsection*{Типы данных}
+\begin{DoxyCompactItemize}
+\item 
+type \mbox{\hyperlink{structmd__general_1_1integrator__params}{integrator\+\_\+params}}
+\item 
+type \mbox{\hyperlink{structmd__general_1_1neighbour__list}{neighbour\+\_\+list}}
+\item 
+type \mbox{\hyperlink{structmd__general_1_1nose__hoover__chain}{nose\+\_\+hoover\+\_\+chain}}
+\item 
+type \mbox{\hyperlink{structmd__general_1_1particle__group}{particle\+\_\+group}}
+\item 
+type \mbox{\hyperlink{structmd__general_1_1particles}{particles}}
+\item 
+type \mbox{\hyperlink{structmd__general_1_1simulation__cell}{simulation\+\_\+cell}}
+\item 
+type \mbox{\hyperlink{structmd__general_1_1time__steps}{time\+\_\+steps}}
+\end{DoxyCompactItemize}
+\subsection*{Функции/подпрограммы}
+\begin{DoxyCompactItemize}
+\item 
+subroutine \mbox{\hyperlink{namespacemd__general_a3a69c40fe5a6e7938d398f803b21e474}{init\+\_\+time\+\_\+steps}} (dt, delta\+\_\+t)
+\item 
+subroutine \mbox{\hyperlink{namespacemd__general_a6e847bdd3b7115bf5ff69e8cd8e68d7f}{create\+\_\+particle\+\_\+group}} (group, type\+\_\+names, atoms)
+\item 
+subroutine \mbox{\hyperlink{namespacemd__general_a5614c27d83ed003aa01d3be2f1b45c57}{change\+\_\+particle\+\_\+group\+\_\+n}} (group, md\+\_\+step, change\+\_\+ts1, change\+\_\+ts2, change\+\_\+frec, init\+\_\+group)
+\item 
+subroutine \mbox{\hyperlink{namespacemd__general_ad4ad26fa9584c63f846d49033ce92987}{scale\+\_\+velocities}} (atoms, group, s)
+\item 
+subroutine \mbox{\hyperlink{namespacemd__general_a326a2fe1c1da84197c4566801133648a}{random\+\_\+velocities}} (atoms, group)
+\item 
+subroutine \mbox{\hyperlink{namespacemd__general_a8192b37ec3462b5fcb7fabf17c8eb658}{random\+\_\+momenta}} (atoms, group)
+\item 
+subroutine \mbox{\hyperlink{namespacemd__general_a0949b9217f73c42e2c7ea47a4e559e39}{calculate\+\_\+kinetic\+\_\+energy}} (ke, atoms, group)
+\item 
+subroutine \mbox{\hyperlink{namespacemd__general_aafe7eb801a25cbfeff68d5574b9fc152}{calculate\+\_\+mass\+\_\+center}} (mc, atoms, group)
+\item 
+subroutine \mbox{\hyperlink{namespacemd__general_a39191e16e77e39d5486e4daaeaa2522e}{calculate\+\_\+mass\+\_\+center\+\_\+velosity}} (mcv, atoms, group)
+\item 
+subroutine \mbox{\hyperlink{namespacemd__general_a79ea9e512a27c651278559e30f97a336}{zero\+\_\+momentum}} (atoms, group)
+\item 
+subroutine \mbox{\hyperlink{namespacemd__general_a77b50b971bc4812a1299348a398491e0}{calculate\+\_\+masses\+\_\+sum}} (totm, atoms, group)
+\item 
+subroutine \mbox{\hyperlink{namespacemd__general_ac5733857b75ce71aa32a105751e4dfd5}{calculate\+\_\+force\+\_\+sum}} (fs, atoms, group)
+\item 
+subroutine \mbox{\hyperlink{namespacemd__general_a1de2d09f44a8dc5b96fc5eb221845cc1}{calculate\+\_\+temperature}} (temp, ke, atoms, group)
+\item 
+subroutine \mbox{\hyperlink{namespacemd__general_a9f99fa4920c9047597f37b777dd44b3c}{set\+\_\+new\+\_\+temperature}} (atoms, group, temp)
+\item 
+subroutine \mbox{\hyperlink{namespacemd__general_ac9e62480edf60d2b3d1a123c9da68e1f}{check\+\_\+positions}} (out\+\_\+id, atoms, box)
+\item 
+subroutine \mbox{\hyperlink{namespacemd__general_abd425450c2140a07748c79f0f0dbd760}{check\+\_\+velocities}} (out\+\_\+id, atoms)
+\item 
+subroutine \mbox{\hyperlink{namespacemd__general_aca48dc12ea3fb99991acd82c2223a9bf}{invert\+\_\+z\+\_\+velocities}} (atoms, z\+\_\+low\+\_\+border, z\+\_\+high\+\_\+border)
+\item 
+subroutine \mbox{\hyperlink{namespacemd__general_a5dc45690a2125a86ce58d01601ebdf45}{position\+\_\+analysis}} (av, mi, ma, atoms, group, direction, minimum, maximum)
+\item 
+pure subroutine \mbox{\hyperlink{namespacemd__general_a33570f37733690b0634f039ad1bcf35e}{find\+\_\+distance}} (dr, dr2, vec1, vec2, box)
+\end{DoxyCompactItemize}
+
+
+\subsection{Функции/подпрограммы}
+\mbox{\Hypertarget{namespacemd__general_ac5733857b75ce71aa32a105751e4dfd5}\label{namespacemd__general_ac5733857b75ce71aa32a105751e4dfd5}} 
+\index{md\+\_\+general@{md\+\_\+general}!calculate\+\_\+force\+\_\+sum@{calculate\+\_\+force\+\_\+sum}}
+\index{calculate\+\_\+force\+\_\+sum@{calculate\+\_\+force\+\_\+sum}!md\+\_\+general@{md\+\_\+general}}
+\subsubsection{\texorpdfstring{calculate\+\_\+force\+\_\+sum()}{calculate\_force\_sum()}}
+{\footnotesize\ttfamily subroutine md\+\_\+general\+::calculate\+\_\+force\+\_\+sum (\begin{DoxyParamCaption}\item[{real, dimension(3)}]{fs,  }\item[{type(\mbox{\hyperlink{structmd__general_1_1particles}{particles}})}]{atoms,  }\item[{type(\mbox{\hyperlink{structmd__general_1_1particle__group}{particle\+\_\+group}})}]{group }\end{DoxyParamCaption})}
+
+
+
+См. определение в файле md\+\_\+general.\+f90 строка 279
+
+
+\begin{DoxyCode}
+279     \textcolor{keywordtype}{type}(particles)::   atoms
+280     \textcolor{keywordtype}{type}(particle\_group):: group
+281     \textcolor{keywordtype}{real}:: fs(3),fs\_priv(3)
+282     \textcolor{keywordtype}{integer}::       i,ind,k
+283 
+284     fs = 0.
+285     fs\_priv = 0.
+286     \textcolor{comment}{!$OMP PARALLEL firstprivate(fs\_priv,i,ind,k)}
+287     \textcolor{comment}{!$OMP DO}
+288     \textcolor{keywordflow}{do} ind=1,group%N
+289         i = group%indexes(ind)
+290         fs\_priv = fs\_priv+atoms%forces(:,i)
+291 \textcolor{keywordflow}{    enddo}
+292     \textcolor{comment}{!$OMP END DO}
+293     \textcolor{keywordflow}{do} k=1,3
+294         \textcolor{comment}{!$OMP ATOMIC}
+295             fs(k) = fs(k)+fs\_priv(k)
+296 \textcolor{keywordflow}{    enddo}
+297     \textcolor{comment}{!$OMP END PARALLEL}
+298 
+299     \textcolor{keywordflow}{return}
+\end{DoxyCode}
+\mbox{\Hypertarget{namespacemd__general_a0949b9217f73c42e2c7ea47a4e559e39}\label{namespacemd__general_a0949b9217f73c42e2c7ea47a4e559e39}} 
+\index{md\+\_\+general@{md\+\_\+general}!calculate\+\_\+kinetic\+\_\+energy@{calculate\+\_\+kinetic\+\_\+energy}}
+\index{calculate\+\_\+kinetic\+\_\+energy@{calculate\+\_\+kinetic\+\_\+energy}!md\+\_\+general@{md\+\_\+general}}
+\subsubsection{\texorpdfstring{calculate\+\_\+kinetic\+\_\+energy()}{calculate\_kinetic\_energy()}}
+{\footnotesize\ttfamily subroutine md\+\_\+general\+::calculate\+\_\+kinetic\+\_\+energy (\begin{DoxyParamCaption}\item[{real}]{ke,  }\item[{type(\mbox{\hyperlink{structmd__general_1_1particles}{particles}})}]{atoms,  }\item[{type(\mbox{\hyperlink{structmd__general_1_1particle__group}{particle\+\_\+group}})}]{group }\end{DoxyParamCaption})}
+
+
+
+См. определение в файле md\+\_\+general.\+f90 строка 163
+
+
+\begin{DoxyCode}
+163     \textcolor{keywordtype}{type}(particles)::   atoms
+164     \textcolor{keywordtype}{type}(particle\_group):: group
+165     \textcolor{keywordtype}{real}:: ke,ke\_priv
+166     \textcolor{keywordtype}{real},\textcolor{keywordtype}{parameter}:: mass\_coef=1.6605389217/1.6021765654*10.**(2)
+167     \textcolor{keywordtype}{integer}::       i,ind
+168 
+169     ke = 0.
+170     ke\_priv = 0.
+171     \textcolor{comment}{!$OMP PARALLEL firstprivate(ke\_priv,i,ind)}
+172     \textcolor{comment}{!$OMP DO}
+173     \textcolor{keywordflow}{do} ind=1,group%N
+174         i = group%indexes(ind)
+175         ke\_priv = ke\_priv+atoms%masses(i)*sum(atoms%velocities(:,i)**2)/2*mass\_coef
+176 \textcolor{keywordflow}{    enddo}
+177     \textcolor{comment}{!$OMP END DO}
+178     \textcolor{comment}{!$OMP ATOMIC}
+179         ke = ke+ke\_priv
+180     \textcolor{comment}{!$OMP END PARALLEL}
+181 
+182     \textcolor{keywordflow}{return}
+\end{DoxyCode}
+\mbox{\Hypertarget{namespacemd__general_aafe7eb801a25cbfeff68d5574b9fc152}\label{namespacemd__general_aafe7eb801a25cbfeff68d5574b9fc152}} 
+\index{md\+\_\+general@{md\+\_\+general}!calculate\+\_\+mass\+\_\+center@{calculate\+\_\+mass\+\_\+center}}
+\index{calculate\+\_\+mass\+\_\+center@{calculate\+\_\+mass\+\_\+center}!md\+\_\+general@{md\+\_\+general}}
+\subsubsection{\texorpdfstring{calculate\+\_\+mass\+\_\+center()}{calculate\_mass\_center()}}
+{\footnotesize\ttfamily subroutine md\+\_\+general\+::calculate\+\_\+mass\+\_\+center (\begin{DoxyParamCaption}\item[{real, dimension(3)}]{mc,  }\item[{type(\mbox{\hyperlink{structmd__general_1_1particles}{particles}})}]{atoms,  }\item[{type(\mbox{\hyperlink{structmd__general_1_1particle__group}{particle\+\_\+group}})}]{group }\end{DoxyParamCaption})}
+
+
+
+См. определение в файле md\+\_\+general.\+f90 строка 186
+
+
+\begin{DoxyCode}
+186     \textcolor{keywordtype}{type}(particles)::   atoms
+187     \textcolor{keywordtype}{type}(particle\_group):: group
+188     \textcolor{keywordtype}{real}:: mc(3),mc\_priv(3),totm
+189     \textcolor{keywordtype}{integer}::       i,ind,k
+190 
+191     mc = 0.
+192     mc\_priv = 0.
+193     \textcolor{comment}{!$OMP PARALLEL firstprivate(mc\_priv,i,ind,k)}
+194     \textcolor{comment}{!$OMP DO}
+195     \textcolor{keywordflow}{do} ind=1,group%N
+196         i = group%indexes(ind)
+197         mc\_priv = mc\_priv+atoms%masses(i)*atoms%positions(:,i)
+198 \textcolor{keywordflow}{    enddo}
+199     \textcolor{comment}{!$OMP END DO}
+200     \textcolor{keywordflow}{do} k=1,3
+201         \textcolor{comment}{!$OMP ATOMIC}
+202             mc(k) = mc(k)+mc\_priv(k)
+203 \textcolor{keywordflow}{    enddo}
+204     \textcolor{comment}{!$OMP END PARALLEL}
+205     \textcolor{keyword}{call }calculate\_masses\_sum(totm,atoms,group)
+206     mc = mc/totm
+207 
+208     \textcolor{keywordflow}{return}
+\end{DoxyCode}
+Граф вызовов\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=340pt]{namespacemd__general_aafe7eb801a25cbfeff68d5574b9fc152_cgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{namespacemd__general_a39191e16e77e39d5486e4daaeaa2522e}\label{namespacemd__general_a39191e16e77e39d5486e4daaeaa2522e}} 
+\index{md\+\_\+general@{md\+\_\+general}!calculate\+\_\+mass\+\_\+center\+\_\+velosity@{calculate\+\_\+mass\+\_\+center\+\_\+velosity}}
+\index{calculate\+\_\+mass\+\_\+center\+\_\+velosity@{calculate\+\_\+mass\+\_\+center\+\_\+velosity}!md\+\_\+general@{md\+\_\+general}}
+\subsubsection{\texorpdfstring{calculate\+\_\+mass\+\_\+center\+\_\+velosity()}{calculate\_mass\_center\_velosity()}}
+{\footnotesize\ttfamily subroutine md\+\_\+general\+::calculate\+\_\+mass\+\_\+center\+\_\+velosity (\begin{DoxyParamCaption}\item[{real, dimension(3)}]{mcv,  }\item[{type(\mbox{\hyperlink{structmd__general_1_1particles}{particles}})}]{atoms,  }\item[{type(\mbox{\hyperlink{structmd__general_1_1particle__group}{particle\+\_\+group}})}]{group }\end{DoxyParamCaption})}
+
+
+
+См. определение в файле md\+\_\+general.\+f90 строка 212
+
+
+\begin{DoxyCode}
+212     \textcolor{keywordtype}{type}(particles)::   atoms
+213     \textcolor{keywordtype}{type}(particle\_group):: group
+214     \textcolor{keywordtype}{real}:: mcv(3),mcv\_priv(3),totm
+215     \textcolor{keywordtype}{integer}::       i,ind,k
+216 
+217     mcv = 0.
+218     mcv\_priv = 0.
+219     \textcolor{comment}{!$OMP PARALLEL firstprivate(mcv\_priv,i,ind,k)}
+220     \textcolor{comment}{!$OMP DO}
+221     \textcolor{keywordflow}{do} ind=1,group%N
+222         i = group%indexes(ind)
+223         mcv\_priv = mcv\_priv+atoms%masses(i)*atoms%velocities(:,i)
+224 \textcolor{keywordflow}{    enddo}
+225     \textcolor{comment}{!$OMP END DO}
+226     \textcolor{keywordflow}{do} k=1,3
+227         \textcolor{comment}{!$OMP ATOMIC}
+228             mcv(k) = mcv(k)+mcv\_priv(k)
+229 \textcolor{keywordflow}{    enddo}
+230     \textcolor{comment}{!$OMP END PARALLEL}
+231     \textcolor{keyword}{call }calculate\_masses\_sum(totm,atoms,group)
+232     mcv = mcv/totm
+233 
+234     \textcolor{keywordflow}{return}
+\end{DoxyCode}
+Граф вызовов\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=344pt]{namespacemd__general_a39191e16e77e39d5486e4daaeaa2522e_cgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{namespacemd__general_a77b50b971bc4812a1299348a398491e0}\label{namespacemd__general_a77b50b971bc4812a1299348a398491e0}} 
+\index{md\+\_\+general@{md\+\_\+general}!calculate\+\_\+masses\+\_\+sum@{calculate\+\_\+masses\+\_\+sum}}
+\index{calculate\+\_\+masses\+\_\+sum@{calculate\+\_\+masses\+\_\+sum}!md\+\_\+general@{md\+\_\+general}}
+\subsubsection{\texorpdfstring{calculate\+\_\+masses\+\_\+sum()}{calculate\_masses\_sum()}}
+{\footnotesize\ttfamily subroutine md\+\_\+general\+::calculate\+\_\+masses\+\_\+sum (\begin{DoxyParamCaption}\item[{real}]{totm,  }\item[{type(\mbox{\hyperlink{structmd__general_1_1particles}{particles}})}]{atoms,  }\item[{type(\mbox{\hyperlink{structmd__general_1_1particle__group}{particle\+\_\+group}})}]{group }\end{DoxyParamCaption})}
+
+
+
+См. определение в файле md\+\_\+general.\+f90 строка 257
+
+
+\begin{DoxyCode}
+257     \textcolor{keywordtype}{type}(particles)::   atoms
+258     \textcolor{keywordtype}{type}(particle\_group):: group
+259     \textcolor{keywordtype}{real}:: totm,totm\_priv
+260     \textcolor{keywordtype}{integer}::       i,ind
+261 
+262     totm = 0.
+263     totm\_priv = 0.
+264     \textcolor{comment}{!$OMP PARALLEL firstprivate(totm\_priv,i,ind)}
+265     \textcolor{comment}{!$OMP DO}
+266     \textcolor{keywordflow}{do} ind=1,group%N
+267         i = group%indexes(ind)
+268         totm\_priv = totm\_priv+atoms%masses(i)
+269 \textcolor{keywordflow}{    enddo}
+270     \textcolor{comment}{!$OMP END DO}
+271     \textcolor{comment}{!$OMP ATOMIC}
+272         totm = totm+totm\_priv
+273     \textcolor{comment}{!$OMP END PARALLEL}
+274 
+275     \textcolor{keywordflow}{return}
+\end{DoxyCode}
+\mbox{\Hypertarget{namespacemd__general_a1de2d09f44a8dc5b96fc5eb221845cc1}\label{namespacemd__general_a1de2d09f44a8dc5b96fc5eb221845cc1}} 
+\index{md\+\_\+general@{md\+\_\+general}!calculate\+\_\+temperature@{calculate\+\_\+temperature}}
+\index{calculate\+\_\+temperature@{calculate\+\_\+temperature}!md\+\_\+general@{md\+\_\+general}}
+\subsubsection{\texorpdfstring{calculate\+\_\+temperature()}{calculate\_temperature()}}
+{\footnotesize\ttfamily subroutine md\+\_\+general\+::calculate\+\_\+temperature (\begin{DoxyParamCaption}\item[{real}]{temp,  }\item[{real}]{ke,  }\item[{type(\mbox{\hyperlink{structmd__general_1_1particles}{particles}})}]{atoms,  }\item[{type(\mbox{\hyperlink{structmd__general_1_1particle__group}{particle\+\_\+group}})}]{group }\end{DoxyParamCaption})}
+
+
+
+См. определение в файле md\+\_\+general.\+f90 строка 303
+
+
+\begin{DoxyCode}
+303     \textcolor{keywordtype}{type}(particles)::   atoms
+304     \textcolor{keywordtype}{type}(particle\_group):: group
+305     \textcolor{keywordtype}{real},\textcolor{keywordtype}{parameter}::    kt\_a\_degree =1.3806488/1.6021765654*10.**(-4)
+306     \textcolor{keywordtype}{real}:: temp,ke
+307     
+308     \textcolor{keyword}{call }calculate\_kinetic\_energy(ke,atoms,group)
+309     temp = 2*ke/kt\_a\_degree/(3*(group%N))
+310     
+311     \textcolor{keywordflow}{return}
+\end{DoxyCode}
+Граф вызовов\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=340pt]{namespacemd__general_a1de2d09f44a8dc5b96fc5eb221845cc1_cgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{namespacemd__general_a5614c27d83ed003aa01d3be2f1b45c57}\label{namespacemd__general_a5614c27d83ed003aa01d3be2f1b45c57}} 
+\index{md\+\_\+general@{md\+\_\+general}!change\+\_\+particle\+\_\+group\+\_\+n@{change\+\_\+particle\+\_\+group\+\_\+n}}
+\index{change\+\_\+particle\+\_\+group\+\_\+n@{change\+\_\+particle\+\_\+group\+\_\+n}!md\+\_\+general@{md\+\_\+general}}
+\subsubsection{\texorpdfstring{change\+\_\+particle\+\_\+group\+\_\+n()}{change\_particle\_group\_n()}}
+{\footnotesize\ttfamily subroutine md\+\_\+general\+::change\+\_\+particle\+\_\+group\+\_\+n (\begin{DoxyParamCaption}\item[{type(\mbox{\hyperlink{structmd__general_1_1particle__group}{particle\+\_\+group}})}]{group,  }\item[{integer}]{md\+\_\+step,  }\item[{integer}]{change\+\_\+ts1,  }\item[{integer}]{change\+\_\+ts2,  }\item[{integer}]{change\+\_\+frec,  }\item[{type(\mbox{\hyperlink{structmd__general_1_1particle__group}{particle\+\_\+group}})}]{init\+\_\+group }\end{DoxyParamCaption})}
+
+
+
+См. определение в файле md\+\_\+general.\+f90 строка 83
+
+
+\begin{DoxyCode}
+83     \textcolor{keywordtype}{type}(particle\_group)::  group,init\_group
+84     \textcolor{keywordtype}{integer}:: md\_step,change\_ts1,change\_ts2,change\_frec
+85 
+86     \textcolor{keywordflow}{if}(md\_step<=change\_ts1) \textcolor{keywordflow}{then}
+87         group%N = init\_group%N
+88         \textcolor{keywordflow}{if}(md\_step==change\_ts1) group%N = group%N+1
+89     \textcolor{keywordflow}{else}
+90         \textcolor{keywordflow}{if}(md\_step<change\_ts2 .and. mod(md\_step-change\_ts1,change\_frec)==0) group%N = group%N+1
+91 \textcolor{keywordflow}{    endif}
+92     \textcolor{keywordflow}{if}(group%N>\textcolor{keyword}{size}(group%indexes)) group%N = \textcolor{keyword}{size}(group%indexes)
+93     
+\end{DoxyCode}
+\mbox{\Hypertarget{namespacemd__general_ac9e62480edf60d2b3d1a123c9da68e1f}\label{namespacemd__general_ac9e62480edf60d2b3d1a123c9da68e1f}} 
+\index{md\+\_\+general@{md\+\_\+general}!check\+\_\+positions@{check\+\_\+positions}}
+\index{check\+\_\+positions@{check\+\_\+positions}!md\+\_\+general@{md\+\_\+general}}
+\subsubsection{\texorpdfstring{check\+\_\+positions()}{check\_positions()}}
+{\footnotesize\ttfamily subroutine md\+\_\+general\+::check\+\_\+positions (\begin{DoxyParamCaption}\item[{integer}]{out\+\_\+id,  }\item[{type(\mbox{\hyperlink{structmd__general_1_1particles}{particles}})}]{atoms,  }\item[{type(\mbox{\hyperlink{structmd__general_1_1simulation__cell}{simulation\+\_\+cell}})}]{box }\end{DoxyParamCaption})}
+
+
+
+См. определение в файле md\+\_\+general.\+f90 строка 327
+
+
+\begin{DoxyCode}
+327     \textcolor{keywordtype}{type}(particles)::   atoms
+328     \textcolor{keywordtype}{type}(simulation\_cell):: box
+329     \textcolor{keywordtype}{integer}:: out\_id,i,k,p
+330     \textcolor{keywordtype}{real}:: tolerance=0.0000001
+331     
+332     \textcolor{comment}{!$OMP PARALLEL private(i,k,p)}
+333     p=0
+334     \textcolor{comment}{!$OMP DO}
+335     \textcolor{keywordflow}{do} i=1,atoms%N
+336         \textcolor{keywordflow}{do} k=1,3
+337             \textcolor{keywordflow}{if}( .not.(atoms%positions(k,i)>(0.-tolerance) .and. atoms%positions(k,i)<(box%box\_size(k)+
+      tolerance)) ) \textcolor{keywordflow}{then}
+338                 \textcolor{keyword}{write}(out\_id,*) i,\textcolor{stringliteral}{' particle out of cell '},atoms%positions(:,i)
+339                 p = p+1
+340 \textcolor{keywordflow}{            endif}
+341 \textcolor{keywordflow}{        enddo}
+342 \textcolor{keywordflow}{    enddo}
+343     \textcolor{comment}{!$OMP END DO}
+344     \textcolor{comment}{!$OMP BARRIER}
+345     \textcolor{keywordflow}{if}(p>0) stop
+346     \textcolor{comment}{!$OMP END PARALLEL}
+347     
+\end{DoxyCode}
+\mbox{\Hypertarget{namespacemd__general_abd425450c2140a07748c79f0f0dbd760}\label{namespacemd__general_abd425450c2140a07748c79f0f0dbd760}} 
+\index{md\+\_\+general@{md\+\_\+general}!check\+\_\+velocities@{check\+\_\+velocities}}
+\index{check\+\_\+velocities@{check\+\_\+velocities}!md\+\_\+general@{md\+\_\+general}}
+\subsubsection{\texorpdfstring{check\+\_\+velocities()}{check\_velocities()}}
+{\footnotesize\ttfamily subroutine md\+\_\+general\+::check\+\_\+velocities (\begin{DoxyParamCaption}\item[{integer}]{out\+\_\+id,  }\item[{type(\mbox{\hyperlink{structmd__general_1_1particles}{particles}})}]{atoms }\end{DoxyParamCaption})}
+
+
+
+См. определение в файле md\+\_\+general.\+f90 строка 351
+
+
+\begin{DoxyCode}
+351     \textcolor{keywordtype}{type}(particles)::   atoms
+352     \textcolor{keywordtype}{integer}:: out\_id,i
+353     \textcolor{keywordtype}{real}:: maxvel2,v2
+354 
+355     maxvel2 = -1.   
+356     \textcolor{comment}{!$OMP PARALLEL DO private(i,v2) REDUCTION(max:maxvel2)}
+357     \textcolor{keywordflow}{do} i=1,atoms%N
+358         v2 = sum(atoms%velocities(:,i)**2)
+359         \textcolor{keywordflow}{if}(maxvel2<v2) maxvel2 = v2
+360 \textcolor{keywordflow}{    enddo}
+361     \textcolor{comment}{!$OMP END PARALLEL DO}
+362     \textcolor{keyword}{write}(out\_id,\textcolor{stringliteral}{'(A,f16.8,A)'}) \textcolor{stringliteral}{' max velocity: '},sqrt(maxvel2),\textcolor{stringliteral}{' A/fs '}
+363     
+\end{DoxyCode}
+\mbox{\Hypertarget{namespacemd__general_a6e847bdd3b7115bf5ff69e8cd8e68d7f}\label{namespacemd__general_a6e847bdd3b7115bf5ff69e8cd8e68d7f}} 
+\index{md\+\_\+general@{md\+\_\+general}!create\+\_\+particle\+\_\+group@{create\+\_\+particle\+\_\+group}}
+\index{create\+\_\+particle\+\_\+group@{create\+\_\+particle\+\_\+group}!md\+\_\+general@{md\+\_\+general}}
+\subsubsection{\texorpdfstring{create\+\_\+particle\+\_\+group()}{create\_particle\_group()}}
+{\footnotesize\ttfamily subroutine md\+\_\+general\+::create\+\_\+particle\+\_\+group (\begin{DoxyParamCaption}\item[{type(\mbox{\hyperlink{structmd__general_1_1particle__group}{particle\+\_\+group}})}]{group,  }\item[{character(len=32), dimension(\+:)}]{type\+\_\+names,  }\item[{type(\mbox{\hyperlink{structmd__general_1_1particles}{particles}})}]{atoms }\end{DoxyParamCaption})}
+
+
+
+См. определение в файле md\+\_\+general.\+f90 строка 58
+
+
+\begin{DoxyCode}
+58     \textcolor{keywordtype}{type}(particles)::   atoms
+59     \textcolor{keywordtype}{type}(particle\_group)::  group
+60     \textcolor{keywordtype}{character(len=32)}:: type\_names(:)
+61     \textcolor{keywordtype}{integer}:: i,j,ind
+62 
+63     group%N = 0
+64     \textcolor{keywordflow}{do} j=1,\textcolor{keyword}{size}(type\_names)
+65         group%N = group%N+count(atoms%atom\_types==type\_names(j))
+66 \textcolor{keywordflow}{    enddo}
+67     \textcolor{keyword}{allocate}(group%indexes(group%N))
+68 
+69     ind=0
+70     \textcolor{keywordflow}{do} j=1,\textcolor{keyword}{size}(type\_names)
+71         \textcolor{keywordflow}{do} i=1,atoms%N
+72             \textcolor{keywordflow}{if} (atoms%atom\_types(i)==type\_names(j)) \textcolor{keywordflow}{then}
+73                 ind=ind+1
+74                 group%indexes(ind) = i
+75 \textcolor{keywordflow}{            endif}
+76 \textcolor{keywordflow}{        enddo}
+77 \textcolor{keywordflow}{    enddo}
+78 
+79     \textcolor{keywordflow}{return}
+\end{DoxyCode}
+\mbox{\Hypertarget{namespacemd__general_a33570f37733690b0634f039ad1bcf35e}\label{namespacemd__general_a33570f37733690b0634f039ad1bcf35e}} 
+\index{md\+\_\+general@{md\+\_\+general}!find\+\_\+distance@{find\+\_\+distance}}
+\index{find\+\_\+distance@{find\+\_\+distance}!md\+\_\+general@{md\+\_\+general}}
+\subsubsection{\texorpdfstring{find\+\_\+distance()}{find\_distance()}}
+{\footnotesize\ttfamily pure subroutine md\+\_\+general\+::find\+\_\+distance (\begin{DoxyParamCaption}\item[{real, dimension(3), intent(out)}]{dr,  }\item[{real, intent(out)}]{dr2,  }\item[{real, dimension(3), intent(in)}]{vec1,  }\item[{real, dimension(3), intent(in)}]{vec2,  }\item[{type(\mbox{\hyperlink{structmd__general_1_1simulation__cell}{simulation\+\_\+cell}}), intent(in)}]{box }\end{DoxyParamCaption})}
+
+
+
+См. определение в файле md\+\_\+general.\+f90 строка 408
+
+
+\begin{DoxyCode}
+408     \textcolor{keywordtype}{type}(simulation\_cell), \textcolor{keywordtype}{intent (in)} :: box
+409     \textcolor{keywordtype}{real}, \textcolor{keywordtype}{intent (in)} :: vec1(3),vec2(3)
+410     \textcolor{keywordtype}{real}, \textcolor{keywordtype}{intent (out)} :: dr(3),dr2
+411 
+412     dr(1) = vec2(1)-vec1(1)
+413     dr(2) = vec2(2)-vec1(2)
+414     dr(3) = vec2(3)-vec1(3)
+415     dr(1) = dr(1)-box%half\_box\_size(1)*(sign(1.,dr(1)-box%half\_box\_size(1))+sign(1.,dr(1)+box%half\_box\_size
+      (1)))
+416     dr(2) = dr(2)-box%half\_box\_size(2)*(sign(1.,dr(2)-box%half\_box\_size(2))+sign(1.,dr(2)+box%half\_box\_size
+      (2)))
+417     dr(3) = dr(3)-box%half\_box\_size(3)*(sign(1.,dr(3)-box%half\_box\_size(3))+sign(1.,dr(3)+box%half\_box\_size
+      (3)))
+418     dr2 = dr(1)*dr(1)+dr(2)*dr(2)+dr(3)*dr(3)
+419     
+420     \textcolor{keywordflow}{return}
+\end{DoxyCode}
+\mbox{\Hypertarget{namespacemd__general_a3a69c40fe5a6e7938d398f803b21e474}\label{namespacemd__general_a3a69c40fe5a6e7938d398f803b21e474}} 
+\index{md\+\_\+general@{md\+\_\+general}!init\+\_\+time\+\_\+steps@{init\+\_\+time\+\_\+steps}}
+\index{init\+\_\+time\+\_\+steps@{init\+\_\+time\+\_\+steps}!md\+\_\+general@{md\+\_\+general}}
+\subsubsection{\texorpdfstring{init\+\_\+time\+\_\+steps()}{init\_time\_steps()}}
+{\footnotesize\ttfamily subroutine md\+\_\+general\+::init\+\_\+time\+\_\+steps (\begin{DoxyParamCaption}\item[{type(\mbox{\hyperlink{structmd__general_1_1time__steps}{time\+\_\+steps}})}]{dt,  }\item[{real}]{delta\+\_\+t }\end{DoxyParamCaption})}
+
+
+
+См. определение в файле md\+\_\+general.\+f90 строка 46
+
+
+\begin{DoxyCode}
+46     \textcolor{keywordtype}{type}(time\_steps):: dt
+47     \textcolor{keywordtype}{integer}:: i
+48     \textcolor{keywordtype}{real}::  delta\_t
+49 
+50     \textcolor{keywordflow}{do} i=1,\textcolor{keyword}{size}(dt%ts)
+51         dt%ts(i) = delta\_t/2**(i-1)
+52 \textcolor{keywordflow}{    enddo}
+53 
+54     \textcolor{keywordflow}{return}
+\end{DoxyCode}
+\mbox{\Hypertarget{namespacemd__general_aca48dc12ea3fb99991acd82c2223a9bf}\label{namespacemd__general_aca48dc12ea3fb99991acd82c2223a9bf}} 
+\index{md\+\_\+general@{md\+\_\+general}!invert\+\_\+z\+\_\+velocities@{invert\+\_\+z\+\_\+velocities}}
+\index{invert\+\_\+z\+\_\+velocities@{invert\+\_\+z\+\_\+velocities}!md\+\_\+general@{md\+\_\+general}}
+\subsubsection{\texorpdfstring{invert\+\_\+z\+\_\+velocities()}{invert\_z\_velocities()}}
+{\footnotesize\ttfamily subroutine md\+\_\+general\+::invert\+\_\+z\+\_\+velocities (\begin{DoxyParamCaption}\item[{type(\mbox{\hyperlink{structmd__general_1_1particles}{particles}})}]{atoms,  }\item[{real}]{z\+\_\+low\+\_\+border,  }\item[{real}]{z\+\_\+high\+\_\+border }\end{DoxyParamCaption})}
+
+
+
+См. определение в файле md\+\_\+general.\+f90 строка 367
+
+
+\begin{DoxyCode}
+367     \textcolor{keywordtype}{type}(particles)::   atoms
+368     \textcolor{keywordtype}{integer}:: i
+369     \textcolor{keywordtype}{real}:: z\_low\_border,z\_high\_border
+370 
+371     \textcolor{comment}{!$OMP PARALLEL DO private(i)}
+372     \textcolor{keywordflow}{do} i=1,atoms%N
+373         \textcolor{keywordflow}{if}( (atoms%positions(3,i)>z\_low\_border .and.&
+374             atoms%positions(3,i)<(z\_low\_border+z\_high\_border)/2 .and.&
+375             atoms%velocities(3,i)>0.) .or.&
+376             (atoms%positions(3,i)<z\_high\_border .and.&
+377             atoms%positions(3,i)>(z\_low\_border+z\_high\_border)/2 .and.&
+378             atoms%velocities(3,i)<0.)   )   atoms%velocities(3,i) = -atoms%velocities(3,i)
+379 \textcolor{keywordflow}{    enddo}
+380     \textcolor{comment}{!$OMP END PARALLEL DO}
+381     
+\end{DoxyCode}
+\mbox{\Hypertarget{namespacemd__general_a5dc45690a2125a86ce58d01601ebdf45}\label{namespacemd__general_a5dc45690a2125a86ce58d01601ebdf45}} 
+\index{md\+\_\+general@{md\+\_\+general}!position\+\_\+analysis@{position\+\_\+analysis}}
+\index{position\+\_\+analysis@{position\+\_\+analysis}!md\+\_\+general@{md\+\_\+general}}
+\subsubsection{\texorpdfstring{position\+\_\+analysis()}{position\_analysis()}}
+{\footnotesize\ttfamily subroutine md\+\_\+general\+::position\+\_\+analysis (\begin{DoxyParamCaption}\item[{real}]{av,  }\item[{real}]{mi,  }\item[{real}]{ma,  }\item[{type(\mbox{\hyperlink{structmd__general_1_1particles}{particles}})}]{atoms,  }\item[{type(\mbox{\hyperlink{structmd__general_1_1particle__group}{particle\+\_\+group}})}]{group,  }\item[{integer}]{direction,  }\item[{real}]{minimum,  }\item[{real}]{maximum }\end{DoxyParamCaption})}
+
+
+
+См. определение в файле md\+\_\+general.\+f90 строка 385
+
+
+\begin{DoxyCode}
+385     \textcolor{keywordtype}{type}(particles)::   atoms
+386     \textcolor{keywordtype}{type}(particle\_group):: group
+387     \textcolor{keywordtype}{real}:: minimum,maximum,av,mi,ma
+388     \textcolor{keywordtype}{integer}::       i,ind,direction,k
+389     
+390     k = 0
+391     av = 0.
+392     mi = maximum
+393     ma = minimum
+394     \textcolor{keywordflow}{do} ind=1,group%N
+395         i = group%indexes(ind)
+396         \textcolor{keywordflow}{if} (atoms%positions(direction,i)<maximum .and. atoms%positions(direction,i)>minimum) \textcolor{keywordflow}{then}
+397             av = av+atoms%positions(direction,i)
+398             k = k+1
+399             \textcolor{keywordflow}{if} (atoms%positions(direction,i)>ma) ma = atoms%positions(direction,i)
+400             \textcolor{keywordflow}{if} (atoms%positions(direction,i)<mi) mi = atoms%positions(direction,i)
+401 \textcolor{keywordflow}{        endif}
+402 \textcolor{keywordflow}{    enddo}
+403     av = av/k
+404     
+\end{DoxyCode}
+\mbox{\Hypertarget{namespacemd__general_a8192b37ec3462b5fcb7fabf17c8eb658}\label{namespacemd__general_a8192b37ec3462b5fcb7fabf17c8eb658}} 
+\index{md\+\_\+general@{md\+\_\+general}!random\+\_\+momenta@{random\+\_\+momenta}}
+\index{random\+\_\+momenta@{random\+\_\+momenta}!md\+\_\+general@{md\+\_\+general}}
+\subsubsection{\texorpdfstring{random\+\_\+momenta()}{random\_momenta()}}
+{\footnotesize\ttfamily subroutine md\+\_\+general\+::random\+\_\+momenta (\begin{DoxyParamCaption}\item[{type(\mbox{\hyperlink{structmd__general_1_1particles}{particles}})}]{atoms,  }\item[{type(\mbox{\hyperlink{structmd__general_1_1particle__group}{particle\+\_\+group}})}]{group }\end{DoxyParamCaption})}
+
+
+
+См. определение в файле md\+\_\+general.\+f90 строка 143
+
+
+\begin{DoxyCode}
+143     \textcolor{keywordtype}{type}(particles)::   atoms
+144     \textcolor{keywordtype}{type}(particle\_group):: group
+145     \textcolor{keywordtype}{real},\textcolor{keywordtype}{parameter}:: coef = 1.3806488/1.6605389217*10.**(-6)
+146     \textcolor{keywordtype}{integer}::       i,ind
+147 
+148     \textcolor{keyword}{call }random\_velocities(atoms,group)
+149 
+150     \textcolor{comment}{!$OMP PARALLEL firstprivate(i,ind)}
+151     \textcolor{comment}{!$OMP DO}
+152     \textcolor{keywordflow}{do} ind=1,group%N
+153         i = group%indexes(ind)
+154         atoms%velocities(:,i) = atoms%velocities(:,i)*sqrt(coef/atoms%masses(i))
+155 \textcolor{keywordflow}{    enddo}
+156     \textcolor{comment}{!$OMP END DO}
+157     \textcolor{comment}{!$OMP END PARALLEL}
+158 
+159     \textcolor{keywordflow}{return}
+\end{DoxyCode}
+Граф вызовов\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=326pt]{namespacemd__general_a8192b37ec3462b5fcb7fabf17c8eb658_cgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{namespacemd__general_a326a2fe1c1da84197c4566801133648a}\label{namespacemd__general_a326a2fe1c1da84197c4566801133648a}} 
+\index{md\+\_\+general@{md\+\_\+general}!random\+\_\+velocities@{random\+\_\+velocities}}
+\index{random\+\_\+velocities@{random\+\_\+velocities}!md\+\_\+general@{md\+\_\+general}}
+\subsubsection{\texorpdfstring{random\+\_\+velocities()}{random\_velocities()}}
+{\footnotesize\ttfamily subroutine md\+\_\+general\+::random\+\_\+velocities (\begin{DoxyParamCaption}\item[{type(\mbox{\hyperlink{structmd__general_1_1particles}{particles}})}]{atoms,  }\item[{type(\mbox{\hyperlink{structmd__general_1_1particle__group}{particle\+\_\+group}})}]{group }\end{DoxyParamCaption})}
+
+
+
+См. определение в файле md\+\_\+general.\+f90 строка 115
+
+
+\begin{DoxyCode}
+115     \textcolor{keywordtype}{type}(particles)::   atoms
+116     \textcolor{keywordtype}{type}(particle\_group):: group
+117     \textcolor{keywordtype}{real} a1,a2,b
+118     \textcolor{keywordtype}{integer}::       i,k,ind
+119     \textcolor{keywordtype}{integer} omp\_get\_thread\_num
+120     
+121     \textcolor{comment}{!$OMP PARALLEL firstprivate(i,ind,k,a1,a2,b)}
+122     \textcolor{keyword}{call }srand(omp\_get\_thread\_num())
+123     \textcolor{comment}{!$OMP DO}
+124     \textcolor{keywordflow}{do} ind=1,group%N
+125         i = group%indexes(ind)
+126         \textcolor{keywordflow}{do} k=1,3,1
+127             b = 2.
+128             \textcolor{keywordflow}{do} \textcolor{keywordflow}{while} (b>=1.)
+129                 a1 = 2.*rand()-1.
+130                 a2 = 2.*rand()-1.
+131                 b = a1**2+a2**2
+132 \textcolor{keywordflow}{            enddo}
+133             atoms%velocities(k,i) = a1*sqrt(-2.*log(b)/b)
+134 \textcolor{keywordflow}{        enddo}
+135 \textcolor{keywordflow}{    enddo}
+136     \textcolor{comment}{!$OMP END DO}
+137     \textcolor{comment}{!$OMP END PARALLEL}
+138 
+139     \textcolor{keywordflow}{return}
+\end{DoxyCode}
+\mbox{\Hypertarget{namespacemd__general_ad4ad26fa9584c63f846d49033ce92987}\label{namespacemd__general_ad4ad26fa9584c63f846d49033ce92987}} 
+\index{md\+\_\+general@{md\+\_\+general}!scale\+\_\+velocities@{scale\+\_\+velocities}}
+\index{scale\+\_\+velocities@{scale\+\_\+velocities}!md\+\_\+general@{md\+\_\+general}}
+\subsubsection{\texorpdfstring{scale\+\_\+velocities()}{scale\_velocities()}}
+{\footnotesize\ttfamily subroutine md\+\_\+general\+::scale\+\_\+velocities (\begin{DoxyParamCaption}\item[{type(\mbox{\hyperlink{structmd__general_1_1particles}{particles}})}]{atoms,  }\item[{type(\mbox{\hyperlink{structmd__general_1_1particle__group}{particle\+\_\+group}})}]{group,  }\item[{real}]{s }\end{DoxyParamCaption})}
+
+
+
+См. определение в файле md\+\_\+general.\+f90 строка 97
+
+
+\begin{DoxyCode}
+97     \textcolor{keywordtype}{type}(particles)::   atoms
+98     \textcolor{keywordtype}{type}(particle\_group):: group
+99     \textcolor{keywordtype}{real}:: s
+100     \textcolor{keywordtype}{integer}::       i,ind
+101 
+102     \textcolor{comment}{!$OMP PARALLEL firstprivate(i,ind)}
+103     \textcolor{comment}{!$OMP DO}
+104     \textcolor{keywordflow}{do} ind=1,group%N
+105         i = group%indexes(ind)
+106         atoms%velocities(:,i) = atoms%velocities(:,i)*s
+107 \textcolor{keywordflow}{    enddo}
+108     \textcolor{comment}{!$OMP END DO}
+109     \textcolor{comment}{!$OMP END PARALLEL}
+110 
+111     \textcolor{keywordflow}{return}
+\end{DoxyCode}
+\mbox{\Hypertarget{namespacemd__general_a9f99fa4920c9047597f37b777dd44b3c}\label{namespacemd__general_a9f99fa4920c9047597f37b777dd44b3c}} 
+\index{md\+\_\+general@{md\+\_\+general}!set\+\_\+new\+\_\+temperature@{set\+\_\+new\+\_\+temperature}}
+\index{set\+\_\+new\+\_\+temperature@{set\+\_\+new\+\_\+temperature}!md\+\_\+general@{md\+\_\+general}}
+\subsubsection{\texorpdfstring{set\+\_\+new\+\_\+temperature()}{set\_new\_temperature()}}
+{\footnotesize\ttfamily subroutine md\+\_\+general\+::set\+\_\+new\+\_\+temperature (\begin{DoxyParamCaption}\item[{type(\mbox{\hyperlink{structmd__general_1_1particles}{particles}})}]{atoms,  }\item[{type(\mbox{\hyperlink{structmd__general_1_1particle__group}{particle\+\_\+group}})}]{group,  }\item[{real}]{temp }\end{DoxyParamCaption})}
+
+
+
+См. определение в файле md\+\_\+general.\+f90 строка 315
+
+
+\begin{DoxyCode}
+315     \textcolor{keywordtype}{type}(particles)::   atoms
+316     \textcolor{keywordtype}{type}(particle\_group):: group
+317     \textcolor{keywordtype}{real}:: temp,ke,temperature
+318     
+319     \textcolor{keyword}{call }random\_momenta(atoms,group)
+320     \textcolor{keyword}{call }zero\_momentum(atoms,group)
+321     \textcolor{keyword}{call }calculate\_temperature(temperature,ke,atoms,group)
+322     \textcolor{keyword}{call }scale\_velocities(atoms,group,sqrt(temp/temperature))
+323 
+\end{DoxyCode}
+Граф вызовов\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{namespacemd__general_a9f99fa4920c9047597f37b777dd44b3c_cgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{namespacemd__general_a79ea9e512a27c651278559e30f97a336}\label{namespacemd__general_a79ea9e512a27c651278559e30f97a336}} 
+\index{md\+\_\+general@{md\+\_\+general}!zero\+\_\+momentum@{zero\+\_\+momentum}}
+\index{zero\+\_\+momentum@{zero\+\_\+momentum}!md\+\_\+general@{md\+\_\+general}}
+\subsubsection{\texorpdfstring{zero\+\_\+momentum()}{zero\_momentum()}}
+{\footnotesize\ttfamily subroutine md\+\_\+general\+::zero\+\_\+momentum (\begin{DoxyParamCaption}\item[{type(\mbox{\hyperlink{structmd__general_1_1particles}{particles}})}]{atoms,  }\item[{type(\mbox{\hyperlink{structmd__general_1_1particle__group}{particle\+\_\+group}})}]{group }\end{DoxyParamCaption})}
+
+
+
+См. определение в файле md\+\_\+general.\+f90 строка 238
+
+
+\begin{DoxyCode}
+238     \textcolor{keywordtype}{type}(particles)::   atoms
+239     \textcolor{keywordtype}{type}(particle\_group):: group
+240     \textcolor{keywordtype}{integer}::       i,ind
+241     \textcolor{keywordtype}{real}:: mcv(3)
+242     
+243     \textcolor{keyword}{call }calculate\_mass\_center\_velosity(mcv,atoms,group)
+244     \textcolor{comment}{!$OMP PARALLEL firstprivate(mcv,i,ind)}
+245     \textcolor{comment}{!$OMP DO}
+246     \textcolor{keywordflow}{do} ind=1,group%N
+247         i = group%indexes(ind)
+248         atoms%velocities(:,i) = atoms%velocities(:,i)-mcv
+249 \textcolor{keywordflow}{    enddo}
+250     \textcolor{comment}{!$OMP END DO}
+251     \textcolor{comment}{!$OMP END PARALLEL}
+252     
+253     \textcolor{keywordflow}{return}
+\end{DoxyCode}
+Граф вызовов\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{namespacemd__general_a79ea9e512a27c651278559e30f97a336_cgraph}
+\end{center}
+\end{figure}

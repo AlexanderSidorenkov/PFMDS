@@ -1,0 +1,267 @@
+\hypertarget{namespacemd__neighbours}{}\section{Модуль md\+\_\+neighbours}
+\label{namespacemd__neighbours}\index{md\+\_\+neighbours@{md\+\_\+neighbours}}
+
+
+Модуль содержит подпрограммы относящиеся к спискам соседей частиц  
+
+
+\subsection*{Функции/подпрограммы}
+\begin{DoxyCompactItemize}
+\item 
+subroutine \mbox{\hyperlink{namespacemd__neighbours_a7246ea26ccbca29fb308ef82c2740bc9}{create\+\_\+neighbour\+\_\+list}} (nl)
+\begin{DoxyCompactList}\small\item\em Инициализирует пустой список соседей. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacemd__neighbours_aa3afc442e82c37b20e8963af79455747}{update\+\_\+neighbour\+\_\+list}} (md\+\_\+step, nl, atoms, group1, group2, box, exe\+\_\+time\+\_\+nlsearch, exe\+\_\+time\+\_\+nldistance)
+\begin{DoxyCompactList}\small\item\em Вычисляет расстояния между соседями. Обновляет список соседей с нужной частотой.  Расстояния между соседями вычисляются всегда. Список соседей обнавляется с периодом указанным в списке. Также замеряется затраченное время. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacemd__neighbours_a037f048abc67c7d83799c76aabaa8dac}{find\+\_\+neighbours}} (nl, atoms, group1, group2, box)
+\begin{DoxyCompactList}\small\item\em Ищет соседей для частиц из первой группы среди второй группы.  Группы могут совпадать. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacemd__neighbours_ad313293c81b7fa1b52e8376710c84c0f}{find\+\_\+neighbour\+\_\+distances}} (nl, atoms, group1, group2, box)
+\begin{DoxyCompactList}\small\item\em Пересчитывает взаимное расположение соседей. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacemd__neighbours_a3f6d619145cba9b77814f398056c243f}{converce\+\_\+neighbour\+\_\+list}} (cnl, group2, nl)
+\begin{DoxyCompactList}\small\item\em Делает список соседей для второй группы из списка соседей для первой группы.  Эквивалентно find\+\_\+neighbours(сnl,atoms,group2,group1,box). Обращенный список соседей заполняется данными из списка полученного подпрогаммой find\+\_\+neighbours(nl,atoms,group1,group2,box) \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Подробное описание}
+Модуль содержит подпрограммы относящиеся к спискам соседей частиц 
+
+\subsection{Функции/подпрограммы}
+\mbox{\Hypertarget{namespacemd__neighbours_a3f6d619145cba9b77814f398056c243f}\label{namespacemd__neighbours_a3f6d619145cba9b77814f398056c243f}} 
+\index{md\+\_\+neighbours@{md\+\_\+neighbours}!converce\+\_\+neighbour\+\_\+list@{converce\+\_\+neighbour\+\_\+list}}
+\index{converce\+\_\+neighbour\+\_\+list@{converce\+\_\+neighbour\+\_\+list}!md\+\_\+neighbours@{md\+\_\+neighbours}}
+\subsubsection{\texorpdfstring{converce\+\_\+neighbour\+\_\+list()}{converce\_neighbour\_list()}}
+{\footnotesize\ttfamily subroutine md\+\_\+neighbours\+::converce\+\_\+neighbour\+\_\+list (\begin{DoxyParamCaption}\item[{type(\mbox{\hyperlink{structmd__general_1_1neighbour__list}{neighbour\+\_\+list}})}]{cnl,  }\item[{type(\mbox{\hyperlink{structmd__general_1_1particle__group}{particle\+\_\+group}})}]{group2,  }\item[{type(\mbox{\hyperlink{structmd__general_1_1neighbour__list}{neighbour\+\_\+list}})}]{nl }\end{DoxyParamCaption})}
+
+
+
+Делает список соседей для второй группы из списка соседей для первой группы.  Эквивалентно find\+\_\+neighbours(сnl,atoms,group2,group1,box). Обращенный список соседей заполняется данными из списка полученного подпрогаммой find\+\_\+neighbours(nl,atoms,group1,group2,box) 
+
+
+
+См. определение в файле md\+\_\+neighbours.\+f90 строка 129
+
+
+\begin{DoxyCode}
+129     \textcolor{keywordtype}{type}(neighbour\_list):: nl,cnl
+130     \textcolor{keywordtype}{type}(particle\_group):: group2
+131     \textcolor{keywordtype}{integer}::       i,j,p
+132     
+133     \textcolor{keywordflow}{if} (group2%N>0 .and. nl%N>0 .and. cnl%N>0) \textcolor{keywordflow}{then}
+134         \textcolor{keywordflow}{if} (group2%N>cnl%N) then; \textcolor{keyword}{write}(*,*) \textcolor{stringliteral}{'error: group2%N>cnl%N'},group2%N,cnl%N; stop;\textcolor{keywordflow}{ endif}
+135         \textcolor{comment}{!$OMP PARALLEL firstprivate(i)}
+136         \textcolor{comment}{!$OMP DO}
+137         \textcolor{keywordflow}{do} i=1,group2%N
+138             cnl%particle\_index(i) = group2%indexes(i)
+139 \textcolor{keywordflow}{        enddo}
+140         \textcolor{comment}{!$OMP END DO}
+141         \textcolor{comment}{!$OMP DO}
+142         \textcolor{keywordflow}{do} i=1,cnl%N
+143             cnl%nnum(i) = 0
+144 \textcolor{keywordflow}{        enddo}
+145         \textcolor{comment}{!$OMP END DO}
+146         \textcolor{comment}{!$OMP END PARALLEL}
+147         \textcolor{keywordflow}{do} i=1,nl%N \textcolor{comment}{!can not be parallel!}
+148             \textcolor{keywordflow}{do} p=1,nl%nnum(i)
+149                 j = nl%nlist(p,i)
+150                 cnl%nnum(j) = cnl%nnum(j)+1
+151                 \textcolor{keywordflow}{if} (cnl%nnum(j)>cnl%neighb\_num\_max) then; \textcolor{keyword}{write}(*,*) \textcolor{stringliteral}{'error: too many neighbours'},j,cnl
+      %nnum(j); stop;\textcolor{keywordflow}{ endif}
+152                 cnl%nlist(cnl%nnum(j),j) = i
+153                 cnl%dr(:,cnl%nnum(j),j) = -nl%dr(:,p,i)
+154                 cnl%moddr(cnl%nnum(j),j) = nl%moddr(p,i)
+155 \textcolor{keywordflow}{            enddo}
+156 \textcolor{keywordflow}{        enddo}
+157 \textcolor{keywordflow}{    endif}
+158     
+159     \textcolor{keywordflow}{return}
+\end{DoxyCode}
+\mbox{\Hypertarget{namespacemd__neighbours_a7246ea26ccbca29fb308ef82c2740bc9}\label{namespacemd__neighbours_a7246ea26ccbca29fb308ef82c2740bc9}} 
+\index{md\+\_\+neighbours@{md\+\_\+neighbours}!create\+\_\+neighbour\+\_\+list@{create\+\_\+neighbour\+\_\+list}}
+\index{create\+\_\+neighbour\+\_\+list@{create\+\_\+neighbour\+\_\+list}!md\+\_\+neighbours@{md\+\_\+neighbours}}
+\subsubsection{\texorpdfstring{create\+\_\+neighbour\+\_\+list()}{create\_neighbour\_list()}}
+{\footnotesize\ttfamily subroutine md\+\_\+neighbours\+::create\+\_\+neighbour\+\_\+list (\begin{DoxyParamCaption}\item[{type(\mbox{\hyperlink{structmd__general_1_1neighbour__list}{neighbour\+\_\+list}})}]{nl }\end{DoxyParamCaption})}
+
+
+
+Инициализирует пустой список соседей. 
+
+
+
+См. определение в файле md\+\_\+neighbours.\+f90 строка 10
+
+
+\begin{DoxyCode}
+10     \textcolor{keywordtype}{type}(neighbour\_list):: nl
+11 
+12     \textcolor{keywordflow}{if} (nl%N>0) \textcolor{keywordflow}{then}
+13         \textcolor{keyword}{allocate}(nl%particle\_index(nl%N))
+14         \textcolor{keyword}{allocate}(nl%nnum(nl%N))
+15         \textcolor{keyword}{allocate}(nl%lessnnum(nl%N))
+16         \textcolor{keyword}{allocate}(nl%nlist(nl%neighb\_num\_max,nl%N))
+17         \textcolor{keyword}{allocate}(nl%dr(3,nl%neighb\_num\_max,nl%N))
+18         \textcolor{keyword}{allocate}(nl%moddr(nl%neighb\_num\_max,nl%N))
+19         nl%particle\_index = 0
+20         nl%nnum = 0
+21         nl%lessnnum = 0
+22         nl%nlist = 0
+23         nl%dr = 0.
+24         nl%moddr = 0.
+25 \textcolor{keywordflow}{    endif}
+26     
+27     \textcolor{keywordflow}{return}
+\end{DoxyCode}
+\mbox{\Hypertarget{namespacemd__neighbours_ad313293c81b7fa1b52e8376710c84c0f}\label{namespacemd__neighbours_ad313293c81b7fa1b52e8376710c84c0f}} 
+\index{md\+\_\+neighbours@{md\+\_\+neighbours}!find\+\_\+neighbour\+\_\+distances@{find\+\_\+neighbour\+\_\+distances}}
+\index{find\+\_\+neighbour\+\_\+distances@{find\+\_\+neighbour\+\_\+distances}!md\+\_\+neighbours@{md\+\_\+neighbours}}
+\subsubsection{\texorpdfstring{find\+\_\+neighbour\+\_\+distances()}{find\_neighbour\_distances()}}
+{\footnotesize\ttfamily subroutine md\+\_\+neighbours\+::find\+\_\+neighbour\+\_\+distances (\begin{DoxyParamCaption}\item[{type(\mbox{\hyperlink{structmd__general_1_1neighbour__list}{neighbour\+\_\+list}})}]{nl,  }\item[{type(\mbox{\hyperlink{structmd__general_1_1particles}{particles}})}]{atoms,  }\item[{type(\mbox{\hyperlink{structmd__general_1_1particle__group}{particle\+\_\+group}})}]{group1,  }\item[{type(\mbox{\hyperlink{structmd__general_1_1particle__group}{particle\+\_\+group}})}]{group2,  }\item[{type(\mbox{\hyperlink{structmd__general_1_1simulation__cell}{simulation\+\_\+cell}})}]{box }\end{DoxyParamCaption})}
+
+
+
+Пересчитывает взаимное расположение соседей. 
+
+\begin{DoxyRefDesc}{Необходимо сделать}
+\item[\mbox{\hyperlink{todo__todo000001}{Необходимо сделать}}]Сделать sqrt(dr2) быстрее. \end{DoxyRefDesc}
+
+
+См. определение в файле md\+\_\+neighbours.\+f90 строка 105
+
+
+\begin{DoxyCode}
+105     \textcolor{keywordtype}{type}(particles)::   atoms
+106     \textcolor{keywordtype}{type}(particle\_group):: group1,group2
+107     \textcolor{keywordtype}{type}(simulation\_cell):: box
+108     \textcolor{keywordtype}{type}(neighbour\_list):: nl
+109     \textcolor{keywordtype}{real}:: dr2
+110     \textcolor{keywordtype}{integer}:: i,p
+111 
+112     \textcolor{comment}{!$OMP PARALLEL firstprivate(i,p,dr2)}
+113     \textcolor{comment}{!$OMP DO}
+114     \textcolor{keywordflow}{do} i=1,nl%N
+115         \textcolor{keywordflow}{do} p=1,nl%nnum(i)
+116             \textcolor{keyword}{call }find\_distance(nl%dr(:,p,i),dr2,atoms%positions(:,group1%indexes(i)),atoms%positions(:,
+      group2%indexes(nl%nlist(p,i))),box)
+117             nl%moddr(p,i) = sqrt(dr2)
+118 \textcolor{keywordflow}{        enddo}
+119 \textcolor{keywordflow}{    enddo}
+120     \textcolor{comment}{!$OMP END DO}
+121     \textcolor{comment}{!$OMP END PARALLEL}
+122 
+123     \textcolor{keywordflow}{return}
+\end{DoxyCode}
+Граф вызовов\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{namespacemd__neighbours_ad313293c81b7fa1b52e8376710c84c0f_cgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{namespacemd__neighbours_a037f048abc67c7d83799c76aabaa8dac}\label{namespacemd__neighbours_a037f048abc67c7d83799c76aabaa8dac}} 
+\index{md\+\_\+neighbours@{md\+\_\+neighbours}!find\+\_\+neighbours@{find\+\_\+neighbours}}
+\index{find\+\_\+neighbours@{find\+\_\+neighbours}!md\+\_\+neighbours@{md\+\_\+neighbours}}
+\subsubsection{\texorpdfstring{find\+\_\+neighbours()}{find\_neighbours()}}
+{\footnotesize\ttfamily subroutine md\+\_\+neighbours\+::find\+\_\+neighbours (\begin{DoxyParamCaption}\item[{type(\mbox{\hyperlink{structmd__general_1_1neighbour__list}{neighbour\+\_\+list}})}]{nl,  }\item[{type(\mbox{\hyperlink{structmd__general_1_1particles}{particles}})}]{atoms,  }\item[{type(\mbox{\hyperlink{structmd__general_1_1particle__group}{particle\+\_\+group}})}]{group1,  }\item[{type(\mbox{\hyperlink{structmd__general_1_1particle__group}{particle\+\_\+group}})}]{group2,  }\item[{type(\mbox{\hyperlink{structmd__general_1_1simulation__cell}{simulation\+\_\+cell}})}]{box }\end{DoxyParamCaption})}
+
+
+
+Ищет соседей для частиц из первой группы среди второй группы.  Группы могут совпадать. 
+
+
+
+См. определение в файле md\+\_\+neighbours.\+f90 строка 57
+
+
+\begin{DoxyCode}
+57     \textcolor{keywordtype}{type}(particles)::   atoms
+58     \textcolor{keywordtype}{type}(particle\_group):: group1,group2
+59     \textcolor{keywordtype}{type}(simulation\_cell):: box
+60     \textcolor{keywordtype}{type}(neighbour\_list):: nl
+61     \textcolor{keywordtype}{real}:: dr(3),dr2
+62     \textcolor{keywordtype}{integer}:: i,j,k,ind,jnd,nnumind,lessnnumind
+63     
+64     \textcolor{keywordflow}{if} (group1%N>nl%N) then; \textcolor{keyword}{write}(*,*) \textcolor{stringliteral}{'error: group1%N>nl%N'},group1%N,nl%N; stop;\textcolor{keywordflow}{ endif}
+65     \textcolor{comment}{!$OMP PARALLEL firstprivate(i,j,k,ind,jnd,dr,dr2,nnumind,lessnnumind)}
+66     \textcolor{comment}{!$OMP DO}
+67     \textcolor{keywordflow}{do} ind=1,group1%N
+68         i = group1%indexes(ind)
+69         nl%particle\_index(ind) = group1%indexes(ind)
+70         \textcolor{comment}{!nl%nlist(:nl%nnum(ind),ind) = 0}
+71         nnumind = 0
+72         lessnnumind = -1
+73         \textcolor{keywordflow}{do} jnd=1,group2%N
+74             j = group2%indexes(jnd)
+75             \textcolor{keywordflow}{if} (i/=j) \textcolor{keywordflow}{then}
+76                 \textcolor{keyword}{call }find\_distance(dr,dr2,atoms%positions(:,i),atoms%positions(:,j),box)
+77                 \textcolor{keywordflow}{if} (dr2<nl%r\_cut*nl%r\_cut) \textcolor{keywordflow}{then}
+78                     \textcolor{keywordflow}{if} (lessnnumind==-1 .and. i<j) lessnnumind = nnumind
+79                     nnumind = nnumind+1
+80                     \textcolor{keywordflow}{if} (nnumind>nl%neighb\_num\_max) then; \textcolor{keyword}{write}(*,*) \textcolor{stringliteral}{'error: too many neighbours'},ind,
+      nnumind; stop;\textcolor{keywordflow}{ endif}
+81                     nl%nlist(nnumind,ind) = jnd
+82                     nl%dr(1,nnumind,ind) = dr(1)
+83                     nl%dr(2,nnumind,ind) = dr(2)
+84                     nl%dr(3,nnumind,ind) = dr(3)
+85                     nl%moddr(nnumind,ind) = sqrt(dr2)
+86 \textcolor{keywordflow}{                endif}
+87 \textcolor{keywordflow}{            endif}
+88 \textcolor{keywordflow}{        enddo}
+89         \textcolor{keywordflow}{if}(lessnnumind==-1) \textcolor{keywordflow}{then}
+90             nl%lessnnum(ind) = nnumind
+91         \textcolor{keywordflow}{else}
+92             nl%lessnnum(ind) = lessnnumind
+93 \textcolor{keywordflow}{        endif}
+94         nl%nnum(ind) = nnumind
+95 \textcolor{keywordflow}{    enddo}
+96     \textcolor{comment}{!$OMP END DO}
+97     \textcolor{comment}{!$OMP END PARALLEL}
+98 
+99     \textcolor{keywordflow}{return}
+\end{DoxyCode}
+Граф вызовов\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{namespacemd__neighbours_a037f048abc67c7d83799c76aabaa8dac_cgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{namespacemd__neighbours_aa3afc442e82c37b20e8963af79455747}\label{namespacemd__neighbours_aa3afc442e82c37b20e8963af79455747}} 
+\index{md\+\_\+neighbours@{md\+\_\+neighbours}!update\+\_\+neighbour\+\_\+list@{update\+\_\+neighbour\+\_\+list}}
+\index{update\+\_\+neighbour\+\_\+list@{update\+\_\+neighbour\+\_\+list}!md\+\_\+neighbours@{md\+\_\+neighbours}}
+\subsubsection{\texorpdfstring{update\+\_\+neighbour\+\_\+list()}{update\_neighbour\_list()}}
+{\footnotesize\ttfamily subroutine md\+\_\+neighbours\+::update\+\_\+neighbour\+\_\+list (\begin{DoxyParamCaption}\item[{integer}]{md\+\_\+step,  }\item[{type(\mbox{\hyperlink{structmd__general_1_1neighbour__list}{neighbour\+\_\+list}})}]{nl,  }\item[{type(\mbox{\hyperlink{structmd__general_1_1particles}{particles}})}]{atoms,  }\item[{type(\mbox{\hyperlink{structmd__general_1_1particle__group}{particle\+\_\+group}})}]{group1,  }\item[{type(\mbox{\hyperlink{structmd__general_1_1particle__group}{particle\+\_\+group}})}]{group2,  }\item[{type(\mbox{\hyperlink{structmd__general_1_1simulation__cell}{simulation\+\_\+cell}})}]{box,  }\item[{real}]{exe\+\_\+time\+\_\+nlsearch,  }\item[{real}]{exe\+\_\+time\+\_\+nldistance }\end{DoxyParamCaption})}
+
+
+
+Вычисляет расстояния между соседями. Обновляет список соседей с нужной частотой.  Расстояния между соседями вычисляются всегда. Список соседей обнавляется с периодом указанным в списке. Также замеряется затраченное время. 
+
+
+
+См. определение в файле md\+\_\+neighbours.\+f90 строка 33
+
+
+\begin{DoxyCode}
+33     \textcolor{keywordtype}{type}(particles)::   atoms
+34     \textcolor{keywordtype}{type}(particle\_group):: group1,group2
+35     \textcolor{keywordtype}{type}(simulation\_cell):: box
+36     \textcolor{keywordtype}{type}(neighbour\_list):: nl
+37     \textcolor{keywordtype}{integer}:: md\_step
+38     \textcolor{keywordtype}{real}:: exe\_t,exe\_time\_nlsearch,exe\_time\_nldistance,omp\_get\_wtime
+39 
+40     \textcolor{keywordflow}{if} (group1%N>0 .and. group2%N>0 .and. nl%N>0) \textcolor{keywordflow}{then}
+41         \textcolor{keywordflow}{if} (mod(md\_step,nl%update\_period)==0) \textcolor{keywordflow}{then}
+42             exe\_t = omp\_get\_wtime()
+43             \textcolor{keyword}{call }find\_neighbours(nl,atoms,group1,group2,box)
+44             exe\_time\_nlsearch = exe\_time\_nlsearch+omp\_get\_wtime()-exe\_t
+45         \textcolor{keywordflow}{else}
+46             exe\_t = omp\_get\_wtime()
+47             \textcolor{keyword}{call }find\_neighbour\_distances(nl,atoms,group1,group2,box)
+48             exe\_time\_nldistance = exe\_time\_nldistance+omp\_get\_wtime()-exe\_t
+49 \textcolor{keywordflow}{        endif}
+50 \textcolor{keywordflow}{    endif}
+51     
+\end{DoxyCode}
+Граф вызовов\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{namespacemd__neighbours_aa3afc442e82c37b20e8963af79455747_cgraph}
+\end{center}
+\end{figure}

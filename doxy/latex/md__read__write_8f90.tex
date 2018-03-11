@@ -1,0 +1,20 @@
+\hypertarget{md__read__write_8f90}{}\section{Файл M\+O\+L\+E\+C\+U\+L\+A\+R\+\_\+\+D\+Y\+N\+A\+M\+I\+C\+S/md\+\_\+read\+\_\+write.f90}
+\label{md__read__write_8f90}\index{M\+O\+L\+E\+C\+U\+L\+A\+R\+\_\+\+D\+Y\+N\+A\+M\+I\+C\+S/md\+\_\+read\+\_\+write.\+f90@{M\+O\+L\+E\+C\+U\+L\+A\+R\+\_\+\+D\+Y\+N\+A\+M\+I\+C\+S/md\+\_\+read\+\_\+write.\+f90}}
+\subsection*{Группы}
+\begin{DoxyCompactItemize}
+\item 
+module \mbox{\hyperlink{namespacemd__read__write}{md\+\_\+read\+\_\+write}}
+\begin{DoxyCompactList}\small\item\em Модуль ввода вывода .xyz файлов и настроек моделирования. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Функции/подпрограммы}
+\begin{DoxyCompactItemize}
+\item 
+subroutine \mbox{\hyperlink{namespacemd__read__write_a13e739c9b44b3100ee36e864eac3d5e0}{md\+\_\+read\+\_\+write\+::read\+\_\+integrator\+\_\+params}} (integr, file\+\_\+id)
+\begin{DoxyCompactList}\small\item\em Читает параметры интегратора. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacemd__read__write_ace09a29b4fd526f8ed784c90098279c4}{md\+\_\+read\+\_\+write\+::read\+\_\+box\+\_\+size}} (box, filename)
+\begin{DoxyCompactList}\small\item\em Читает параметры моделируемой ячейки в файле .xyz.  Читает второю строку в xyz файле. В размер ячейки задается тремя векторами. В общем случае ячейка триклинная. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacemd__read__write_a1a0fd7df876318fd4247d110936384d8}{md\+\_\+read\+\_\+write\+::read\+\_\+particles}} (atoms, filename)
+\begin{DoxyCompactList}\small\item\em Читает информацию о частицах из .xyz файла.  Первая строка файла содержит количество частиц. Третья и последующие -\/ координаты по X, Y, Z, скорости по X, Y, Z, массу и название частицы. Всего 8 столбцов для каждой частицы. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacemd__read__write_a20f73c896cf124f2e1da6ccbf23cc12d}{md\+\_\+read\+\_\+write\+::write\+\_\+particle\+\_\+group}} (filename, atoms, group, box)
+\begin{DoxyCompactList}\small\item\em Выводит информацию о группе частиц в новый файл. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacemd__read__write_a24453b47bb1935e66563cd522e09e3af}{md\+\_\+read\+\_\+write\+::write\+\_\+particle\+\_\+group\+\_\+append}} (filename, atoms, group, box, md\+\_\+step)
+\begin{DoxyCompactList}\small\item\em Выводит информацию о группе частиц в конец уже имеющегося файла. \end{DoxyCompactList}\end{DoxyCompactItemize}
