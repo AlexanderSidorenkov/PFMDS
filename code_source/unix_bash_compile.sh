@@ -14,11 +14,14 @@ modules=''
 if [ $compiler = 'ifort' ]
 then
 module add intel
+module add impi
 mod="$mod"lomonosov_ifort/
 p=" -fpconstant -r8 -openmp -fast -unroll-aggressive -module $mod -I $mod "
 elif [ $compiler = 'gfortran' ]
 then
 module add gcc
+module add openmpi/1.8.4-gcc
+mpicompiler='mpif90'
 gfortran -v
 mod="$mod"lomonosov_gfortran/
 #p=" -fdefault-real-8 -fopenmp -Ofast -funroll-all-loops -ffast-math -funsafe-math-optimizations -flto -march=native -Wsurprising -Wunused -J $mod -I $mod "
@@ -64,6 +67,7 @@ $compiler $p -c "$md"md_simulation.f90 -o "$mod"md_simulation.o
 modules="$modules $mod"'md_simulation.o '
 
 $compiler $p -o "$exe"run_md_simulation_"$compiler" "$rns"run_md_simulation.f90 $modules
+$mpicompiler $p -o "$exe"run_md_simulation_mpi_"$compiler" "$rns"run_md_simulation_mpi.f90 $modules
 
 $compiler $p -c "$anl"graphene_on_surface_analysis.f90 -o "$mod"graphene_on_surface_analysis.o
 modules="$modules $mod"'graphene_on_surface_analysis.o '
@@ -74,4 +78,6 @@ modules="$modules $mod"'fit_gr_moire.o'
 $compiler $p -o "$exe"run_gr_moire_fitting_"$compiler" "$rns"run_gr_moire_fitting.f90 $modules
 
 module rm intel
+module rm impi
 module rm gcc
+module rm openmpi
