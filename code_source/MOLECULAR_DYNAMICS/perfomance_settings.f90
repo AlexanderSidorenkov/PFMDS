@@ -3,9 +3,9 @@
 module perfomance_settings
 implicit none
 
-public
-
 integer:: omp_chunk_size !< Массивы данных будут разбиваться на части длины omp_chunk_size при использовании omp parallel for schedule(dynamic ,omp_chunk_size)
+
+private:: omp_chunk_size
 
 contains
 
@@ -21,6 +21,13 @@ subroutine set_openmp_perfomance(num_of_omp_treads,N)
 	chunks_per_thread = 8
 	omp_chunk_size = int(real(N)/chunks_per_thread/num_of_omp_treads)
 	if(omp_chunk_size==0) omp_chunk_size = 1
+	
+end subroutine
+
+subroutine get_chunk_size(chunk_size)
+	integer:: chunk_size
+	
+	chunk_size = omp_chunk_size
 	
 end subroutine
 

@@ -28,8 +28,10 @@ end subroutine read_LJ1g_parameters
 subroutine LJ1g_energy(energy,nl,LJp)
 	type(neighbour_list):: nl
 	type(LennardJones1g_parameters):: LJp
-	integer:: i,p
+	integer:: i,p,chunk_size
 	real:: energy,energy_priv,U
+	
+	call get_chunk_size(chunk_size)
 	
 	energy = 0.
 	energy_priv = 0.
@@ -52,8 +54,10 @@ subroutine LJ1g_forces(atoms,nl,LJp)
 	type(particles) ::	atoms
 	type(neighbour_list) :: nl
 	type(LennardJones1g_parameters) :: LJp
-	integer:: i,p,k,ind,jnd
+	integer:: i,p,k,ind,jnd,chunk_size
 	real,allocatable:: priv_force(:,:),F(:),fp(:,:)
+	
+	call get_chunk_size(chunk_size)
 	
 	!$OMP PARALLEL private(i,p,k,ind,jnd,F,fp,priv_force)
 	if(.not. allocated(priv_force)) allocate(priv_force(3,atoms%N))!realloc if N changed

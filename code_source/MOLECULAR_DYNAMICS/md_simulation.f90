@@ -6,6 +6,7 @@ use md_read_write
 use md_interactions
 implicit none 
 contains
+
 subroutine md(out_id,all_out_id,input_path,settings_filename,output_prefix,out_period,num_of_omp_treads)
 
 type(simulation_cell)					:: cell
@@ -19,7 +20,7 @@ real									::	exe_t,exe_time_start,exe_time_md,exe_time_pos_vel,&
 											exe_time_nlists,exe_time_nlsearch,exe_time_nldistance,exe_time_forces,exe_time_energy,&
 											conserved_energy,total_energy,kinetic_energy,potential_energy,prev_potential_energy,&
 											ms_de,fs(3),mcv(3),mc(3),initial_temperature,target_temperature,temperature,nhc_q1
-integer									::	i,num_of_omp_treads,md_step,md_step_limit,integrators_num,integrator_index,&
+integer									::	i,rand_seed,num_of_omp_treads,md_step,md_step_limit,integrators_num,integrator_index,&
 											file_id,out_id,log_id,out_period,all_out_id,&
 											all_atoms_group_num,termo_atoms_group_num,&
 											all_moving_atoms_group_num,xyz_moving_atoms_group_num,z_moving_atoms_group_num,&
@@ -225,4 +226,5 @@ if (md_step/=0) call write_particle_group(filename,atoms,groups(all_atoms_group_
 close(log_id)
 
 end subroutine md
+
 end module md_simulation
