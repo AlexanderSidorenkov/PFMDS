@@ -7,7 +7,16 @@ use md_interactions
 implicit none 
 contains
 
-subroutine md(out_id,all_out_id,input_path,settings_filename,output_prefix,out_period,num_of_omp_treads)
+!> Молекулярная динамика.
+!> \param[in] out_id Идентификатор основного потока вывода
+!> \param[in] all_out_id Идентификатор потока вывода для конечных значений энергий, температуры и прочего
+!> \param[in] input_path Путь к папке с входными файлами
+!> \param[in] settings_filename Имя файла настроек
+!> \param[in] output_prefix	Префикс выходных файлов
+!> \param[in] out_period Период основного вывода в шагах МД
+!> \param[in] num_of_omp_treads Количество OpenMP потоков
+!> \param[in] rand_seed Число для инициализации ГСЧ
+subroutine md(out_id,all_out_id,input_path,settings_filename,output_prefix,out_period,num_of_omp_treads,rand_seed)
 
 type(simulation_cell)					:: cell
 type(time_steps)						:: dt
@@ -75,7 +84,7 @@ read(file_id,*) str,target_temperature,nhc%M,nhc_q1;	write(out_id,'(A32,f16.6,i6
 call create_nose_hoover_chain(nhc)
 read(file_id,*) str,initial_temperature;				write(out_id,'(A32,f16.6)') str,initial_temperature
 if (initial_temperature<0.) initial_temperature=0.
-if (new_velocities) call set_new_temperature(atoms,groups(all_moving_atoms_group_num),initial_temperature)
+if (new_velocities) call set_new_temperature(atoms,groups(all_moving_atoms_group_num),initial_temperature,rand_seed)
 call create_interactions(interactions,groups,file_id,out_id,input_path)
 close(file_id)
 

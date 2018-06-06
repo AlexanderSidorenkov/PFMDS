@@ -187,7 +187,7 @@ subroutine set_nose_hoover_chain(nhc,temp,q1,l)
 	nhc%temperature = temp
 	nhc%q(1) = q1
 	do i=2,nhc%M,1
-		nhc%q(i) = nhc%q(1)/(3.d0*nhc%L)
+		nhc%q(i) = nhc%q(1)/(3.*nhc%L)
 	enddo
 
 	return

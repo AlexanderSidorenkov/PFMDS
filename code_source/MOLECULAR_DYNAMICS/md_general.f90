@@ -111,15 +111,14 @@ subroutine scale_velocities(atoms,group,s)
 	return
 end subroutine scale_velocities
 
-subroutine random_velocities(atoms,group)
+subroutine random_velocities(atoms,group,rand_seed)
 	type(particles)::	atoms
 	type(particle_group):: group
 	real a1,a2,b
-	integer::		i,k,ind
-	integer omp_get_thread_num
+	integer::		i,k,ind,rand_seed
 	
 	!$OMP PARALLEL firstprivate(i,ind,k,a1,a2,b)
-	call srand(omp_get_thread_num())
+	call srand(rand_seed)
 	!$OMP DO
 	do ind=1,group%N
 		i = group%indexes(ind)
@@ -139,13 +138,13 @@ subroutine random_velocities(atoms,group)
 	return
 end subroutine random_velocities
 
-subroutine random_momenta(atoms,group)
+subroutine random_momenta(atoms,group,rand_seed)
 	type(particles)::	atoms
 	type(particle_group):: group
 	real,parameter:: coef = 1.3806488/1.6605389217*10.**(-6)
-	integer::		i,ind
+	integer::		i,ind,rand_seed
 
-	call random_velocities(atoms,group)
+	call random_velocities(atoms,group,rand_seed)
 
 	!$OMP PARALLEL firstprivate(i,ind)
 	!$OMP DO
@@ -311,12 +310,13 @@ subroutine calculate_temperature(temp,ke,atoms,group)
 	return
 end subroutine calculate_temperature
 
-subroutine set_new_temperature(atoms,group,temp)
+subroutine set_new_temperature(atoms,group,temp,rand_seed)
 	type(particles)::	atoms
 	type(particle_group):: group
 	real:: temp,ke,temperature
+	integer:: rand_seed
 	
-	call random_momenta(atoms,group)
+	call random_momenta(atoms,group,rand_seed)
 	call zero_momentum(atoms,group)
 	call calculate_temperature(temperature,ke,atoms,group)
 	call scale_velocities(atoms,group,sqrt(temp/temperature))

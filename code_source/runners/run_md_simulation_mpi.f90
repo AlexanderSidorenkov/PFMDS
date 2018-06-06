@@ -7,15 +7,14 @@ integer					::	i,out_period,num_of_omp_treads,out_id,all_out_id,settings_files_l
 character(len=128)		::	settings_filename,settings_files_list,all_out_file,output_prefix,list_p,input_path,out_path,str
 character(len=32)		::	arg,str_node_id
 character(len=80)		::	line
-integer					::	omp_get_max_threads
-integer					::	node_id, number_of_nodes
-integer					::	ierr
+integer					::	omp_get_max_threads, node_id, number_of_nodes, ierr, rand_seed
 
 call MPI_INIT(ierr)
 call MPI_COMM_RANK(MPI_COMM_WORLD,node_id,ierr)
 call MPI_COMM_SIZE(MPI_COMM_WORLD,number_of_nodes,ierr)
 node_id = node_id+1
 write(str_node_id,'(i4.4,A)') node_id,'-'
+rand_seed = node_id
 
 do i=1,80
 	line(i:i) = '_'
@@ -79,7 +78,7 @@ if (settings_files_list/='') then
 				write(out_id,'(A,i6,A,i6,A)') 'RUNNING ON NODE ',node_id,' OUT OF', number_of_nodes,' NODES'
 				str = trim(out_path)//trim(output_prefix)//trim(str_node_id)//trim(list_p)
 				write(out_id,'(i6,A,A,A,A)') i,'	',trim(settings_filename),'	',trim(str)
-				call md(out_id,all_out_id,input_path,settings_filename,str,out_period,num_of_omp_treads)
+				call md(out_id,all_out_id,input_path,settings_filename,str,out_period,num_of_omp_treads,rand_seed)
 				write(all_out_id,*)
 				write(out_id,'(A)') line
 			endif
@@ -95,7 +94,7 @@ else
 	write(out_id,'(A,i6,A,i6,A)') 'RUNNING ON NODE ',node_id,' OUT OF', number_of_nodes,' NODES. EACH NODE RUNS THE SAME SIMULATION.'
 	str = trim(out_path)//trim(output_prefix)//trim(str_node_id)//trim(list_p)
 	write(out_id,'(i6,A,A,A,A)') i,'	',trim(settings_filename),'	',trim(str)
-	call md(out_id,out_id,input_path,settings_filename,str,out_period,num_of_omp_treads)
+	call md(out_id,out_id,input_path,settings_filename,str,out_period,num_of_omp_treads,rand_seed)
 	write(out_id,*)
 	write(out_id,'(A)') line
 endif

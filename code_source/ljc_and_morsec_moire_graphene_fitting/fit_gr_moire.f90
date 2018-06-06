@@ -63,7 +63,7 @@ integer					::	i,rnm_err
 		write(op,'(A)') trim(out_path)//trim(output_prefix)//trim(str)//'_'
 		open(final_out_id,file=trim(op)//trim(final_file))
 		write(out_id,'(A)') line
-		call md(out_id,final_out_id,input_path,settings_filename,op,out_period,num_of_omp_treads)
+		call md(out_id,final_out_id,input_path,settings_filename,op,out_period,num_of_omp_treads,1)
 		write(out_id,'(A)') line
 		write(tempstring,'(A)') trim(op)//'final_'//trim(xyz_file)
 		call gr_on_cu_analysis(arr1,arr2,tempstring,z)

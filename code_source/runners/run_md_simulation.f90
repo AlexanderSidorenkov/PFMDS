@@ -62,7 +62,7 @@ if (settings_files_list/='') then
 		write(output_prefix,'(A,A)') trim(out_path),trim(str)
 		write(out_id,'(A)') line
 		write(out_id,'(i6,A,A32,A32)') i,'	',settings_filename,output_prefix
-		call md(out_id,all_out_id,input_path,settings_filename,output_prefix,out_period,num_of_omp_treads)
+		call md(out_id,all_out_id,input_path,settings_filename,output_prefix,out_period,num_of_omp_treads,1)
 		write(all_out_id,*)
 		write(out_id,'(A)') line
 	enddo
@@ -70,7 +70,7 @@ if (settings_files_list/='') then
 	close(all_out_id)
 else
 	write(out_id,'(A)') line
-	call md(out_id,out_id,input_path,settings_filename,output_prefix,out_period,num_of_omp_treads)
+	call md(out_id,out_id,input_path,settings_filename,output_prefix,out_period,num_of_omp_treads,1)
 	write(out_id,*)
 	write(out_id,'(A)') line
 endif
