@@ -9,7 +9,7 @@ function f_cut(r,R1,R2)
 	
 	if(r>R1 .and. r<R2) then
 		f_cut = 1.+(-10.*(r-R1)**3*(R2-R1)**2+15.*(r-R1)**4*(R2-R1)-6.*(r-R1)**5)/(R2-R1)**5
-	elseif(r<R1) then
+	elseif(r<=R1) then
 		f_cut = 1.
 	else
 		f_cut = 0.

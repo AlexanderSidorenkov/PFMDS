@@ -34,8 +34,9 @@ subroutine LJ1g_energy(energy,nl,LJp)
 	call get_chunk_size(chunk_size)
 	
 	energy = 0.
+	
+	!$OMP PARALLEL private(i,p,U,energy_priv)
 	energy_priv = 0.
-	!$OMP PARALLEL firstprivate(energy_priv) private(i,p,U)
 	!$OMP DO schedule(dynamic,chunk_size)
 	do i=1,nl%N
 		do p=1,nl%lessnnum(i)!do p=1,nl%nnum(i)!if (nl%nlist(p,i)>i) exit
@@ -60,12 +61,13 @@ subroutine LJ1g_forces(atoms,nl,LJp)
 	call get_chunk_size(chunk_size)
 	
 	!$OMP PARALLEL private(i,p,k,ind,jnd,F,fp,priv_force)
-	if(.not. allocated(priv_force)) allocate(priv_force(3,atoms%N))!realloc if N changed
-	if(.not. allocated(F)) allocate(F(nl%neighb_num_max))!realloc if neighb_num_max changed
-	if(.not. allocated(fp)) allocate(fp(3,nl%neighb_num_max))!realloc if neighb_num_max changed
-	F = 0.
-	fp = 0.
-	priv_force = 0.	
+	if(.not. allocated(priv_force)) allocate(priv_force(3,atoms%N))	!realloc if N changed
+	if(.not. allocated(F)) allocate(F(nl%neighb_num_max))			!realloc if neighb_num_max changed
+	if(.not. allocated(fp)) allocate(fp(3,nl%neighb_num_max))		!realloc if neighb_num_max changed
+	!F = 0.!?
+	!fp = 0.!?
+	priv_force = 0.
+	
 	!$OMP DO SCHEDULE(dynamic,chunk_size)	 
 	do i=1,nl%N
 		do p=1,nl%lessnnum(i)
@@ -88,12 +90,14 @@ subroutine LJ1g_forces(atoms,nl,LJp)
 		enddo
 	enddo
 	!$OMP END DO
-	do i=1,nl%N
+	
+	do i=1,atoms%N
 		do k=1,3
 			!$OMP ATOMIC
 				atoms%forces(k,i) = atoms%forces(k,i)+priv_force(k,i)
 		enddo
 	enddo
+
 	!$OMP END PARALLEL
 	
 end subroutine LJ1g_forces

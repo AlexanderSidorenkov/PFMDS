@@ -166,8 +166,7 @@ do md_step=0,md_step_limit
 	endif
 	exe_time_pos_vel = exe_time_pos_vel+omp_get_wtime()-exe_t
 	
-	if (mod(md_step,integrators(integrator_index)%period_log)==0 .or. mod(md_step,out_period)==0 &
-	.or. mod(md_step,out_period)==0 .or. integrator_name=='nvms') then
+	if (mod(md_step,integrators(integrator_index)%period_log)==0 .or. mod(md_step,out_period)==0 .or. integrator_name=='nvms') then
 
 		exe_t = omp_get_wtime()
 		call calculate_potential_energies(interactions)
