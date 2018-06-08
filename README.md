@@ -16,11 +16,11 @@
 
 ## Как скачать?
 
-Исходники брать отсюда -> https://github.com/AlexanderSidorenkov/PFMDS.  Зеленая кнопка Clone or Download. Там же есть и скомпилированные .exe для Windows.
+Исходники и скомпилированные .exe для Windows можно скачать по ссылке [стабильная версия](https://github.com/AlexanderSidorenkov/PFMDS/archive/stable.zip). Или здесь: https://github.com/AlexanderSidorenkov/PFMDS/tree/stable , зеленая кнопка Clone or Download. 
 
 ## Документация
 
-Скачиваем описание отсюда -> ????????. Жмем на documentation. Просмотр с помощью браузера.
+Скачиваем описание [отсюда](https://github.com/AlexanderSidorenkov/PFMDS_manual/archive/master.zip). Разархивируем и жмем на documentation. Просмотр с помощью браузера.
 
 ## Список программ:
 
@@ -265,7 +265,7 @@ Lattice=" 16.0 0.0 0.0 0.0 16.0 0.0 0.0 0.0 16.0 " Properties=pos:R:3:vel:R:3:ma
 
 ## Примеры входных и выходных файлов
 
-Примеры находятся в папке examples в репозитории документации ???????.
+Примеры находятся в папке examples в репозитории [документации](https://github.com/AlexanderSidorenkov/PFMDS_manual).
 
 ## Контакты
 
