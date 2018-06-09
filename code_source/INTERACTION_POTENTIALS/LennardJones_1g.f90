@@ -111,7 +111,7 @@ function scalar_lj_force(r,R1,R2,c12,c6,c12t12,c6t6)
 	
 	invr2 = 1./(r*r)
 	U = invr2*invr2*invr2
-	call f_dfr_cut(fcut,dfrcut,r,R1,R2)
+	call f_dfr_cut(fcut,dfrcut,r,R1,R2) !remove from here? make function?
 	scalar_lj_force = U*invr2*((c12t12*U-c6t6)*fcut-(c12*U-c6)*dfrcut)
 	
 end function

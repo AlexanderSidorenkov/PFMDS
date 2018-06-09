@@ -347,10 +347,10 @@ subroutine check_positions(out_id,atoms,box)
 	
 end subroutine check_positions
 
-subroutine check_velocities(out_id,atoms)
+subroutine find_max_velocity(v,atoms)
 	type(particles)::	atoms
-	integer:: out_id,i
-	real:: maxvel2,v2
+	integer:: i
+	real:: maxvel2,v2,v
 
 	maxvel2 = -1.	
 	!$OMP PARALLEL DO private(i,v2) REDUCTION(max:maxvel2)
@@ -359,9 +359,9 @@ subroutine check_velocities(out_id,atoms)
 		if(maxvel2<v2) maxvel2 = v2
 	enddo
 	!$OMP END PARALLEL DO
-	write(out_id,'(A,f16.8,A)') ' max velocity: ',sqrt(maxvel2),' A/fs '
+	v = sqrt(maxvel2)
 	
-end subroutine check_velocities
+end subroutine find_max_velocity
 
 subroutine invert_z_velocities(atoms,z_low_border,z_high_border)
 	type(particles)::	atoms
@@ -412,9 +412,13 @@ pure subroutine find_distance(dr,dr2,vec1,vec2,box)
 	dr(1) = vec2(1)-vec1(1)
 	dr(2) = vec2(2)-vec1(2)
 	dr(3) = vec2(3)-vec1(3)
+	!this part consumes a lot of time (approx. 50% of neighbour search and distance)
+	!replace with vectorizable function?
+	!replace with no pbc function?
 	dr(1) = dr(1)-box%half_box_size(1)*(sign(1.,dr(1)-box%half_box_size(1))+sign(1.,dr(1)+box%half_box_size(1)))
 	dr(2) = dr(2)-box%half_box_size(2)*(sign(1.,dr(2)-box%half_box_size(2))+sign(1.,dr(2)+box%half_box_size(2)))
 	dr(3) = dr(3)-box%half_box_size(3)*(sign(1.,dr(3)-box%half_box_size(3))+sign(1.,dr(3)+box%half_box_size(3)))
+	!
 	dr2 = dr(1)*dr(1)+dr(2)*dr(2)+dr(3)*dr(3)
 	
 	return
