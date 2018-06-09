@@ -1,5 +1,5 @@
-08.06.2018 
-18:16
+09.06.2018 
+16:57
 Using built-in specs.
 COLLECT_GCC=gfortran
 COLLECT_LTO_WRAPPER=c:/mingw/bin/../libexec/gcc/mingw32/6.3.0/lto-wrapper.exe

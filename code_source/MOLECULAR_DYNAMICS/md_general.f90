@@ -412,9 +412,13 @@ pure subroutine find_distance(dr,dr2,vec1,vec2,box)
 	dr(1) = vec2(1)-vec1(1)
 	dr(2) = vec2(2)-vec1(2)
 	dr(3) = vec2(3)-vec1(3)
+	!this part consumes a lot of time (approx. 50% of neighbour search and distance)
+	!replace with vectorizable function?
+	!replace with no pbc function?
 	dr(1) = dr(1)-box%half_box_size(1)*(sign(1.,dr(1)-box%half_box_size(1))+sign(1.,dr(1)+box%half_box_size(1)))
 	dr(2) = dr(2)-box%half_box_size(2)*(sign(1.,dr(2)-box%half_box_size(2))+sign(1.,dr(2)+box%half_box_size(2)))
 	dr(3) = dr(3)-box%half_box_size(3)*(sign(1.,dr(3)-box%half_box_size(3))+sign(1.,dr(3)+box%half_box_size(3)))
+	!
 	dr2 = dr(1)*dr(1)+dr(2)*dr(2)+dr(3)*dr(3)
 	
 	return
