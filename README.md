@@ -69,7 +69,7 @@
 
 ## Как компилировать?
 
-На Linux запустить скрипт unix_bash_compile.sh в папке code_source.
+На кластере Ломоносов запустить скрипт unix_bash_compile.sh в папке code_source.
 На Windows запустить скрипт windows_compile.cmd в папке code_source.
 
 Изменить испльзуемый компилятор, путь к нему, опции компиляции и т. д. можно внутри этих скриптов.
@@ -249,7 +249,28 @@ Lattice=" 16.0 0.0 0.0 0.0 16.0 0.0 0.0 0.0 16.0 " Properties=pos:R:3:vel:R:3:ma
 
 См. описания потенциалов взаимодействия.
 
-### Выходная информация и файлы
+### Запуск
+
+На Windows запускать программы из командной строки или подготовить .cmd файл. См. в примерах.
+
+На кластере удобнее всего запускать скриптом оболочки. Например:
+```
+#!/bin/bash
+EXEPATH='/mnt/msu/users/your_path_to/PFMDS/executables/'
+EXE='run_md_simulation_mpi_gfortran'
+module add gcc
+module add openmpi/1.8.4-gcc
+export I_MPI_PIN=off
+
+prefix='test_'
+sbatch -o "$prefix"out.txt -e "$prefix"err.txt -p regular4 -t 3-0 -N 48 ompi --bind-to none "$EXEPATH""$EXE" -p "$prefix" -op 50000 -ipath input_files/ -opath results/ -ilist settings_list.txt &>"$prefix"job_id.txt
+
+module rm gcc
+module rm openmpi/1.8.4-gcc
+```
+Запускать из папки с папками input_files (там входные файлы) и results (создать пустую для рзультатов). Приведенный скрипт поставит в очередь задачу run_md_simulation_mpi_gfortran на 48 узлов, выходные файлы будут иметь префикс "test_".
+
+### Выходная информация
 
 Информация в основном потоке вывода.
 
