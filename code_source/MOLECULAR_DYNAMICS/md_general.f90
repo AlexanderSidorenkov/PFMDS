@@ -347,10 +347,10 @@ subroutine check_positions(out_id,atoms,box)
 	
 end subroutine check_positions
 
-subroutine check_velocities(out_id,atoms)
+subroutine find_max_velocity(v,atoms)
 	type(particles)::	atoms
-	integer:: out_id,i
-	real:: maxvel2,v2
+	integer:: i
+	real:: maxvel2,v2,v
 
 	maxvel2 = -1.	
 	!$OMP PARALLEL DO private(i,v2) REDUCTION(max:maxvel2)
@@ -359,9 +359,9 @@ subroutine check_velocities(out_id,atoms)
 		if(maxvel2<v2) maxvel2 = v2
 	enddo
 	!$OMP END PARALLEL DO
-	write(out_id,'(A,f16.8,A)') ' max velocity: ',sqrt(maxvel2),' A/fs '
+	v = sqrt(maxvel2)
 	
-end subroutine check_velocities
+end subroutine find_max_velocity
 
 subroutine invert_z_velocities(atoms,z_low_border,z_high_border)
 	type(particles)::	atoms
