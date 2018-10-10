@@ -162,13 +162,13 @@ subroutine zero_forces(atoms,group)
 	
 end subroutine zero_forces
 
-
-subroutine create_nose_hoover_chain(nhc)
+subroutine create_nose_hoover_chain(nhc,M)
 	type(nose_hoover_chain):: nhc
-
-	allocate(nhc%x(nhc%M))
-	allocate(nhc%v(nhc%M))
-	allocate(nhc%q(nhc%M))
+	integer:: M
+	
+	allocate(nhc%x(M))
+	allocate(nhc%v(M))
+	allocate(nhc%q(M))
 	nhc%x = 0.
 	nhc%v = 0.
 	nhc%q = 0.
@@ -202,6 +202,8 @@ subroutine integrate_nose_hoover_chain(nhc,atoms,group,dt)
 	integer::		i
 
 	call calculate_kinetic_energy(ke,atoms,group)
+	!or !call calculate_temperature_wo_com_motion(temp,kewocomm,atoms,group)
+	
 	kt=1.3806488/1.6021765654*10.**(-4)*nhc%temperature
 	kedif = 2.*ke-3.*nhc%L*kt
 

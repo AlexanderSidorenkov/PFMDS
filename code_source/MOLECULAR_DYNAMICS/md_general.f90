@@ -207,7 +207,7 @@ subroutine calculate_mass_center(mc,atoms,group)
 	return
 end subroutine calculate_mass_center
 
-subroutine calculate_mass_center_velosity(mcv,atoms,group)
+subroutine calculate_mass_center_velocity(mcv,atoms,group)
 	type(particles)::	atoms
 	type(particle_group):: group
 	real:: mcv(3),mcv_priv(3),totm
@@ -231,7 +231,7 @@ subroutine calculate_mass_center_velosity(mcv,atoms,group)
 	mcv = mcv/totm
 
 	return
-end subroutine calculate_mass_center_velosity
+end subroutine calculate_mass_center_velocity
 
 subroutine zero_momentum(atoms,group)
 	type(particles)::	atoms
@@ -239,7 +239,7 @@ subroutine zero_momentum(atoms,group)
 	integer::		i,ind
 	real:: mcv(3)
 	
-	call calculate_mass_center_velosity(mcv,atoms,group)
+	call calculate_mass_center_velocity(mcv,atoms,group)
 	!$OMP PARALLEL firstprivate(mcv,i,ind)
 	!$OMP DO
 	do ind=1,group%N
@@ -306,6 +306,21 @@ subroutine calculate_temperature(temp,ke,atoms,group)
 	
 	call calculate_kinetic_energy(ke,atoms,group)
 	temp = 2*ke/kt_a_degree/(3*(group%N))
+	
+	return
+end subroutine calculate_temperature
+
+subroutine calculate_temperature_wo_com_motion(temp,kewocomm,atoms,group)
+	type(particles)::	atoms
+	type(particle_group):: group
+	real,parameter::	kt_a_degree =1.3806488/1.6021765654*10.**(-4)
+	real:: temp,kewocomm,ke,mcv(3),totm
+	
+	call calculate_kinetic_energy(ke,atoms,group)
+	call calculate_mass_center_velocity(mcv,atoms,group)
+	call calculate_masses_sum(totm,atoms,group)
+	kewocomm = ke-totm*sum(mcv**2)/2
+	temp = 2*kewocomm/kt_a_degree/(3*(group%N))
 	
 	return
 end subroutine calculate_temperature

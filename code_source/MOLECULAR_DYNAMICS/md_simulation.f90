@@ -24,7 +24,7 @@ type(particles)							:: atoms
 type(particle_group),allocatable		:: groups(:)
 type(interaction),allocatable			:: interactions(:)
 type(integrator_params),allocatable		:: integrators(:)
-type(nose_hoover_chain)					:: nhc
+type(nose_hoover_chain),allocatable		:: nhc(:)
 real									::	exe_t,exe_time_start,exe_time_md,exe_time_pos_vel,&
 											exe_time_nlists,exe_time_nlsearch,exe_time_nldistance,exe_time_forces,exe_time_energy,&
 											conserved_energy,total_energy,kinetic_energy,potential_energy,prev_potential_energy,&
@@ -80,8 +80,14 @@ do i=1,integrators_num
 	integrators(i)%dt,integrators(i)%l,integrators(i)%period_snapshot,integrators(i)%period_log
 enddo
 read(file_id,*) str,ms_de;								write(out_id,'(A32,es16.6)') str,ms_de
-read(file_id,*) str,target_temperature,nhc%M,nhc_q1;	write(out_id,'(A32,f16.6,i6,f16.6)') str,target_temperature,nhc%M,nhc_q1
-call create_nose_hoover_chain(nhc)
+read(file_id,*) str,nhc_num								write(out_id,'(A32,i12)') str,nhc_num
+allocate(nhc(nhc_num))
+do i=1,nhc_num
+	read(file_id,*) str,termo_atoms_group_num,target_temperature,nhc_M,nhc_q1
+	write(out_id,'(A32,f16.6,i6,f16.6)') str,termo_atoms_group_num,target_temperature,nhc_M,nhc_q1
+	call create_nose_hoover_chain(nhc(i),nhc_M)
+	call set_nose_hoover_chain(nhc(i),target_temperature,nhc_q1,groups(termo_atoms_group_num)%N)
+enddo
 read(file_id,*) str,initial_temperature;				write(out_id,'(A32,f16.6)') str,initial_temperature
 if (initial_temperature<0.) initial_temperature=0.
 if (new_velocities) call set_new_temperature(atoms,groups(all_moving_atoms_group_num),initial_temperature,rand_seed)
@@ -118,7 +124,7 @@ do md_step=0,md_step_limit
 			if (integrators(i)%l>0) then
 				integrator_name = integrators(i)%int_name
 				call init_time_steps(dt,integrators(i)%dt)
-				if (integrator_name=='nvt') call set_nose_hoover_chain(nhc,target_temperature,nhc_q1,groups(termo_atoms_group_num)%N)
+				!if (integrator_name=='nvt') call set_nose_hoover_chain(nhc,target_temperature,nhc_q1,groups(termo_atoms_group_num)%N)
 				exit
 			endif
 		enddo
@@ -189,7 +195,7 @@ do md_step=0,md_step_limit
 		if (mod(md_step,out_period)==0) then
 			call calculate_force_sum(fs,atoms,groups(all_atoms_group_num))
 			call calculate_mass_center(mc,atoms,groups(all_atoms_group_num))
-			call calculate_mass_center_velosity(mcv,atoms,groups(all_atoms_group_num))
+			call calculate_mass_center_velocity(mcv,atoms,groups(all_atoms_group_num))
 			write(out_id,'(A,f10.2)') 'exe time (s) = ',omp_get_wtime()-exe_time_start
 			write(out_id,'(A,i12,A,A6)') 'step = ',md_step,' integrator = ',trim(integrator_name)
 			write(out_id,'(A,es21.9)') 'conserved energy (eV) = ',conserved_energy
