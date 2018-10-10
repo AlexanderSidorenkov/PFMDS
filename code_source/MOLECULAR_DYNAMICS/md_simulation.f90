@@ -24,20 +24,20 @@ type(particles)							:: atoms
 type(particle_group),allocatable		:: groups(:)
 type(interaction),allocatable			:: interactions(:)
 type(integrator_params),allocatable		:: integrators(:)
-type(nose_hoover_chain),allocatable		:: nhc(:)
+type(nose_hoover_chain),allocatable		:: nhc_thermostats(:)
 real									::	exe_t,exe_time_start,exe_time_md,exe_time_pos_vel,&
 											exe_time_nlists,exe_time_nlsearch,exe_time_nldistance,exe_time_forces,exe_time_energy,&
-											conserved_energy,total_energy,kinetic_energy,potential_energy,prev_potential_energy,&
-											ms_de,fs(3),mcv(3),mc(3),mav_vel,initial_temperature,target_temperature,temperature,nhc_q1
+											conserved_energy,nose_hoover_energy,total_energy,kinetic_energy,potential_energy,prev_potential_energy,&
+											ms_de,fs(3),mcv(3),mc(3),mav_vel,initial_temperature,nhc_temperature,temperature,nhc_q1
 integer									::	i,rand_seed,num_of_omp_treads,md_step,md_step_limit,integrators_num,integrator_index,&
 											file_id,out_id,log_id,out_period,all_out_id,&
-											all_atoms_group_num,termo_atoms_group_num,&
+											all_atoms_group_num,nhc_atoms_group_num,nhc_M,nhc_num,&
 											all_moving_atoms_group_num,xyz_moving_atoms_group_num,z_moving_atoms_group_num,&
 											traj_group_num,period_traj,change_group_num,&
 											zero_momentum_period
 integer,allocatable						::	group_change_from(:),group_change_to(:),change_ts1(:),change_ts2(:),change_frec(:)
 character(len=128)						::	str,filename,logfilename,init_xyz_filename,input_path,settings_filename,output_prefix
-character(len=32)						::	integrator_name,interactions_energies_format
+character(len=32)						::	integrator_name,interactions_energies_format,nose_hoover_energies_format
 logical 								::	new_velocities,invert_z_vel
 real									::	omp_get_wtime
 
@@ -57,7 +57,6 @@ call create_groups(groups,file_id,out_id,atoms)
 read(file_id,*) str,all_moving_atoms_group_num;			write(out_id,'(A32,i12)') str,all_moving_atoms_group_num
 read(file_id,*) str,xyz_moving_atoms_group_num;			write(out_id,'(A32,i12)') str,xyz_moving_atoms_group_num
 read(file_id,*) str,z_moving_atoms_group_num;			write(out_id,'(A32,i12)') str,z_moving_atoms_group_num
-read(file_id,*) str,termo_atoms_group_num;				write(out_id,'(A32,i12)') str,termo_atoms_group_num
 read(file_id,*) str,all_atoms_group_num;				write(out_id,'(A32,i12)') str,all_atoms_group_num
 read(file_id,*) str,traj_group_num;						write(out_id,'(A32,i12)') str,traj_group_num
 read(file_id,*) str,period_traj;						write(out_id,'(A32,i12)') str,period_traj
@@ -79,14 +78,14 @@ do i=1,integrators_num
 	write(out_id,'(A,A6,f10.5,4i9)') '  ',integrators(i)%int_name,&
 	integrators(i)%dt,integrators(i)%l,integrators(i)%period_snapshot,integrators(i)%period_log
 enddo
-read(file_id,*) str,ms_de;								write(out_id,'(A32,es16.6)') str,ms_de
-read(file_id,*) str,nhc_num								write(out_id,'(A32,i12)') str,nhc_num
-allocate(nhc(nhc_num))
+read(file_id,*) str,ms_de;								;write(out_id,'(A32,es16.6)') str,ms_de
+read(file_id,*) str,nhc_num								;write(out_id,'(A32,i12)') str,nhc_num
+allocate(nhc_thermostats(nhc_num))
 do i=1,nhc_num
-	read(file_id,*) str,termo_atoms_group_num,target_temperature,nhc_M,nhc_q1
-	write(out_id,'(A32,f16.6,i6,f16.6)') str,termo_atoms_group_num,target_temperature,nhc_M,nhc_q1
-	call create_nose_hoover_chain(nhc(i),nhc_M)
-	call set_nose_hoover_chain(nhc(i),target_temperature,nhc_q1,groups(termo_atoms_group_num)%N)
+	read(file_id,*) nhc_atoms_group_num,nhc_temperature,nhc_M,nhc_q1
+	write(out_id,'(i6,f16.6,i6,f16.6)') nhc_atoms_group_num,nhc_temperature,nhc_M,nhc_q1
+	call create_nose_hoover_chain(nhc_thermostats(i),nhc_M)
+	call set_nose_hoover_chain(nhc_thermostats(i),nhc_temperature,nhc_q1,nhc_atoms_group_num,groups(nhc_atoms_group_num)%N)
 enddo
 read(file_id,*) str,initial_temperature;				write(out_id,'(A32,f16.6)') str,initial_temperature
 if (initial_temperature<0.) initial_temperature=0.
@@ -95,6 +94,7 @@ call create_interactions(interactions,groups,file_id,out_id,input_path)
 close(file_id)
 
 write(interactions_energies_format,'("(",i0,"f20.9)")') size(interactions)
+write(nose_hoover_energies_format,'("(",i0,"f20.9)")') size(nhc_thermostats)
 write(str,'(A,A)') trim(output_prefix),trim(logfilename)
 open(log_id,file=str)
 write(out_id,'(A24,1f10.2,A)') 'PREPARATIONS TIME: ',omp_get_wtime()-exe_time_start,' S '
@@ -124,7 +124,7 @@ do md_step=0,md_step_limit
 			if (integrators(i)%l>0) then
 				integrator_name = integrators(i)%int_name
 				call init_time_steps(dt,integrators(i)%dt)
-				!if (integrator_name=='nvt') call set_nose_hoover_chain(nhc,target_temperature,nhc_q1,groups(termo_atoms_group_num)%N)
+				!if (integrator_name=='nvt') call set_nose_hoover_chain(nhc,nhc_temperature,nhc_q1,groups(nhc_atoms_group_num)%N)
 				exit
 			endif
 		enddo
@@ -145,7 +145,11 @@ do md_step=0,md_step_limit
 				exit
 			endif
 		endif
-		if (integrator_name=='nvt') call integrate_nose_hoover_chain(nhc,atoms,groups(termo_atoms_group_num),dt)
+		if (integrator_name=='nvt') then
+			do i=1,nhc_num
+				call integrate_nose_hoover_chain(nhc_thermostats(i),atoms,groups(nhc_thermostats(i)%group_num),dt)
+			enddo
+		endif
 		call integrate_verlet_xyz_velocities(atoms,groups(xyz_moving_atoms_group_num),dt)
 		call integrate_verlet_z_velocities(atoms,groups(z_moving_atoms_group_num),dt)
 		call integrate_verlet_xyz_positions(atoms,groups(xyz_moving_atoms_group_num),dt,cell)
@@ -168,9 +172,15 @@ do md_step=0,md_step_limit
 	if (md_step/=0) then
 		call integrate_verlet_xyz_velocities(atoms,groups(xyz_moving_atoms_group_num),dt)
 		call integrate_verlet_z_velocities(atoms,groups(z_moving_atoms_group_num),dt)
-		if (integrator_name=='nvt') call integrate_nose_hoover_chain(nhc,atoms,groups(termo_atoms_group_num),dt)
-		if (integrator_name=='nvms') call molecular_static_xyz_velocities(atoms,groups(xyz_moving_atoms_group_num))
-		if (integrator_name=='nvms') call molecular_static_1D_velocities(atoms,groups(z_moving_atoms_group_num))
+		if (integrator_name=='nvt') then
+			do i=1,nhc_num
+				call integrate_nose_hoover_chain(nhc_thermostats(i),atoms,groups(nhc_thermostats(i)%group_num),dt)
+			enddo
+		endif
+		if (integrator_name=='nvms') then
+			call molecular_static_xyz_velocities(atoms,groups(xyz_moving_atoms_group_num))
+			call molecular_static_1D_velocities(atoms,groups(z_moving_atoms_group_num))
+		endif
 		dt%simulation_time = dt%simulation_time+dt%ts(1)
 	endif
 	exe_time_pos_vel = exe_time_pos_vel+omp_get_wtime()-exe_t
@@ -181,15 +191,21 @@ do md_step=0,md_step_limit
 		call calculate_potential_energies(interactions)
 		potential_energy = sum(interactions%energy)
 		call calculate_temperature(temperature,kinetic_energy,atoms,groups(all_moving_atoms_group_num))
+		if (integrator_name=='nvt') then
+			do i=1,nhc_num
+				call calculate_nose_hoover_chain_energy(nhc_thermostats(i))
+			enddo
+		endif
+		nose_hoover_energy = sum(nhc_thermostats%e)
 		total_energy = potential_energy+kinetic_energy
-		if (integrator_name=='nvt') call calculate_nose_hoover_chain_energy(nhc)
-		conserved_energy = total_energy+nhc%e
+		conserved_energy = total_energy+nose_hoover_energy
 		exe_time_energy = exe_time_energy+omp_get_wtime()-exe_t
 		
 		if (mod(md_step,integrators(integrator_index)%period_log)==0) then
-			write(log_id,'(A6,i9,6f24.6)',advance='no') trim(integrator_name),md_step,dt%simulation_time,&
-			conserved_energy,total_energy,potential_energy,kinetic_energy,temperature
-			write(log_id,interactions_energies_format) interactions%energy
+			write(log_id,'(A6,i9,7f24.6)',advance='no') trim(integrator_name),md_step,dt%simulation_time,&
+			conserved_energy,nose_hoover_energy,total_energy,potential_energy,kinetic_energy,temperature
+			write(log_id,interactions_energies_format,advance='no') interactions%energy
+			write(log_id,nose_hoover_energies_format) nhc_thermostats%e
 		endif
 		
 		if (mod(md_step,out_period)==0) then

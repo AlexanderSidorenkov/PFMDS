@@ -162,34 +162,38 @@ subroutine zero_forces(atoms,group)
 	
 end subroutine zero_forces
 
-subroutine create_nose_hoover_chain(nhc,M)
+subroutine create_nose_hoover_chain(nhc,nhc_M)
 	type(nose_hoover_chain):: nhc
-	integer:: M
+	integer:: nhc_M
 	
-	allocate(nhc%x(M))
-	allocate(nhc%v(M))
-	allocate(nhc%q(M))
+	allocate(nhc%x(nhc_M))
+	allocate(nhc%v(nhc_M))
+	allocate(nhc%q(nhc_M))
+	nhc%M = nhc_M
 	nhc%x = 0.
 	nhc%v = 0.
 	nhc%q = 0.
 	nhc%e = 0.
 	nhc%s = 1.
-
+	
 	return
 end subroutine create_nose_hoover_chain
 
-subroutine set_nose_hoover_chain(nhc,temp,q1,l)
+subroutine set_nose_hoover_chain(nhc,temp,q1,gn,l)
 	type(nose_hoover_chain):: nhc
-	integer:: l,i
+	integer:: l,i,gn
 	real::	q1,temp
 
+	if (l<1 .or. q1<0. .or. temp<0.) then; write(*,*) 'error: wrong nhc parameters'; stop; endif
+
+	nhc%group_num = gn
 	nhc%L = l
 	nhc%temperature = temp
 	nhc%q(1) = q1
 	do i=2,nhc%M,1
 		nhc%q(i) = nhc%q(1)/(3.*nhc%L)
 	enddo
-
+	
 	return
 end subroutine set_nose_hoover_chain
 

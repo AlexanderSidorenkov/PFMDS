@@ -22,7 +22,7 @@ type particle_group
 end type particle_group
 
 type nose_hoover_chain
-	integer:: M,L
+	integer:: M,L,group_num
 	real,allocatable:: x(:),v(:),q(:)
 	real::	temperature,s,e
 end type nose_hoover_chain
@@ -323,7 +323,7 @@ subroutine calculate_temperature_wo_com_motion(temp,kewocomm,atoms,group)
 	temp = 2*kewocomm/kt_a_degree/(3*(group%N))
 	
 	return
-end subroutine calculate_temperature
+end subroutine calculate_temperature_wo_com_motion
 
 subroutine set_new_temperature(atoms,group,temp,rand_seed)
 	type(particles)::	atoms
@@ -331,6 +331,7 @@ subroutine set_new_temperature(atoms,group,temp,rand_seed)
 	real:: temp,ke,temperature
 	integer:: rand_seed
 	
+	!mb divide into 2 routines with proper Ndof?
 	call random_momenta(atoms,group,rand_seed)
 	call zero_momentum(atoms,group)
 	call calculate_temperature(temperature,ke,atoms,group)
